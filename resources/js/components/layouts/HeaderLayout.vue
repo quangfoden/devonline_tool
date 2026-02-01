@@ -6,18 +6,18 @@
         <div class="navbar-brand-box">
           <router-link to="/admin" class="logo logo-dark">
             <span class="logo-sm">
-              <span class="text-f">NA<span class="text-l">S</span></span>
+              <span class="text-f">DEV<span class="text-l"></span></span>
             </span>
             <span class="logo-lg">
-              <span class="text-f">NAM ANH <span class="space"></span><span class="text-l">SHOP</span></span>
+              <span class="text-f">DEV ONLINE <span class="space"></span><span class="text-l">SHOP</span></span>
             </span>
           </router-link>
           <router-link to="/admin" class="logo logo-light">
             <span class="logo-sm">
-              <span class="text-f">NA<span class="text-l">S</span></span>
+              <span class="text-f">DEV<span class="text-l"></span></span>
             </span>
             <span class="logo-lg">
-              <span class="text-f">NAM ANH <span class="space"></span><span class="text-l">SHOP</span></span>
+              <span class="text-f">DEV ONLINE <span class="space"></span><span class="text-l">SHOP</span></span>
             </span>
           </router-link>
         </div>

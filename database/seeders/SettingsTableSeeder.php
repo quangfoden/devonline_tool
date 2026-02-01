@@ -12,17 +12,36 @@ class SettingsTableSeeder extends Seeder
      *
      * @return void
      */
+    // public function run(): void
+    // {
+    //     $data = [
+    //         'id' => 2,
+    //         'name' => 'About',
+    //         'data' => serialize($this->aboutData()),
+    //         'status' => 1,
+    //         'created_by' => 1
+    //     ];
+
+    //     DB::table('settings')->insert($data);
+    // }
+
     public function run(): void
     {
-        $data = [
-            'id' => 2,
-            'name' => 'About',
-            'data' => serialize($this->aboutData()),
-            'status' => 1,
-            'created_by' => 1
+        $settings = [
+            'Home' => $this->homeData(),
+            'About' => $this->aboutData(),
         ];
 
-        DB::table('settings')->insert($data);
+        foreach ($settings as $name => $data) {
+            DB::table('settings')->updateOrInsert(
+                ['name' => $name],
+                [
+                    'data' => serialize($data),
+                    'status' => 1,
+                    'created_by' => 1
+                ]
+            );
+        }
     }
 
     private function homeData(): array
@@ -162,7 +181,7 @@ Chúng tôi luôn sẵn sàng hỗ trợ và đáp ứng mọi yêu cầu của 
             'name' => 'Life With You Sec.',
             'data' => [
                 'main_title' => '[:vi]GIỚI THIỆU[:vi][:en]ABOUT US[:en]',
-                'video' =>  '/videos/video2.mp4'
+                'video' => '/videos/video2.mp4'
             ]
         ];
         $howWeHire = [

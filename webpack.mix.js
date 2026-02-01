@@ -11,13 +11,6 @@ require('dotenv').config();
  | file for the application as well as bundling up all the JS files.
  |
  */
-mix.webpackConfig({
-    resolve: {
-        alias: {
-            '@resources': path.resolve(__dirname, 'resources/')
-        }
-    },
-});
 mix.js("resources/js/app.js", "public/assets/js")
     .vue()
     .webpackConfig({
@@ -37,11 +30,11 @@ mix.js("resources/js/app.js", "public/assets/js")
         },
         resolve: {
             alias: {
-                '@': path.resolve('resources/assets/sass')
+               '@': path.resolve(__dirname, 'resources/js'),
+               '@js': path.resolve(__dirname, 'resources/js'),
+               '@components': path.resolve(__dirname, 'resources/js/components'),
+               '@resources': path.resolve(__dirname, 'resources')
             },
-            alias: {
-                '@resources': path.resolve(__dirname, 'resources/')
-            }
         }
     })
     .sass('resources/assets/scss/style.scss', 'public/assets/css')
@@ -49,6 +42,8 @@ mix.js("resources/js/app.js", "public/assets/js")
     .sass('resources/assets/scss/datatable.scss', 'public/assets/css')
     .sass('resources/assets/scss/simple-typeahead.scss', 'public/assets/css')
     .sass('resources/assets/scss/utils.scss', 'public/assets/css')
+    .sass('resources/assets/scss/home.scss', 'public/assets/css')
+
 // .postCss("resources/assets/css/app.css", "public/assets/css", [
 //     //
 // ]);

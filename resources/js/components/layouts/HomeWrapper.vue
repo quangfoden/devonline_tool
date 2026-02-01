@@ -1,13 +1,16 @@
 <template>
     <div class="loader-first load-intro notranslate">
         <div class="logo-intro d-flex align-items-center justify-content-center text-white">
-            <span class="text-logo">N</span>
-            <span class="text-logo">A</span>
-            <span class="text-logo">M</span>
+            <span class="text-logo">D</span>
+            <span class="text-logo">e</span>
+            <span class="text-logo">v</span>
             <span class="text-logo space"></span>
-            <span class="text-logo">A</span>
+            <span class="text-logo">O</span>
             <span class="text-logo">N</span>
-            <span class="text-logo">H</span>
+            <span class="text-logo">L</span>
+            <span class="text-logo">I</span>
+            <span class="text-logo">N</span>
+            <span class="text-logo">E</span>
             <span class="text-logo space"></span>
             <span class="text-logo cus-color">S</span>
             <span class="text-logo cus-color">H</span>

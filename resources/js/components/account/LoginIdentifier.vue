@@ -2,7 +2,7 @@
   <div class="col-lg-9">
     <div class="text-center">
       <a href="/" class="logo">
-        <img src="/images/logo.jpg" height="50" alt="logo" />
+        <img src="/images/logo2.png" width="100" alt="logo" />
       </a>
       <h4 class="font-size-18 mt-4">Log in</h4>
     </div>
@@ -29,7 +29,7 @@
 
     <div class="mt-5 text-center">
       <p>
-          Nam Anh
+         Devonline 2026
         <i class="mdi mdi-heart text-danger"></i> Shop
       </p>
     </div>

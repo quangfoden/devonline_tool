@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import LoginIdentifier from '../components/account/LoginIdentifier.vue';
 
 import AdminParent from "../components/admin/AdminParent.vue";
@@ -30,235 +30,200 @@ export const routes = [
         component: HomeParent,
         children: [
             {
-                path: ':lang',
+                path: '',
+                name: 'Home Page',
+                component: HomePage
+          }
+        ]
+    },
+
+    {
+        path: '/admin',
+        name: 'Dashboard',
+        component: AdminParent,
+        meta: { requiresAuth: true },
+        children: [
+            {
+                path: '',
+                name: 'Dashboard Details',
+                component: AdminDashboard,
+            },
+            {
+                path: 'role',
+                name: 'Role',
+                component: RoleParent,
+                meta: { permissions: ['Role Manager'] },
                 children: [
                     {
-                        path: '',
-                        name: "NamAnh's Home",
-                        component: HomePage
+                        name: 'All Roles',
+                        path: 'all',
+                        component: AllRoles,
                     },
                     {
-                        path: 'about',
-                        name: "NamAnh's About",
-                        component: AboutPage
+                        name: 'Add Role',
+                        path: 'add',
+                        component: AddRole,
+                    },
+                ]
+            },
+            {
+                path: 'permission',
+                name: 'Permission',
+                component: PermissionParent,
+                meta: { permissions: ['Permission Manager'] },
+                children: [
+                    {
+                        name: 'All Permissions',
+                        path: 'all',
+                        component: AllPermissions,
+                        meta: { requiresAuth: true }
                     },
                     {
-                        path: 'products',
-                        name: "NamAnh's Products",
-                        component: ProductsPage
+                        name: 'Add Permission',
+                        path: 'add',
+                        component: AddPermission,
+                        meta: { requiresAuth: true }
+                    },
+                ]
+            },
+            {
+                name: 'Profile',
+                path: 'profile',
+                component: ProfileParent,
+                children: [
+                    {
+                        name: 'Profile User',
+                        path: 'profile-user',
+                        component: Profile,
                     },
                     {
-                        path: 'news',
-                        name: "News",
-                        component: NewsParent,
-                        children: [
-                            {
-                                name: "NamAnh's News",
-                                path: '',
-                                component: NewsCategoryPage,
-                            },
-                            {
-                                name: 'Category News',
-                                path: ':slug',
-                                component: NewsCategoryPage,
-                            },
-                            {
-                                name: 'News Detail',
-                                path: ':cat_slug/:post_slug',
-                                component: NewsDetailPage
-                            }
-                        ]
+                        name: 'Change Password',
+                        path: 'change-password',
+                        component: ChangePasswordProfile,
                     }
                 ]
             },
             {
-                path: '/admin',
-                name: 'Dashboard',
-                component: AdminParent,
-                meta: {requiresAuth: true},
+                name: 'User Manager',
+                path: 'user-manager',
+                component: UserParent,
+                meta: { permissions: ['User Manager'] },
                 children: [
                     {
+                        name: 'All User',
                         path: '',
-                        name: 'Dashboard Details',
-                        component: AdminDashboard,
+                        component: AllUser,
                     },
                     {
-                        path: 'role',
-                        name: 'Role',
-                        component: RoleParent,
-                        meta: {permissions: ['Role Manager']},
-                        children: [
-                            {
-                                name: 'All Roles',
-                                path: 'all',
-                                component: AllRoles,
-                            },
-                            {
-                                name: 'Add Role',
-                                path: 'add',
-                                component: AddRole,
-                            },
-                        ]
-                    },
-                    {
-                        path: 'permission',
-                        name: 'Permission',
-                        component: PermissionParent,
-                        meta: {permissions: ['Permission Manager']},
-                        children: [
-                            {
-                                name: 'All Permissions',
-                                path: 'all',
-                                component: AllPermissions,
-                                meta: {requiresAuth: true}
-                            },
-                            {
-                                name: 'Add Permission',
-                                path: 'add',
-                                component: AddPermission,
-                                meta: {requiresAuth: true}
-                            },
-                        ]
-                    },
-                    {
-                        name: 'Profile',
-                        path: 'profile',
-                        component: ProfileParent,
-                        children: [
-                            {
-                                name: 'Profile User',
-                                path: 'profile-user',
-                                component: Profile,
-                            },
-                            {
-                                name: 'Change Password',
-                                path: 'change-password',
-                                component: ChangePasswordProfile,
-                            }
-                        ]
-                    },
-                    {
-                        name: 'User Manager',
-                        path: 'user-manager',
-                        component: UserParent,
-                        meta: {permissions: ['User Manager']},
-                        children: [
-                            {
-                                name: 'All User',
-                                path: '',
-                                component: AllUser,
-                            },
-                            {
-                                name: 'Create New User',
-                                path: 'create-new-user',
-                                component: CreateNewUser,
-                            },
-                        ]
-                    },
-                    {
-                        name: 'Product Manager',
-                        path: 'product-manager',
-                        component: ProductParent,
-                        meta: {permissions: ['Products Manager']},
-                        children: [
-                            {
-                                name: 'All Product',
-                                path: 'all',
-                                component: ProductList,
-                            },
-                            {
-                                name: 'Create Product',
-                                path: 'add',
-                                component: AddProduct,
-                            },
-                            {
-                                name: 'Product Detail',
-                                path: 'detail/:id',
-                                component: ProductDetail,
-                            }
-                        ]
-                    },
-                    {
-                        name: 'Contact Manager',
-                        path: 'contact-manager',
-                        component: ContactParent,
-                        meta: {permissions: ['Contact Manager']},
-                        children: [
-                            {
-                                name: 'All Contact',
-                                path: 'all',
-                                component: ContactList,
-                            },
-                            {
-                                name: 'Contact Detail',
-                                path: 'detail/:id',
-                                component: ContactDetail,
-                            }
-                        ]
-                    },
-                    {
-                        name: 'Setting Manager',
-                        path: 'setting-manager',
-                        component: SettingParent,
-                        meta: {permissions: ['Setting Manager']},
-                        children: [
-                            {
-                                name: 'All Setting',
-                                path: 'all',
-                                component: AllSetting,
-                            }
-                        ]
-                    },
-                    {
-                        name: 'Category Manager',
-                        path: 'category-manager',
-                        component: CategoryParent,
-                        meta: {permissions: ['News Manager']},
-                        children: [
-                            {
-                                name: 'All Category',
-                                path: 'all',
-                                component: CategoryList,
-                            },
-                            {
-                                name: 'Create Category',
-                                path: 'add',
-                                component: AddCategory,
-                            },
-                            {
-                                name: 'Category Detail',
-                                path: 'detail/:id',
-                                component: CategoryDetail,
-                            }
-                        ]
-                    },
-                    {
-                        name: 'Post Manager',
-                        path: 'post-manager',
-                        component: PostParent,
-                        meta: {permissions: ['News Manager']},
-                        children: [
-                            {
-                                name: 'All Post',
-                                path: 'all',
-                                component: PostList,
-                            },
-                            {
-                                name: 'Create Post',
-                                path: 'add',
-                                component: AddPost,
-                            },
-                            {
-                                name: 'Post Detail',
-                                path: 'detail/:id',
-                                component: PostDetail,
-                            }
-                        ]
+                        name: 'Create New User',
+                        path: 'create-new-user',
+                        component: CreateNewUser,
                     },
                 ]
-            }
-        ],
+            },
+            {
+                name: 'Product Manager',
+                path: 'product-manager',
+                component: ProductParent,
+                meta: { permissions: ['Products Manager'] },
+                children: [
+                    {
+                        name: 'All Product',
+                        path: 'all',
+                        component: ProductList,
+                    },
+                    {
+                        name: 'Create Product',
+                        path: 'add',
+                        component: AddProduct,
+                    },
+                    {
+                        name: 'Product Detail',
+                        path: 'detail/:id',
+                        component: ProductDetail,
+                    }
+                ]
+            },
+            {
+                name: 'Contact Manager',
+                path: 'contact-manager',
+                component: ContactParent,
+                meta: { permissions: ['Contact Manager'] },
+                children: [
+                    {
+                        name: 'All Contact',
+                        path: 'all',
+                        component: ContactList,
+                    },
+                    {
+                        name: 'Contact Detail',
+                        path: 'detail/:id',
+                        component: ContactDetail,
+                    }
+                ]
+            },
+            {
+                name: 'Setting Manager',
+                path: 'setting-manager',
+                component: SettingParent,
+                meta: { permissions: ['Setting Manager'] },
+                children: [
+                    {
+                        name: 'All Setting',
+                        path: 'all',
+                        component: AllSetting,
+                    }
+                ]
+            },
+            {
+                name: 'Category Manager',
+                path: 'category-manager',
+                component: CategoryParent,
+                meta: { permissions: ['News Manager'] },
+                children: [
+                    {
+                        name: 'All Category',
+                        path: 'all',
+                        component: CategoryList,
+                    },
+                    {
+                        name: 'Create Category',
+                        path: 'add',
+                        component: AddCategory,
+                    },
+                    {
+                        name: 'Category Detail',
+                        path: 'detail/:id',
+                        component: CategoryDetail,
+                    }
+                ]
+            },
+            {
+                name: 'Post Manager',
+                path: 'post-manager',
+                component: PostParent,
+                meta: { permissions: ['News Manager'] },
+                children: [
+                    {
+                        name: 'All Post',
+                        path: 'all',
+                        component: PostList,
+                    },
+                    {
+                        name: 'Create Post',
+                        path: 'add',
+                        component: AddPost,
+                    },
+                    {
+                        name: 'Post Detail',
+                        path: 'detail/:id',
+                        component: PostDetail,
+                    }
+                ]
+            },
+        ]
     },
+
     {
         path: '/admin/login',
         name: 'login',
@@ -271,14 +236,263 @@ export const routes = [
     }
 
 ];
+// export const routes = [
+//     {
+//         path: '/',
+//         name: 'Home',
+//         component: HomeParent,
+//         children: [
+//             {
+//                 path: ':lang',
+//                 children: [
+//                     {
+//                         path: '',
+//                         name: "NamAnh's Home",
+//                         component: HomePage
+//                     },
+//                     {
+//                         path: 'about',
+//                         name: "NamAnh's About",
+//                         component: AboutPage
+//                     },
+//                     {
+//                         path: 'products',
+//                         name: "NamAnh's Products",
+//                         component: ProductsPage
+//                     },
+//                     {
+//                         path: 'news',
+//                         name: "News",
+//                         component: NewsParent,
+//                         children: [
+//                             {
+//                                 name: "NamAnh's News",
+//                                 path: '',
+//                                 component: NewsCategoryPage,
+//                             },
+//                             {
+//                                 name: 'Category News',
+//                                 path: ':slug',
+//                                 component: NewsCategoryPage,
+//                             },
+//                             {
+//                                 name: 'News Detail',
+//                                 path: ':cat_slug/:post_slug',
+//                                 component: NewsDetailPage
+//                             }
+//                         ]
+//                     }
+//                 ]
+//             },
+//             {
+//                 path: '/admin',
+//                 name: 'Dashboard',
+//                 component: AdminParent,
+//                 meta: {requiresAuth: true},
+//                 children: [
+//                     {
+//                         path: '',
+//                         name: 'Dashboard Details',
+//                         component: AdminDashboard,
+//                     },
+//                     {
+//                         path: 'role',
+//                         name: 'Role',
+//                         component: RoleParent,
+//                         meta: {permissions: ['Role Manager']},
+//                         children: [
+//                             {
+//                                 name: 'All Roles',
+//                                 path: 'all',
+//                                 component: AllRoles,
+//                             },
+//                             {
+//                                 name: 'Add Role',
+//                                 path: 'add',
+//                                 component: AddRole,
+//                             },
+//                         ]
+//                     },
+//                     {
+//                         path: 'permission',
+//                         name: 'Permission',
+//                         component: PermissionParent,
+//                         meta: {permissions: ['Permission Manager']},
+//                         children: [
+//                             {
+//                                 name: 'All Permissions',
+//                                 path: 'all',
+//                                 component: AllPermissions,
+//                                 meta: {requiresAuth: true}
+//                             },
+//                             {
+//                                 name: 'Add Permission',
+//                                 path: 'add',
+//                                 component: AddPermission,
+//                                 meta: {requiresAuth: true}
+//                             },
+//                         ]
+//                     },
+//                     {
+//                         name: 'Profile',
+//                         path: 'profile',
+//                         component: ProfileParent,
+//                         children: [
+//                             {
+//                                 name: 'Profile User',
+//                                 path: 'profile-user',
+//                                 component: Profile,
+//                             },
+//                             {
+//                                 name: 'Change Password',
+//                                 path: 'change-password',
+//                                 component: ChangePasswordProfile,
+//                             }
+//                         ]
+//                     },
+//                     {
+//                         name: 'User Manager',
+//                         path: 'user-manager',
+//                         component: UserParent,
+//                         meta: {permissions: ['User Manager']},
+//                         children: [
+//                             {
+//                                 name: 'All User',
+//                                 path: '',
+//                                 component: AllUser,
+//                             },
+//                             {
+//                                 name: 'Create New User',
+//                                 path: 'create-new-user',
+//                                 component: CreateNewUser,
+//                             },
+//                         ]
+//                     },
+//                     {
+//                         name: 'Product Manager',
+//                         path: 'product-manager',
+//                         component: ProductParent,
+//                         meta: {permissions: ['Products Manager']},
+//                         children: [
+//                             {
+//                                 name: 'All Product',
+//                                 path: 'all',
+//                                 component: ProductList,
+//                             },
+//                             {
+//                                 name: 'Create Product',
+//                                 path: 'add',
+//                                 component: AddProduct,
+//                             },
+//                             {
+//                                 name: 'Product Detail',
+//                                 path: 'detail/:id',
+//                                 component: ProductDetail,
+//                             }
+//                         ]
+//                     },
+//                     {
+//                         name: 'Contact Manager',
+//                         path: 'contact-manager',
+//                         component: ContactParent,
+//                         meta: {permissions: ['Contact Manager']},
+//                         children: [
+//                             {
+//                                 name: 'All Contact',
+//                                 path: 'all',
+//                                 component: ContactList,
+//                             },
+//                             {
+//                                 name: 'Contact Detail',
+//                                 path: 'detail/:id',
+//                                 component: ContactDetail,
+//                             }
+//                         ]
+//                     },
+//                     {
+//                         name: 'Setting Manager',
+//                         path: 'setting-manager',
+//                         component: SettingParent,
+//                         meta: {permissions: ['Setting Manager']},
+//                         children: [
+//                             {
+//                                 name: 'All Setting',
+//                                 path: 'all',
+//                                 component: AllSetting,
+//                             }
+//                         ]
+//                     },
+//                     {
+//                         name: 'Category Manager',
+//                         path: 'category-manager',
+//                         component: CategoryParent,
+//                         meta: {permissions: ['News Manager']},
+//                         children: [
+//                             {
+//                                 name: 'All Category',
+//                                 path: 'all',
+//                                 component: CategoryList,
+//                             },
+//                             {
+//                                 name: 'Create Category',
+//                                 path: 'add',
+//                                 component: AddCategory,
+//                             },
+//                             {
+//                                 name: 'Category Detail',
+//                                 path: 'detail/:id',
+//                                 component: CategoryDetail,
+//                             }
+//                         ]
+//                     },
+//                     {
+//                         name: 'Post Manager',
+//                         path: 'post-manager',
+//                         component: PostParent,
+//                         meta: {permissions: ['News Manager']},
+//                         children: [
+//                             {
+//                                 name: 'All Post',
+//                                 path: 'all',
+//                                 component: PostList,
+//                             },
+//                             {
+//                                 name: 'Create Post',
+//                                 path: 'add',
+//                                 component: AddPost,
+//                             },
+//                             {
+//                                 name: 'Post Detail',
+//                                 path: 'detail/:id',
+//                                 component: PostDetail,
+//                             }
+//                         ]
+//                     },
+//                 ]
+//             }
+//         ],
+//     },
+//     {
+//         path: '/admin/login',
+//         name: 'login',
+//         component: LoginIdentifier
+//     },
+//     {
+//         path: '/admin/error',
+//         name: 'error',
+//         component: ErrorPage
+//     }
+
+// ];
+
 const router = createRouter({
     history: createWebHistory(),
     routes
 })
-import {store} from '../store/store';
+import { store } from '../store/store';
 import $ from 'jquery';
 import HomeParent from "../components/home/HomeParent.vue";
-import HomePage from "../components/home/HomePage.vue";
+import HomePage from "../components/home/pages/HomePage.vue";
 import TermsCondsPage from "../components/home/pages/TermsCondsPage.vue";
 import ProductsPage from "../components/home/pages/ProductsPage.vue";
 import AboutPage from "../components/home/pages/AboutPage.vue";
@@ -309,32 +523,32 @@ router.beforeEach((to, from, next) => {
     initLoading();
     let isAdminArea = document.URL.includes('/admin');
 
-    // check lang in path
-    if (!isAdminArea) {
-        const lang = i18n.global.locale;
-        if (typeof to.name === 'undefined') {
-            next(`/${lang}`);
-            return;
-        }
-        if (typeof to.params.lang === 'undefined') {
-            next(`/${lang}${to.path}`);
-            return;
-        }
-        if (!config.languages.includes(to.params.lang)) {
-            let nextTo = '';
-            if (config.sub_pages.includes(to.params.lang)) {
-                nextTo = '/' + lang + to.path;
-            } else {
-                nextTo = `/${lang}/`;
-            }
-            i18n.global.locale = to.params.lang;
-            next(nextTo);
-            return;
-        } else {
-            localStorage.setItem('lang', to.params.lang);
-            i18n.global.locale = to.params.lang;
-        }
-    }
+    // // check lang in path
+    // if (!isAdminArea) {
+    //     const lang = i18n.global.locale;
+    //     if (typeof to.name === 'undefined') {
+    //         next(`/${lang}`);
+    //         return;
+    //     }
+    //     if (typeof to.params.lang === 'undefined') {
+    //         next(`/${lang}${to.path}`);
+    //         return;
+    //     }
+    //     if (!config.languages.includes(to.params.lang)) {
+    //         let nextTo = '';
+    //         if (config.sub_pages.includes(to.params.lang)) {
+    //             nextTo = '/' + lang + to.path;
+    //         } else {
+    //             nextTo = `/${lang}/`;
+    //         }
+    //         i18n.global.locale = to.params.lang;
+    //         next(nextTo);
+    //         return;
+    //     } else {
+    //         localStorage.setItem('lang', to.params.lang);
+    //         i18n.global.locale = to.params.lang;
+    //     }
+    // }
 
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
     const isAuthenticated = store.getters.getLoginResponse.authenticated || JSON.parse(localStorage.getItem('loginResponse'))?.authenticated

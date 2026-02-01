@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Nam Anh Shop</title>
+    <title>Devonline Shop</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description"/>
     <meta content="Themesdesign" name="author"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('assets/images/icons/icon-news.jpg') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/images/icons/favicon.ico') }}">
 
     <!-- jquery.vectormap css -->
     <link href="{{ asset('assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css') }}"
@@ -27,6 +27,9 @@
     <link href="{{ mix('assets/css/utils.css') }}" type="text/css" rel="stylesheet"/>
     <link href="{{ mix('assets/css/datatable.css') }}" type="text/css" rel="stylesheet"/>
     <link href="{{ mix('assets/css/simple-typeahead.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ mix('assets/css/home.css') }}" type="text/css" rel="stylesheet"/>
+    
+   
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.24/datatables.min.css"/>
     <script src="https://cdn.jsdelivr.net/npm/he@1.2.0/he.js"></script>
     <style>
