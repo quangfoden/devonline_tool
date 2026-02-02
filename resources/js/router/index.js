@@ -33,7 +33,20 @@ export const routes = [
                 path: '',
                 name: 'Home Page',
                 component: HomePage
-          }
+            }
+        ]
+    },
+
+    {
+        path: '/p',
+        name: 'Landing Page',
+        component: LandingPageParent,
+        children: [
+            {
+                path: 'give-a-gift',
+                name: 'Love Page',
+                component: LovePage
+            }
         ]
     },
 
@@ -492,6 +505,8 @@ const router = createRouter({
 import { store } from '../store/store';
 import $ from 'jquery';
 import HomeParent from "../components/home/HomeParent.vue";
+import LandingPageParent from "../components/landing/LandingPageParent.vue";
+import LovePage from "../components/landing/pages/LovePage.vue";
 import HomePage from "../components/home/pages/HomePage.vue";
 import TermsCondsPage from "../components/home/pages/TermsCondsPage.vue";
 import ProductsPage from "../components/home/pages/ProductsPage.vue";

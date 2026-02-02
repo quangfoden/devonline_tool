@@ -28,6 +28,7 @@
     <link href="{{ mix('assets/css/datatable.css') }}" type="text/css" rel="stylesheet"/>
     <link href="{{ mix('assets/css/simple-typeahead.css') }}" type="text/css" rel="stylesheet"/>
     <link href="{{ mix('assets/css/home.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ mix('assets/css/landing.css') }}" type="text/css" rel="stylesheet"/>
     
    
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.24/datatables.min.css"/>
