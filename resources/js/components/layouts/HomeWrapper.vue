@@ -5,17 +5,12 @@
             <span class="text-logo">e</span>
             <span class="text-logo">v</span>
             <span class="text-logo space"></span>
-            <span class="text-logo">O</span>
-            <span class="text-logo">N</span>
-            <span class="text-logo">L</span>
-            <span class="text-logo">I</span>
-            <span class="text-logo">N</span>
-            <span class="text-logo">E</span>
-            <span class="text-logo space"></span>
-            <span class="text-logo cus-color">S</span>
-            <span class="text-logo cus-color">H</span>
             <span class="text-logo cus-color">O</span>
-            <span class="text-logo cus-color">P</span>
+            <span class="text-logo cus-color">N</span>
+            <span class="text-logo cus-color">L</span>
+            <span class="text-logo cus-color">I</span>
+            <span class="text-logo cus-color">N</span>
+            <span class="text-logo cus-color">E</span>
         </div>
     </div>
     <div class="loader-overlay one"></div>

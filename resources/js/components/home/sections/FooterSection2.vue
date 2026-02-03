@@ -1,6 +1,5 @@
 <template>
-
-    <footer class="footer">
+    <footer class="footer2" id="Footer2">
         <div class="footer__container">
             <div class="footer__top">
                 <div class="footer__brand">
@@ -8,35 +7,35 @@
                         <span class="footer__logo-text">Page</span><span class="footer__logo-accent">Craft</span>
                     </a>
                     <p class="footer__tagline">
-                        Create beautiful personalized pages in minutes
+                        Tạo thiệp và trang cá nhân đẹp mắt chỉ trong vài phút
                     </p>
                 </div>
 
                 <div class="footer__links">
                     <div class="footer__column">
-                        <h4 class="footer__heading">Product</h4>
+                        <h4 class="footer__heading">Sản phẩm</h4>
                         <ul class="footer__list">
-                            <li><a href="#templates" class="footer__link">Templates</a></li>
-                            <li><a href="#" class="footer__link">Features</a></li>
-                            <li><a href="#" class="footer__link">Pricing</a></li>
+                            <li><a href="#templates" class="footer__link">Mẫu thiệp</a></li>
+                            <li><a href="#" class="footer__link">Tính năng</a></li>
+                            <li><a href="#" class="footer__link">Bảng giá</a></li>
                         </ul>
                     </div>
 
                     <div class="footer__column">
-                        <h4 class="footer__heading">Company</h4>
+                        <h4 class="footer__heading">Công ty</h4>
                         <ul class="footer__list">
-                            <li><a href="#about" class="footer__link">About</a></li>
+                            <li><a href="#about" class="footer__link">Giới thiệu</a></li>
                             <li><a href="#" class="footer__link">Blog</a></li>
-                            <li><a href="#" class="footer__link">Careers</a></li>
+                            <li><a href="#" class="footer__link">Tuyển dụng</a></li>
                         </ul>
                     </div>
 
                     <div class="footer__column">
-                        <h4 class="footer__heading">Legal</h4>
+                        <h4 class="footer__heading">Pháp lý</h4>
                         <ul class="footer__list">
-                            <li><a href="#" class="footer__link">Privacy Policy</a></li>
-                            <li><a href="#" class="footer__link">Terms of Service</a></li>
-                            <li><a href="#" class="footer__link">Cookie Policy</a></li>
+                            <li><a href="#" class="footer__link">Chính sách bảo mật</a></li>
+                            <li><a href="#" class="footer__link">Điều khoản sử dụng</a></li>
+                            <li><a href="#" class="footer__link">Chính sách cookie</a></li>
                         </ul>
                     </div>
                 </div>
@@ -44,7 +43,7 @@
 
             <div class="footer__bottom">
                 <p class="footer__copyright">
-                    © {{ currentYear }} PageCraft. All rights reserved.
+                    © {{ currentYear }} Devonline Shop. Bảo lưu mọi quyền.
                 </p>
 
                 <div class="footer__social">
@@ -64,8 +63,12 @@
                     <a href="#" class="footer__social-link" aria-label="Instagram">
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                            <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" fill="none" stroke="#0a0a0a"
-                                stroke-width="2" />
+                            <path
+                                d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"
+                                fill="none"
+                                stroke="#0a0a0a"
+                                stroke-width="2"
+                            />
                             <circle cx="17.5" cy="6.5" r="1.5" fill="#0a0a0a" />
                         </svg>
                     </a>
@@ -74,7 +77,6 @@
         </div>
     </footer>
 </template>
-
 <script>
 export default {
     name: 'FooterSection2',

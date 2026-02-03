@@ -2,9 +2,9 @@
     <section class="templates">
         <div class="templates__container">
             <div class="templates__header">
-                <h2 class="templates__title">Choose Your Template</h2>
+                <h2 class="templates__title">Chọn mẫu bạn yêu thích</h2>
                 <p class="templates__subtitle">
-                    Select from our carefully crafted designs, each optimized for different purposes
+                    Các mẫu được thiết kế sẵn, phù hợp cho nhiều mục đích sử dụng khác nhau
                 </p>
             </div>
 
@@ -25,7 +25,7 @@
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                                     <circle cx="12" cy="12" r="3" />
                                 </svg>
-                                Quick Preview
+                                Xem nhanh
                             </button>
                         </div>
                     </div>
@@ -36,10 +36,10 @@
 
                         <div class="template-card__actions">
                             <button class="template-card__btn template-card__btn--preview">
-                                Preview
+                                Xem trước
                             </button>
                             <button class="template-card__btn template-card__btn--choose">
-                                Choose Template
+                                Chọn mẫu
                             </button>
                         </div>
                     </div>
@@ -48,7 +48,6 @@
         </div>
     </section>
 </template>
-
 <script>
 export default {
     data() {
@@ -56,38 +55,38 @@ export default {
             templates: [
                 {
                     id: 1,
-                    name: 'Minimal Portfolio',
-                    description: 'Perfect for showcasing your work with elegant simplicity',
+                    name: 'Thiệp sinh nhật tối giản',
+                    description: 'Phong cách nhẹ nhàng, phù hợp để gửi lời chúc sinh nhật ý nghĩa',
                     gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
                 },
                 {
                     id: 2,
-                    name: 'Business Card',
-                    description: 'Professional layout for networking and first impressions',
+                    name: 'Thiệp chúc mừng chuyên nghiệp',
+                    description: 'Thiết kế lịch sự, phù hợp cho công việc và đối tác',
                     gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
                 },
                 {
                     id: 3,
-                    name: 'Event Landing',
-                    description: 'Engaging design for conferences, weddings, and gatherings',
+                    name: 'Thiệp sự kiện',
+                    description: 'Phù hợp cho đám cưới, hội nghị, lễ kỷ niệm',
                     gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
                 },
                 {
                     id: 4,
-                    name: 'Link Collection',
-                    description: 'Organize all your important links in one beautiful page',
+                    name: 'Thiệp lưu giữ kỷ niệm',
+                    description: 'Tổng hợp hình ảnh, lời chúc và cảm xúc trong một trang',
                     gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
                 },
                 {
                     id: 5,
-                    name: 'Product Launch',
-                    description: 'Generate excitement for your next big release',
+                    name: 'Thiệp ra mắt',
+                    description: 'Dùng để thông báo sự kiện, sản phẩm hoặc điều đặc biệt',
                     gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
                 },
                 {
                     id: 6,
-                    name: 'Resume Showcase',
-                    description: 'Stand out with an interactive resume experience',
+                    name: 'Thiệp cá nhân',
+                    description: 'Giới thiệu bản thân, câu chuyện hoặc lời nhắn riêng',
                     gradient: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)'
                 }
             ]

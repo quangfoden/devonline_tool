@@ -2,9 +2,9 @@
     <section class="about">
         <div class="about__container">
             <div class="about__header">
-                <h2 class="about__title">How It Works</h2>
+                <h2 class="about__title">Cách hoạt động</h2>
                 <p class="about__subtitle">
-                    Four simple steps to your personalized page
+                    Chỉ với 4 bước đơn giản để tạo trang cá nhân của bạn
                 </p>
             </div>
 
@@ -59,23 +59,23 @@ export default {
             steps: [
                 {
                     id: 1,
-                    title: 'Choose a Template',
-                    description: 'Browse our collection and select the perfect design that matches your style and purpose'
+                    title: 'Chọn mẫu',
+                    description: 'Duyệt qua các mẫu có sẵn và chọn thiết kế phù hợp với nhu cầu của bạn'
                 },
                 {
                     id: 2,
-                    title: 'Customize Content',
-                    description: 'Add your text, images, links, and personal touches with our intuitive editor'
+                    title: 'Tùy chỉnh nội dung',
+                    description: 'Thêm lời nhắn, hình ảnh, nhạc và cá nhân hóa thiệp theo ý muốn'
                 },
                 {
                     id: 3,
-                    title: 'Generate Link & QR',
-                    description: 'Instantly receive a unique shareable link and downloadable QR code for your page'
+                    title: 'Tạo link & mã QR',
+                    description: 'Sau khi hoàn tất, hệ thống tự động tạo link riêng và mã QR cho thiệp của bạn'
                 },
                 {
                     id: 4,
-                    title: 'Share with Others',
-                    description: 'Distribute your personalized page across social media, email, or print materials'
+                    title: 'Chia sẻ',
+                    description: 'Gửi thiệp cho người thân, bạn bè qua mạng xã hội, tin nhắn hoặc in mã QR'
                 }
             ]
         };
