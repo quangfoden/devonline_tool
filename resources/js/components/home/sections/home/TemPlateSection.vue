@@ -1,7 +1,7 @@
 <template>
     <section class="templates">
         <div class="templates__container">
-            <div class="templates__header">
+            <div class="templates__header gsap-fade-up">
                 <h2 class="templates__title">Chọn mẫu bạn yêu thích</h2>
                 <p class="templates__subtitle">
                     Các mẫu được thiết kế sẵn, phù hợp cho nhiều mục đích sử dụng khác nhau

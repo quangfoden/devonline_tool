@@ -1,11 +1,11 @@
 <template>
   <TopBar />
-  <HeroSectione id="home" />
-  <AboutSection id="about" />
-  <TemPlateSection id="templates" />
-  <StatsSection />
-  <ReviewSection id="reviews"/>
-  <CtaSection/>
+  <HeroSectione id="home" class="gsap-fade-up" />
+  <AboutSection id="about" class="gsap-fade-left" />
+  <TemPlateSection id="templates" class="gsap-fade-right" />
+  <StatsSection class="gsap-zoom" />
+  <ReviewSection id="reviews" class="gsap-fade-up" />
+  <CtaSection class="gsap-zoom" />
   <FooterSection2 />
 </template>
 <script>
