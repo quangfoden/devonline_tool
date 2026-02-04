@@ -7,25 +7,25 @@
 
         <div class="cta__container">
             <div class="cta__content">
-                <h2 class="cta__title">Sẵn sàng tạo thiệp của bạn?</h2>
+                <h2 class="cta__title">
+                    Bắt đầu tạo thiệp theo cách của bạn
+                </h2>
+
                 <p class="cta__description">
-                    Hàng ngàn người đã và đang chia sẻ lời chúc, kỷ niệm
-                    và câu chuyện của mình thông qua những trang thiệp được thiết kế đẹp mắt.
+                    Tùy chỉnh nội dung, hình ảnh và phong cách chỉ trong vài bước đơn giản.
+                    Tạo một trang thiệp tinh tế để lưu giữ và chia sẻ những khoảnh khắc ý nghĩa.
                 </p>
 
                 <a href="#templates" class="cta__btn">
-                    Tạo thiệp ngay
+                    Khám phá mẫu thiệp
                     <svg class="cta__btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                 </a>
-
-                <p class="cta__note">
-                    Không cần thẻ ngân hàng • Có sẵn nhiều mẫu miễn phí
-                </p>
             </div>
         </div>
     </section>
+
 </template>
 <script>
 export default {

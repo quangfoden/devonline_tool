@@ -3,28 +3,58 @@
    ============================================ */
 
 :root {
-  --color-primary: #6b1f2d;          /* Hồng rượu vang – sang, lãng mạn */
-  --color-primary-light: #9f3a52;    /* Nhẹ hơn cho hover */
-  
-  --color-accent: #f4a7b9;           /* Hồng pastel – cảm xúc */
-  --color-accent-light: #ffd1dc;     /* Hồng phấn rất nhẹ */
+  /* =========================
+     Primary – Rose Champagne
+     ========================= */
+  --color-primary: #8b2f3c;
+  /* Hồng rượu champagne – sang & ấm */
+  --color-primary-light: #b24a5c;
+  /* Hover / nhấn */
 
-  --color-background: #fff7f9;       /* Nền hồng sữa */
-  --color-surface: #ffffff;          /* Card trắng */
-  
-  --color-text: #3a1a22;             /* Nâu hồng – đọc dễ */
-  --color-text-light: #8a5a65;       /* Text phụ */
-  
-  --color-border: #f3c6cf;           /* Viền nhẹ nhàng */
+  /* Accent – Soft Blush */
+  --color-accent: #f2b6c6;
+  /* Hồng phấn cảm xúc */
+  --color-accent-light: #fde4ea;
+  /* Rất nhẹ – nền phụ */
 
-  /* 🌈 Gradients */
-  --gradient-primary: linear-gradient(135deg, #6b1f2d 0%, #9f3a52 100%);
-  --gradient-accent: linear-gradient(135deg, #f4a7b9 0%, #ffd1dc 100%);
-  --gradient-hero: linear-gradient(180deg, #fff7f9 0%, #ffeef3 100%);
+  /* Background */
+  --color-background: #fff9fb;
+  /* Trắng hồng cực nhẹ */
+  --color-surface: #ffffff;
+  /* Card trắng */
 
-  /* Typography */
+  /* Text */
+  --color-text: #402025;
+  /* Nâu rượu – đọc dễ, ấm */
+  --color-text-light: #8f5a64;
+  /* Text phụ – dịu */
+
+  /* Border */
+  --color-border: #f1cfd6;
+  /* Viền mềm mại */
+
+  /* =========================
+     Gradients – romantic flow
+     ========================= */
+  --gradient-primary: linear-gradient(135deg,
+      #8b2f3c 0%,
+      #c35b6e 100%);
+
+  --gradient-accent: linear-gradient(135deg,
+      #f2b6c6 0%,
+      #fde4ea 100%);
+
+  --gradient-hero: linear-gradient(180deg,
+      #fff9fb 0%,
+      #fff0f4 100%);
+
+  /* =========================
+     Typography – Luxury & Love
+     ========================= */
   --font-display: 'Playfair Display', serif;
-  --font-body: 'DM Sans', sans-serif;
+  /* Title – sang */
+  --font-body: 'Inter', 'DM Sans', sans-serif;
+  /* Body – hiện đại */
 
   /* Spacing */
   --spacing-xs: 0.5rem;
@@ -105,7 +135,6 @@ ul {
 .navbar__container {
   max-width: var(--container-width);
   margin: 0 auto;
-  padding: 0 var(--spacing-lg);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -172,6 +201,11 @@ ul {
   color: var(--color-text);
   position: relative;
   padding: 8px 0;
+
+  &--active {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
 }
 
 .navbar__link::after {
@@ -666,6 +700,84 @@ ul {
 }
 
 /* ============================================
+   Stats Section
+   ============================================ */
+.stats {
+  padding: var(--spacing-3xl) 0;
+  background: var(--gradient-hero);
+
+  &__container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+    text-align: center;
+  }
+
+  &__header {
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  &__subtitle {
+    font-size: 1rem;
+    color: var(--color-text-light);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-lg);
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__item {
+    background: var(--color-surface);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl) var(--spacing-md);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base),
+      box-shadow var(--transition-base);
+
+    &:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+  }
+
+  &__number {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    font-weight: 700;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  &__label {
+    font-size: 0.95rem;
+    color: var(--color-text);
+  }
+}
+
+
+/* ============================================
    About Section
    ============================================ */
 
@@ -1037,7 +1149,7 @@ ul {
     gap: var(--spacing-sm);
     padding: 0;
   }
-  
+
   .footer__link {
     font-size: 0.95rem;
     color: rgba(255, 255, 255, 0.8);

@@ -17,10 +17,10 @@
                     <a href="#home" class="navbar__link" @click="closeMobileMenu">Home</a>
                 </li>
                 <li class="navbar__item">
-                    <a href="#templates" class="navbar__link" @click="closeMobileMenu">Tất cả mẫu</a>
+                    <a href="#about" class="navbar__link" @click="closeMobileMenu">Cách hoạt động</a>
                 </li>
                 <li class="navbar__item">
-                    <a href="#about" class="navbar__link" @click="closeMobileMenu">Về chúng tôi</a>
+                    <a href="#templates" class="navbar__link" @click="closeMobileMenu">Tất cả mẫu</a>
                 </li>
                 <li class="navbar__item">
                     <a href="#reviews" class="navbar__link" @click="closeMobileMenu">Reviews</a>

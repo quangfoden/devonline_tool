@@ -4,7 +4,7 @@
             <div class="about__header">
                 <h2 class="about__title">Cách hoạt động</h2>
                 <p class="about__subtitle">
-                    Chỉ với 4 bước đơn giản để tạo trang cá nhân của bạn
+                    Chỉ với 4 bước đơn giản để tạo mẫu thiệp hoàn hảo cho mọi dịp đặc biệt
                 </p>
             </div>
 

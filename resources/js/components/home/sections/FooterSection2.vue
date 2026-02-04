@@ -4,7 +4,7 @@
             <div class="footer__top">
                 <div class="footer__brand">
                     <a href="#home" class="footer__logo">
-                        <span class="footer__logo-text">Page</span><span class="footer__logo-accent">Craft</span>
+                        <span class="footer__logo-text">Devonline</span><span class="footer__logo-accent">Shop</span>
                     </a>
                     <p class="footer__tagline">
                         Tạo thiệp và trang cá nhân đẹp mắt chỉ trong vài phút
