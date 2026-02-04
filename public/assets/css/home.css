@@ -78,6 +78,9 @@ a {
   color: inherit;
   transition: var(--transition-base);
 }
+a:hover {
+  color: var(--color-primary);
+}
 
 button {
   font-family: inherit;
@@ -303,6 +306,11 @@ ul {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.hero__title-line {
+  color: var(--color-text-light);
+  font-weight: 700;
 }
 
 .hero__description {
@@ -879,7 +887,7 @@ ul {
 /* Review Card */
 .review-card {
   background: var(--color-background);
-  padding: var(--spacing-xl);
+  padding: var(--spacing-md);
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--color-border);
   transition: all var(--transition-base);

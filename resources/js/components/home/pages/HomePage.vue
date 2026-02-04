@@ -2,11 +2,11 @@
   <TopBar />
   <HeroSectione id="home" class="gsap-fade-up" />
   <AboutSection id="about" class="gsap-fade-left" />
-  <TemPlateSection id="templates" class="gsap-fade-right" />
+  <TemPlateSection id="templates"/>
   <StatsSection class="gsap-zoom" />
   <ReviewSection id="reviews" class="gsap-fade-up" />
-  <CtaSection class="gsap-zoom" />
-  <FooterSection2 />
+  <CtaSection />
+  <FooterSection2/>
 </template>
 <script>
 import TopBar from "@components/home/partials/TopBar.vue";

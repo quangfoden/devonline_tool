@@ -17,27 +17,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $adminRole = Role::create([
-            'name' => 'ADMIN',
-            'guard_name' => 'web',
-            'status' => 1
+        $this->call([
+            PermissionSeeder::class,
+            RoleSeeder::class,
+            TestDataSeeder::class,
+            SettingsTableSeeder::class,
         ]);
-
-        Role::create([
-            'name' => 'USER',
-            'guard_name' => 'web',
-            'status' => 1
-        ]);
-
-        $admin = User::create([
-            'name' => "Nguyễn Văn Quang",
-            'email' => "admin@gmail.com",
-            'password' => Hash::make('Devonline@info0'),
-        ]);
-        $admin->assignRole('ADMIN');
-
-        // Gán tất cả các quyền cho vai trò ADMIN
-        $permissions = Permission::all();
-        $adminRole->syncPermissions($permissions);
     }
 }

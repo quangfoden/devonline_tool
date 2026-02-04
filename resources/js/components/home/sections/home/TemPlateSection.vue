@@ -9,7 +9,7 @@
             </div>
 
             <div class="templates__grid">
-                <div v-for="template in templates" :key="template.id" class="template-card">
+                <div v-for="template in templates" :key="template.id" class="template-card gsap-fade-up">
                     <div class="template-card__image">
                         <div class="template-card__thumbnail" :style="{ background: template.gradient }">
                             <div class="template-card__preview-icon">

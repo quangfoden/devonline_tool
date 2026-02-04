@@ -5,7 +5,7 @@
             <div class="cta__pattern"></div>
         </div>
 
-        <div class="cta__container">
+        <div class="cta__container gsap-zoom">
             <div class="cta__content">
                 <h2 class="cta__title">
                     Bắt đầu tạo thiệp theo cách của bạn

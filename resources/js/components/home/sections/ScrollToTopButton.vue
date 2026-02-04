@@ -115,4 +115,13 @@ export default {
   opacity: 0;
   transform: translateY(10px) scale(0.9);
 }
+
+@media (max-width: 768px) {
+  .scroll-to-top {
+    width: 40px;
+    height: 40px;
+    bottom: 20px;
+    right: 20px;
+  }
+}
 </style>
