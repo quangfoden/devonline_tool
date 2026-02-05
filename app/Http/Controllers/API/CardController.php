@@ -43,7 +43,7 @@ class CardController extends Controller
             'session_id' => $sessionId ?? null, // Lưu session nếu là khách
             'uuid' => Str::uuid(),
             'status' => 'draft',
-            'ip' => $request->ip(),    
+            'ip' => $request->ip(),
             'data' => [],
         ]);
 
@@ -61,7 +61,7 @@ class CardController extends Controller
         return response()->json([
             'card' => [
                 'id' => $card->id,
-                'data' => $card->data_json ?? [],
+                'data' => $card->data ?? [],
                 'status' => $card->status,
             ],
             'template' => [
@@ -70,6 +70,57 @@ class CardController extends Controller
                 'schema' => $card->template->schema,
                 'view' => $card->template->view,
             ]
+        ]);
+    }
+
+    public function autosave(Request $request, $uuid)
+    {
+        $card = Card::where('uuid', $uuid)
+            ->where('status', 'draft')
+            ->firstOrFail();
+
+        $data = $request->input('data', []);
+
+        // merge data cũ + mới
+        $card->data = array_merge(
+            $card->data ?? [],
+            $data
+        );
+
+        $card->save();
+
+        return response()->json([
+            'status' => 'saved',
+            'updated_at' => $card->updated_at,
+        ]);
+    }
+
+    public function uploadImage(Request $request, $uuid)
+    {
+        $card = Card::where('uuid', $uuid)
+            ->where('status', 'draft')
+            ->firstOrFail();
+
+        $request->validate([
+            'image' => 'required|image|max:4096', // 4MB
+        ]);
+
+        $path = $request->file('image')->store(
+            "cards/{$card->uuid}",
+            'public'
+        );
+
+        // LƯU PATH VÀO DATA
+        $data = $card->data ?? [];
+        $data['sender_image'] = $path;
+
+        $card->update([
+            'data' => $data
+        ]);
+
+        return response()->json([
+            'path' => $path,
+            'url' => asset('storage/' . $path),
         ]);
     }
 

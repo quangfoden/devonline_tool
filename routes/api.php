@@ -126,12 +126,16 @@ Route::post('/edit_image', [ImageUploadController::class, 'editImage']);
 
 
 Route::get('templates', [TemplateController::class, 'index']);
-Route::get('template/{slug}', [TemplateController::class,'show']);
+Route::get('template/{slug}', [TemplateController::class, 'show']);
 
 Route::get('template/{slug}/create', [TemplateController::class, 'create']);
 
 Route::get('/cards/{id}', [CardController::class, 'show']);
 Route::post('cards/draft', [CardController::class, 'createDraft']);
+Route::post('/cards/{uuid}/autosave', [CardController::class, 'autosave']);
+Route::post('/cards/{uuid}/upload-image', [CardController::class, 'uploadImage']);
+
+
 
 
 
