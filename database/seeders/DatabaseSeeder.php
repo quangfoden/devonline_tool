@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             TestDataSeeder::class,
             SettingsTableSeeder::class,
+            TemplateSeeder::class,
         ]);
     }
 }

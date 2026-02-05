@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\Template;
+use Illuminate\Http\Request;
+
+class TemplateController extends Controller
+{
+    public function index()
+    {
+        return Template::select('id', 'name', 'slug', 'description', 'thumbnail')->get();
+    }
+
+    public function show($slug)
+    {
+        $template = Template::where('slug', $slug)->firstOrFail();
+
+        return response()->json([
+            'template' => [
+                'id' => $template->id,
+                'name' => $template->name,
+                'slug' => $template->slug,
+                'description' => $template->description,
+                'view' => $template->view,
+                'schema' => $template->schema,
+            ],
+            'data' => $template->preview_data
+        ]);
+    }
+
+    public function create($slug)
+    {
+        $template = Template::where('slug', $slug)->firstOrFail();
+
+        return response()->json([
+            'template' => $template,
+            'preview_data' => $template->preview_data
+        ]);
+    }
+
+}

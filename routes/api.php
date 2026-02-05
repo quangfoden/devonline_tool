@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\CardController;
+use App\Http\Controllers\Api\TemplateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
@@ -120,3 +122,14 @@ Route::post('post/like/{id}', [PostController::class, 'likePost']);
 
 Route::post('/upload_image', [ImageUploadController::class, 'upload']);
 Route::post('/edit_image', [ImageUploadController::class, 'editImage']);
+
+
+
+Route::get('templates', [TemplateController::class, 'index']);
+Route::get('template/{slug}', [TemplateController::class,'show']);
+
+Route::get('template/{slug}/create', [TemplateController::class, 'create']);
+Route::post('cards', [CardController::class, 'store']);
+
+
+

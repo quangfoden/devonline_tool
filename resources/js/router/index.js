@@ -33,7 +33,19 @@ export const routes = [
                 path: '',
                 name: 'Home Page',
                 component: HomePage
-            }
+            },
+            {
+                path: '/demo/:slug',
+                name: 'Template Demo',
+                component: TemplateDemo
+            },
+            {
+                path: '/create/:slug',
+                name: 'Create Template',
+                component: CreateCard
+            },
+
+
         ]
     },
 
@@ -508,6 +520,8 @@ import HomeParent from "../components/home/HomeParent.vue";
 import LandingPageParent from "../components/landing/LandingPageParent.vue";
 import LovePage from "../components/landing/pages/LovePage.vue";
 import HomePage from "../components/home/pages/HomePage.vue";
+import TemplateDemo from "../components/templates/TemplateDemo.vue";
+import CreateCard from "../components/templates/create/CreateCard.vue";
 import TermsCondsPage from "../components/home/pages/TermsCondsPage.vue";
 import ProductsPage from "../components/home/pages/ProductsPage.vue";
 import AboutPage from "../components/home/pages/AboutPage.vue";
