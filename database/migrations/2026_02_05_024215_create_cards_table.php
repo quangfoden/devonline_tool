@@ -14,13 +14,42 @@ class CreateCardsTable extends Migration
     public function up()
     {
         Schema::create('cards', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignId('template_id')->constrained();
-             $table->string('uuid')->unique();
+            $table->id();
+
+            // liên kết template
+            $table->foreignId('template_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            // liên kết user
+            $table->foreignId('user_id')
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
+
+            // link public
+            $table->uuid('uuid')->unique();
+
+            // dữ liệu người dùng nhập (title, message, images, music…)
             $table->json('data');
-            $table->string('status')->default('draft');
+
+            // link công khai
+            $table->string('public_url')->nullable();
+
+            // trạng thái vòng đời
+            $table->enum('status', [
+                'draft',     // đang chỉnh
+                'paid',      // đã thanh toán
+                'published', // public
+                'disabled'   // bị khóa
+            ])->default('draft');
+
+            // optional: IP, device (sau này chống spam)
+            $table->string('ip')->nullable();
+
             $table->timestamps();
         });
+
     }
 
     /**

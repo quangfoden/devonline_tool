@@ -13,7 +13,8 @@
             <div v-else class="templates__grid">
                 <div v-for="template in templates" :key="template.id" class="template-card gsap-fade-up">
                     <div class="template-card__image">
-                        <div v-if="!template.thumbnail" class="template-card__thumbnail" :style="{ background: template.gradient }">
+                        <div v-if="!template.thumbnail" class="template-card__thumbnail"
+                            :style="{ background: template.gradient }">
                             <div class="template-card__preview-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -45,7 +46,7 @@
                             <button class="template-card__btn template-card__btn--preview" @click="preview(template)">
                                 Xem trước
                             </button>
-                            <button class="template-card__btn template-card__btn--choose" @click="choose(template)">
+                            <button class="template-card__btn template-card__btn--choose" @click="choose(template.id)">
                                 Chọn mẫu
                             </button>
                         </div>
@@ -60,8 +61,14 @@ export default {
     data() {
         return {
             templates: [],
-            loading: true
+            loading: true,
+            loadingSpam: false
         };
+    },
+    computed: {
+        isProcessing() {
+            return this.$store.state.isProcessing;
+        }
     },
     mounted() {
         this.fetchTemplates();
@@ -96,8 +103,22 @@ export default {
         preview(template) {
             this.$router.push(`/demo/${template.slug}`)
         },
-        choose(template) {
-            this.$router.push(`/create/${template.slug}`)
+        async choose(templateId) {
+            if (this.loadingSpam || this.isProcessing) return;
+            this.loadingSpam = true;
+            try {
+                const draftId = await this.$store.dispatch('createCardDraft', templateId);
+
+                if (draftId) {
+                    this.$router.push(`/create/${draftId}`);
+                }
+            } catch (error) {
+                console.error("Lỗi khi tạo draft:", error);
+                alert("Có lỗi xảy ra, vui lòng thử lại sau.");
+            }
+            finally {
+                this.loadingSpam = false;
+            }
         }
     }
 }

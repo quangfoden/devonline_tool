@@ -22,4 +22,10 @@ class Template extends Model
         'preview_data' => 'array', // Hoặc 'json'
         'schema' => 'array',
     ];
+
+
+    public function cards()
+    {
+        return $this->hasMany(Card::class);
+    }
 }

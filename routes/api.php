@@ -129,7 +129,9 @@ Route::get('templates', [TemplateController::class, 'index']);
 Route::get('template/{slug}', [TemplateController::class,'show']);
 
 Route::get('template/{slug}/create', [TemplateController::class, 'create']);
-Route::post('cards', [CardController::class, 'store']);
+
+Route::get('/cards/{id}', [CardController::class, 'show']);
+Route::post('cards/draft', [CardController::class, 'createDraft']);
 
 
 

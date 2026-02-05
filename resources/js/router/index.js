@@ -40,7 +40,7 @@ export const routes = [
                 component: TemplateDemo
             },
             {
-                path: '/create/:slug',
+                path: '/create/:id',
                 name: 'Create Template',
                 component: CreateCard
             },
@@ -520,8 +520,8 @@ import HomeParent from "../components/home/HomeParent.vue";
 import LandingPageParent from "../components/landing/LandingPageParent.vue";
 import LovePage from "../components/landing/pages/LovePage.vue";
 import HomePage from "../components/home/pages/HomePage.vue";
-import TemplateDemo from "../components/templates/TemplateDemo.vue";
-import CreateCard from "../components/templates/create/CreateCard.vue";
+import TemplateDemo from "../components/templates/preview/TemplateDemo.vue";
+import CreateCard from "../components/templates/create/[id].vue";
 import TermsCondsPage from "../components/home/pages/TermsCondsPage.vue";
 import ProductsPage from "../components/home/pages/ProductsPage.vue";
 import AboutPage from "../components/home/pages/AboutPage.vue";
