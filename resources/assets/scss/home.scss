@@ -113,6 +113,71 @@ ul {
   margin: 0 !important;
 }
 
+.demo {
+  position: relative;
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: flex-end;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 10;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+      gap: 8px;
+      top: 12px;
+      left: 12px;
+    }
+
+    @media (max-width: 480px) {
+      gap: 6px;
+      top: 8px;
+      left: 8px;
+      width: calc(100% - 16px);
+    }
+
+    .btn {
+      padding: 8px 12px;
+      background: var(--gradient-accent);
+      color: white;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all var(--transition-base);
+      white-space: nowrap;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      @media (max-width: 768px) {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+      }
+
+      @media (max-width: 480px) {
+        padding: 6px 8px;
+        font-size: 0.8rem;
+        flex: 1;
+        min-width: 70px;
+      }
+    }
+  }
+}
+
+.preview-template{
+   width: 100%;
+  height: 100vh; /* Chiều cao toàn màn hình */
+  display: flex;
+  justify-content: center; /* Căn giữa ngang */
+  align-items: center; /* Căn giữa dọc */
+  background-color: #f0f0f0; /* Màu nền nhẹ để nổi bật khung preview */
+}
 
 /* ============================================
    Navbar

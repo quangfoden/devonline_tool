@@ -133,6 +133,7 @@ Route::get('template/{slug}/create', [TemplateController::class, 'create']);
 Route::get('/cards/{id}', [CardController::class, 'show']);
 Route::post('cards/draft', [CardController::class, 'createDraft']);
 Route::post('/cards/{uuid}/autosave', [CardController::class, 'autosave']);
+Route::post('/cards/{uuid}/upload-images', [CardController::class, 'uploadImages']);
 Route::post('/cards/{uuid}/upload-image', [CardController::class, 'uploadImage']);
 
 

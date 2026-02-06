@@ -5,8 +5,10 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Card;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 class CardController extends Controller
 {
     public function createDraft(Request $request)
@@ -95,33 +97,71 @@ class CardController extends Controller
         ]);
     }
 
-    public function uploadImage(Request $request, $uuid)
+    public function uploadImages(Request $request, $id)
     {
-        $card = Card::where('uuid', $uuid)
-            ->where('status', 'draft')
-            ->firstOrFail();
+        $card = Card::where('uuid', $id)->firstOrFail();
+
 
         $request->validate([
-            'image' => 'required|image|max:4096', // 4MB
+            'images.*' => 'required|image|max:4096' // 4MB / ảnh
         ]);
 
-        $path = $request->file('image')->store(
-            "cards/{$card->uuid}",
-            'public'
-        );
+        $paths = [];
 
-        // LƯU PATH VÀO DATA
+        foreach ($request->file('images') as $file) {
+
+            $name = uniqid() . '.webp';
+            $path = "cards/{$card->uuid}/images/{$name}";
+
+            $manager = new ImageManager(new Driver());
+
+            $image = $manager->read($file)
+                ->scale(width: 1280)
+                ->toWebp(80);
+
+            Storage::disk('public')->put($path, $image);
+
+            $paths[] = Storage::url($path);
+        }
+
+        // Merge data
         $data = $card->data ?? [];
-        $data['sender_image'] = $path;
+        $data['sender_gallery'] = array_merge($data['sender_gallery'] ?? [], $paths);
 
-        $card->update([
-            'data' => $data
-        ]);
+        $card->update(['data' => $data]);
 
         return response()->json([
-            'path' => $path,
-            'url' => asset('storage/' . $path),
+            'paths' => $paths
         ]);
     }
+
+    public function uploadImage(Request $request, $id)
+    {
+        $card = Card::where('uuid', $id)->firstOrFail();
+
+        $request->validate([
+            'image' => 'required|image|max:5120'
+        ]);
+
+        $manager = new ImageManager(new Driver());
+
+        $image = $manager->read($request->file('image'))
+            ->scaleDown(1200)
+            ->toWebp(80);
+
+        $path = "cards/{$card->uuid}/images/" . uniqid() . '.webp';
+
+        Storage::disk('public')->put($path, $image);
+
+        // lưu DB
+        $data = $card->data ?? [];
+        $data['sender_image'] = Storage::url($path);
+        $card->update(['data'=> $data]);
+
+        return response()->json([
+            'path' => Storage::url($path)
+        ]);
+    }
+
 
 }

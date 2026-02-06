@@ -3,7 +3,6 @@
     <component
       v-if="createComponent"
       :is="createComponent"
-      :schema="schema"
       v-model="formData"
     />
 
@@ -32,7 +31,7 @@ export default {
 
     const viewPath = res.data.template.view
 
-    const module = await import(`@components/templates/create/${viewPath}.vue`)
+    const module = await import(`@components/templates/create/${viewPath}/index.vue`)
     this.createComponent = module.default
   }
 }
