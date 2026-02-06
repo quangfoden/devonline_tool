@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\CardController;
+use App\Http\Controllers\API\CardController;
 use App\Http\Controllers\API\TemplateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
