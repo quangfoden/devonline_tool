@@ -44,8 +44,6 @@ export const routes = [
                 name: 'Create Template',
                 component: CreateCard
             },
-
-
         ]
     },
 

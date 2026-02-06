@@ -70,7 +70,7 @@ randomWords.forEach((word) => {
 });
 
 // Ảnh dùng cho hiệu ứng nổ (hiển thị hình ảnh ngẫu nhiên tại điểm nổ)
-const imageSources = [
+let imageSources = [
 	"./images/image1.jpeg",
 	"./images/image2.jpeg",
 	"./images/image3.jpeg",
@@ -544,7 +544,7 @@ store.subscribe(handleStateChange);
 // ===== LỜI CHÚC BAY TRÊN TRỜI (OVERLAY TRÊN CANVAS) =====
 
 // Mảng câu chúc màu hồng
-const WISH_MESSAGES = [
+let WISH_MESSAGES = [
 	"Năm mới an khang thịnh vượng",
 	"Năm mới bình an",
 	"Chúc mọi điều ước của em đều trở thành hiện thực ✨",

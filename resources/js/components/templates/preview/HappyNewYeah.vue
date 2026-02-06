@@ -13,41 +13,10 @@
 export default {
   name: "HappyNewYeahPreview",
   props: {
-    previewData: { type: Object, default: () => ({}) },
     src: { type: String, default: "/template/HappyNewYeah/index.html" },
     height: { type: String, default: "100vh" },
   },
-  mounted() {
-    this.postPreview = this.postPreview.bind(this);
-    const frame = this.$refs.frame;
-    if (frame) {
-      frame.addEventListener("load", () => {
-        this.postPreview();
-      });
-    }
-  },
-  watch: {
-    previewData: {
-      deep: true,
-      handler() {
-        this.postPreview();
-      },
-    },
-  },
-  methods: {
-    postPreview() {
-      const frame = this.$refs.frame;
-      if (!frame || !frame.contentWindow) return;
-      try {
-        frame.contentWindow.postMessage(
-          { type: "templatePreviewData", data: this.previewData },
-          "*"
-        );
-      } catch (err) {
-        // ignore
-      }
-    },
-  },
+ 
 };
 </script>
 

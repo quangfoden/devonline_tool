@@ -14,12 +14,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "HappyNewYeahPreview",
   props: {
-    previewData: {
-      type: Object,
-      "default": function _default() {
-        return {};
-      }
-    },
     src: {
       type: String,
       "default": "/template/HappyNewYeah/index.html"
@@ -27,38 +21,6 @@ __webpack_require__.r(__webpack_exports__);
     height: {
       type: String,
       "default": "100vh"
-    }
-  },
-  mounted: function mounted() {
-    var _this = this;
-    this.postPreview = this.postPreview.bind(this);
-    var frame = this.$refs.frame;
-    if (frame) {
-      frame.addEventListener("load", function () {
-        _this.postPreview();
-      });
-    }
-  },
-  watch: {
-    previewData: {
-      deep: true,
-      handler: function handler() {
-        this.postPreview();
-      }
-    }
-  },
-  methods: {
-    postPreview: function postPreview() {
-      var frame = this.$refs.frame;
-      if (!frame || !frame.contentWindow) return;
-      try {
-        frame.contentWindow.postMessage({
-          type: "templatePreviewData",
-          data: this.previewData
-        }, "*");
-      } catch (err) {
-        // ignore
-      }
     }
   }
 });
