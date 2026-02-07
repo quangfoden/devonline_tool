@@ -32,6 +32,7 @@ export default {
       renderData: null,
       loading: true,
       loadingSpam: false,
+      createComponent: null,
     };
   },
   computed: {
@@ -53,7 +54,7 @@ export default {
 
         const viewPath = res.data.template.view;
 
-        const module = await import(`@components/templates/preview/${viewPath}.vue`);
+        const module = await import(`@components/templates/preview/${viewPath}/preview.vue`);
         this.createComponent = module.default;
       } catch (e) {
         console.error("Không tìm thấy template", e);

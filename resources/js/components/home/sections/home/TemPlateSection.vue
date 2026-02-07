@@ -1,3 +1,4 @@
+// TemPlateSection.vue
 <template>
     <section class="templates">
         <div class="templates__container">
