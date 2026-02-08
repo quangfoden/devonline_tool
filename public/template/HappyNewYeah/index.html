@@ -8,9 +8,9 @@
 	<meta name="mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="theme-color" content="#000000" />
-	<link rel="shortcut icon" type="image/png" href="./images/favicon.png" />
-	<link rel="icon" type="image/png" href="./images/favicon.png" />
-	<link rel="apple-touch-icon-precomposed" href="./images/favicon.png" />
+	<link rel="shortcut icon" type="image/png" href="/template/HappyNewYeah//images/favicon.png" />
+	<link rel="icon" type="image/png" href="/template/HappyNewYeah//images/favicon.png" />
+	<link rel="apple-touch-icon-precomposed" href="/template/HappyNewYeah//images/favicon.png" />
 	<!-- Thư viện CSS Clip Path Helper -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/clippy.js/1.0.0/clippy.min.css" />
 	<style>
@@ -253,12 +253,12 @@
 	</style>
 	<meta name="msapplication-TileColor" content="#000000" />
 	<meta name="msapplication-TileImage" content="./images/favicon.png" />
-	<link href="./fonts/css.css" rel="stylesheet" />
+	<link href="/template/HappyNewYeah//fonts/css.css" rel="stylesheet" />
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 	<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap"
 		rel="stylesheet" />
-	<link rel="stylesheet" href="./css/style.css" />
+	<link rel="stylesheet" href="/template/HappyNewYeah//css/style.css" />
 </head>
 <style>
 	/* Khu vực demo ảnh dùng clip-path (tròn + trái tim) */
@@ -562,7 +562,71 @@
 					</svg>
 				</div>
 			</div>
-		
+			<div class="menu hide">
+				<div class="menu__inner-wrap">
+					<div class="btn btn--bright close-menu-btn">
+						<svg fill="white" width="24" height="24">
+							<use href="#icon-close" xlink:href="#icon-close"></use>
+						</svg>
+					</div>
+					<div class="menu__header">Cài đặt</div>
+					<div class="menu__subheader">Để biết thêm thông tin hãy nhấp vào bất kỳ nhãn nào</div>
+					<form>
+						<div class="form-option form-option--select">
+							<label class="shell-type-label"> Loại pháo hoa </label>
+							<select class="shell-type"></select>
+						</div>
+						<div class="form-option form-option--select">
+							<label class="shell-size-label"> Kích thước pháo hoa </label>
+							<select class="shell-size"></select>
+						</div>
+						<div class="form-option form-option--select">
+							<label class="quality-ui-label"> Chất lượng hiển thị </label>
+							<select class="quality-ui"></select>
+						</div>
+						<div class="form-option form-option--select">
+							<label class="sky-lighting-label"> Độ sáng bầu trời </label>
+							<select class="sky-lighting"></select>
+						</div>
+						<div class="form-option form-option--select">
+							<label class="scaleFactor-label"> Thu phóng </label>
+							<select class="scaleFactor"></select>
+						</div>
+						<div class="form-option form-option--checkbox">
+							<label class="word-shell-label"> Pháo hoa chữ </label>
+							<input class="word-shell" type="checkbox" />
+						</div>
+						<div class="form-option form-option--checkbox">
+							<label class="auto-launch-label"> Tự động bắn pháo </label>
+							<input class="auto-launch" type="checkbox" />
+						</div>
+						<div class="form-option form-option--checkbox form-option--finale-mode">
+							<label class="finale-mode-label"> Bắn nhiều pháo hoa cùng lúc </label>
+							<input class="finale-mode" type="checkbox" />
+						</div>
+						<div class="form-option form-option--checkbox">
+							<label class="hide-controls-label"> Ẩn nút điều khiển </label>
+							<input class="hide-controls" type="checkbox" />
+						</div>
+						<div class="form-option form-option--checkbox form-option--fullscreen">
+							<label class="fullscreen-label"> Toàn màn hình </label>
+							<input class="fullscreen" type="checkbox" />
+						</div>
+						<div class="form-option form-option--checkbox">
+							<label class="long-exposure-label"> Giữ vệt sáng pháo hoa </label>
+							<input class="long-exposure" type="checkbox" />
+						</div>
+					</form>
+					<div class="credits">
+						<p class="copyright">
+							<script>
+								var mydate = new Date();
+								document.writeln("Copyright&nbsp;&copy;&nbsp;2021 - " + mydate.getFullYear() + '&nbsp;<a target="_blank" href="https://www.nianbroken.top/">碎念_Nian</a><br />All&nbsp;Rights&nbsp;Reserved');
+							</script>
+						</p>
+					</div>
+				</div>
+			</div>
 		</div>
 		<div class="help-modal">
 			<div class="help-modal__overlay"></div>
@@ -574,28 +638,22 @@
 		</div>
 	</div>
 
-	<!-- partial -->
-	<script src="./js/fscreen.js"></script>
-	<script src="./js/Stage.js"></script>
-	<script src="./js/MyMath.js"></script>
-	<script src="./js/script.js"></script>
+	<script src="/template/HappyNewYeah/js/demo-data.js"></script>
+
 	<script>
-		// Allow demos to send preview data via postMessage from a parent iframe.
-		window.addEventListener("message", (e) => {
-			if (e.data?.type !== "templatePreviewData") return;
-
-			const { messages, images } = e.data.data || {};
-
-			if (Array.isArray(messages) && messages.length) {
-				WISH_MESSAGES = messages;
-			}
-
-			if (Array.isArray(images) && images.length) {
-				imageSources = images;
-			}
-		});
-
+		window.CARD_DATA = {{DATA}};
+		
+		if (!window.CARD_DATA) {
+			window.CARD_DATA = {};
+		}
+		
 	</script>
+	<!-- partial -->
+	<script src="/template/HappyNewYeah/js/fscreen.js"></script>
+	<script src="/template/HappyNewYeah/js/Stage.js"></script>
+	<script src="/template/HappyNewYeah/js/MyMath.js"></script>
+	<script src="/template/HappyNewYeah/js/script.js"></script>
+
 </body>
 
 </html>

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class CardController extends Controller
 {
     public function createDraft(Request $request)
@@ -60,20 +61,35 @@ class CardController extends Controller
             ->where('uuid', $id)
             ->firstOrFail();
 
+        $template = $card->template;
+
         return response()->json([
-            'card' => [
-                'id' => $card->id,
-                'data' => $card->data ?? [],
-                'status' => $card->status,
-            ],
             'template' => [
-                'id' => $card->template->id,
-                'slug' => $card->template->slug,
-                'schema' => $card->template->schema,
-                'view' => $card->template->view,
-            ]
+                'id' => $template->id,
+                'name' => $template->name,
+                'view' => $template->view,
+            ],
+            'schema' => $template->schema,
+            'data' => $card->data,
         ]);
     }
+
+    public function saveCard(Request $request, $uuid)
+    {
+        // 1. tìm card theo uuid
+        $card = Card::where('uuid', $uuid)->firstOrFail();
+
+        // 2. lưu toàn bộ data user nhập (JSON)
+        $card->update([
+            'data' => $request->all(),
+        ]);
+
+        // 3. trả về OK
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
 
     public function autosave(Request $request, $uuid)
     {
@@ -94,6 +110,31 @@ class CardController extends Controller
         return response()->json([
             'status' => 'saved',
             'updated_at' => $card->updated_at,
+        ]);
+    }
+
+    public function publish($uuid)
+    {
+        $card = Card::where('uuid', $uuid)->firstOrFail();
+
+        // Không publish lại
+        if ($card->status === 'published') {
+            return response()->json([
+                'public_url' => $card->public_url,
+            ]);
+        }
+
+        // Sinh public url
+        $publicUrl = url('/c/' . $card->uuid);
+
+        $card->update([
+            'status' => 'published',
+            'public_url' => $publicUrl,
+        ]);
+
+        return response()->json([
+            'public_url' => $publicUrl,
+            'qr_url' => url('/api/cards/' . $card->uuid . '/qr'),
         ]);
     }
 
@@ -156,12 +197,21 @@ class CardController extends Controller
         // lưu DB
         $data = $card->data ?? [];
         $data['sender_image'] = Storage::url($path);
-        $card->update(['data'=> $data]);
+        $card->update(['data' => $data]);
 
         return response()->json([
             'path' => Storage::url($path)
         ]);
     }
 
+
+    public function qr($uuid)
+    {
+        $card = Card::where('uuid', $uuid)->firstOrFail();
+
+        return response(
+            QrCode::format('png')->size(300)->generate($card->public_url)
+        )->header('Content-Type', 'image/png');
+    }
 
 }

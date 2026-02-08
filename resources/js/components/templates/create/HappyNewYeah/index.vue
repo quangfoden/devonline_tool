@@ -1,171 +1,135 @@
 <template>
-  <div class="template-create">
-    <!-- EDITOR -->
-    <div class="editor">
-      <h3>Chỉnh sửa nội dung</h3>
+  <div class="card-form">
 
-      <!-- Messages -->
-      <div v-if="schemaMap.messages">
-        <h4>{{ schemaMap.messages.label }}</h4>
+    <!-- WISH MESSAGES -->
+    <h3>Lời chúc</h3>
 
-        <div v-for="(item, index) in localData.messages" :key="index" class="item">
-          <input v-model="item.text" placeholder="Nhập lời chúc" />
-          <button @click="removeMessage(index)">✕</button>
-        </div>
+    <div
+      v-for="(wish, index) in wishes"
+      :key="index"
+      class="wish-item"
+    >
+      <input
+        :value="wish"
+        @input="updateWish(index, $event.target.value)"
+        placeholder="Nhập lời chúc..."
+      />
+      <button @click="removeWish(index)">✕</button>
+    </div>
 
-        <button
-          v-if="localData.messages.length < schemaMap.messages.max"
-          @click="addMessage"
-        >
-          + Thêm lời chúc
-        </button>
+    <button @click="addWish">+ Thêm lời chúc</button>
+
+    <hr />
+
+    <!-- IMAGE UPLOAD -->
+    <h3>Ảnh hiệu ứng</h3>
+
+    <input type="file" multiple @change="uploadImages" />
+
+    <div class="image-preview">
+      <div
+        v-for="(img, index) in images"
+        :key="img"
+        class="image-item"
+      >
+        <img :src="img" />
+        <button @click="removeImage(index)">✕</button>
       </div>
     </div>
 
-    <!-- PREVIEW -->
-    <div class="preview">
-      <iframe
-        ref="frame"
-        :src="templateSrc"
-        sandbox="allow-same-origin allow-scripts"
-        @load="postPreview()"
-      ></iframe>
-    </div>
   </div>
 </template>
-
 <script>
 export default {
-  name: "HappyNewYeahCreate",
-
   props: {
-    modelValue: Object,
-    schema: Object,
-    template: Object,
+    modelValue: {
+      type: Object,
+      default: () => ({
+        WISH_MESSAGES: [],
+        imageSources: [],
+      }),
+    },
   },
 
   emits: ["update:modelValue"],
 
-  data() {
-    return {
-      localData: {
-        messages: [],
-        images: [],
-        music: null,
-      },
-    };
-  },
-
   computed: {
-    schemaMap() {
-      const map = {};
-      this.schema.fields.forEach((f) => (map[f.key] = f));
-      return map;
+    wishes() {
+      return this.modelValue.WISH_MESSAGES || [];
     },
-
-    templateSrc() {
-      return `/template/${this.template.view}/index.html`;
-    },
-  },
-
-  mounted() {
-    // init data từ base
-    this.localData = JSON.parse(JSON.stringify(this.modelValue || {}));
-
-    this.$refs.frame.addEventListener("load", () => {
-      this.postPreview();
-    });
-  },
-
-  watch: {
-    localData: {
-      deep: true,
-      handler() {
-        this.postPreview();
-        this.$emit("update:modelValue", this.localData);
-      },
+    images() {
+      return this.modelValue.imageSources || [];
     },
   },
 
   methods: {
-    addMessage() {
-      if (!Array.isArray(this.localData.messages)) {
-        this.localData.messages = [];
-      }
-      this.localData.messages.push({
-        x: 50,
-        y: 50,
-        text: "",
+    emit(data) {
+      this.$emit("update:modelValue", {
+        ...this.modelValue,
+        ...data,
       });
     },
 
-    removeMessage(index) {
-      this.localData.messages.splice(index, 1);
+    // ===== WISHES =====
+    addWish() {
+      this.emit({
+        WISH_MESSAGES: [...this.wishes, ""],
+      });
     },
 
-    normalizeData() {
-      return {
-        messages: Array.isArray(this.localData.messages)
-          ? this.localData.messages.map((m) => m.text).filter(Boolean)
-          : null,
-
-        images: this.localData.images || null,
-      };
+    updateWish(index, value) {
+      const arr = [...this.wishes];
+      arr[index] = value;
+      this.emit({ WISH_MESSAGES: arr });
     },
 
-    postPreview() {
-      const frame = this.$refs.frame;
-      if (!frame?.contentWindow) return;
+    removeWish(index) {
+      const arr = [...this.wishes];
+      arr.splice(index, 1);
+      this.emit({ WISH_MESSAGES: arr });
+    },
 
-      const payload = JSON.parse(JSON.stringify(this.normalizeData()));
-      frame.contentWindow.postMessage(
-        {
-          type: "templatePreviewData",
-          data: payload,
-        },
-        "*"
-      );
+    // ===== IMAGES =====
+    async uploadImages(e) {
+      const files = [...e.target.files];
+
+      const uploaded = [];
+
+      for (const file of files) {
+        const form = new FormData();
+        form.append("file", file);
+
+        const res = await axios.post("/api/upload", form);
+        uploaded.push(res.data.url); // ví dụ /storage/xxx.jpg
+      }
+
+      this.emit({
+        imageSources: [...this.images, ...uploaded],
+      });
+    },
+
+    removeImage(index) {
+      const arr = [...this.images];
+      arr.splice(index, 1);
+      this.emit({ imageSources: arr });
     },
   },
 };
+
 </script>
 
 <style scoped>
-.template-create {
+.wish-item,
+.image-item {
   display: flex;
-  flex-wrap: wrap;
-  height: 100vh;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
-.editor {
-  width: 35%;
-  padding: 16px;
-  border-right: 1px solid #eee;
+.image-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
 }
 
-.preview {
-  width: 65%;
-  background: #f5f5f5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-iframe {
-  width: 90%;
-  height: 90%;
-  border: none;
-  border-radius: 8px;
-}
-
-@media (max-width: 768px) {
-  .template-create {
-    flex-direction: column;
-  }
-  .editor,
-  .preview {
-    width: 100%;
-    height: 50vh;
-  }
-}
 </style>

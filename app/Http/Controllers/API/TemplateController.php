@@ -10,7 +10,7 @@ class TemplateController extends Controller
 {
     public function index()
     {
-        return Template::select('id', 'name', 'slug', 'description', 'thumbnail')->get();
+        return Template::select('id', 'name', 'slug', 'description','preview_data','preview_url', 'thumbnail')->get();
     }
 
     public function show($slug)

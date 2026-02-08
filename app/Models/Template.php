@@ -13,6 +13,11 @@ class Template extends Model
     protected $fillable = [
         'name',
         'slug',
+        'description',
+        'view',
+        'thumbnail',
+        'preview_url',
+        'is_active',
         'schema',
         'preview_data',
     ];

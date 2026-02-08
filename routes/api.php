@@ -135,6 +135,10 @@ Route::post('cards/draft', [CardController::class, 'createDraft']);
 Route::post('/cards/{uuid}/autosave', [CardController::class, 'autosave']);
 Route::post('/cards/{uuid}/upload-images', [CardController::class, 'uploadImages']);
 Route::post('/cards/{uuid}/upload-image', [CardController::class, 'uploadImage']);
+Route::post('/cards/{uuid}/save', [CardController::class, 'saveCard']);
+Route::post('/cards/{uuid}/publish', [CardController::class, 'publish']);
+
+
 
 
 
