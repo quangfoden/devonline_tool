@@ -18,11 +18,17 @@ class Card extends Model
         'data',
         'public_url',
         'status',
-        'ip'
+        'is_paid',
+        'paid_at',
+        'ip',
+        'price',
     ];
 
     protected $casts = [
-        'data' => 'array'
+        'data' => 'array',
+        'price' => 'decimal:2',
+        'is_paid' => 'boolean',
+        'paid_at' => 'datetime',
     ];
 
     public function template()

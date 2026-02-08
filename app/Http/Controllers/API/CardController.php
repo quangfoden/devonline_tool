@@ -68,6 +68,15 @@ class CardController extends Controller
                 'id' => $template->id,
                 'name' => $template->name,
                 'view' => $template->view,
+                'price' => $template->price,
+            ],
+            'card' => [
+                'id' => $card->id,
+                'uuid' => $card->uuid,
+                'status' => $card->status,
+                'is_paid' => $card->is_paid,
+                'paid_at' => $card->paid_at,
+                'price' => $card->price,
             ],
             'schema' => $template->schema,
             'data' => $card->data,
@@ -167,7 +176,7 @@ class CardController extends Controller
 
         // Merge data
         $data = $card->data ?? [];
-        $data['sender_gallery'] = array_merge($data['sender_gallery'] ?? [], $paths);
+        $data['imageSources'] = array_merge($data['imageSources'] ?? [], $paths);
 
         $card->update(['data' => $data]);
 
@@ -204,6 +213,36 @@ class CardController extends Controller
         ]);
     }
 
+    public function removeImage(Request $request, $uuid)
+    {
+        $card = Card::where('uuid', $uuid)->firstOrFail();
+
+        $request->validate([
+            'url' => 'required|string',
+        ]);
+
+        $url = $request->url;
+
+        // convert /storage/... -> cards/uuid/images/xxx.webp
+        $path = str_replace('/storage/', '', parse_url($url, PHP_URL_PATH));
+
+        // xoá file
+        if (Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
+
+        // update data
+        $data = $card->data ?? [];
+        $data['imageSources'] = array_values(
+            array_filter($data['imageSources'] ?? [], fn($img) => $img !== $url)
+        );
+
+        $card->update(['data' => $data]);
+
+        return response()->json([
+            'success' => true,
+        ]);
+    }
 
     public function qr($uuid)
     {

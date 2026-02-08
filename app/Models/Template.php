@@ -13,6 +13,7 @@ class Template extends Model
     protected $fillable = [
         'name',
         'slug',
+        'price',
         'description',
         'view',
         'thumbnail',
@@ -26,6 +27,7 @@ class Template extends Model
     protected $casts = [
         'preview_data' => 'array', // Hoặc 'json'
         'schema' => 'array',
+        'price' => 'decimal:2',
     ];
 
 

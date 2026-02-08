@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\CardController;
+use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\TemplateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -135,8 +136,15 @@ Route::post('cards/draft', [CardController::class, 'createDraft']);
 Route::post('/cards/{uuid}/autosave', [CardController::class, 'autosave']);
 Route::post('/cards/{uuid}/upload-images', [CardController::class, 'uploadImages']);
 Route::post('/cards/{uuid}/upload-image', [CardController::class, 'uploadImage']);
+Route::post('/cards/{uuid}/remove-image', [CardController::class, 'removeImage']);
 Route::post('/cards/{uuid}/save', [CardController::class, 'saveCard']);
 Route::post('/cards/{uuid}/publish', [CardController::class, 'publish']);
+
+Route::post('/cards/{card}/payment', [PaymentController::class, 'createVNPay']);
+Route::get('/payment/vnpay/return', [PaymentController::class, 'vnpayReturn']);
+
+Route::post('/payments/payos/create', [PaymentController::class, 'createPayOs']);
+Route::post('/payments/payos/webhook', [PaymentController::class, 'handlePayOSWebhook']);
 
 
 

@@ -324,57 +324,6 @@ function _regeneratorRuntime() {
     }
   }, exports;
 }
-function _createForOfIteratorHelper(o, allowArrayLike) {
-  var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
-  if (!it) {
-    if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
-      if (it) o = it;
-      var i = 0;
-      var F = function F() {};
-      return {
-        s: F,
-        n: function n() {
-          if (i >= o.length) return {
-            done: true
-          };
-          return {
-            done: false,
-            value: o[i++]
-          };
-        },
-        e: function e(_e) {
-          throw _e;
-        },
-        f: F
-      };
-    }
-    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-  }
-  var normalCompletion = true,
-    didErr = false,
-    err;
-  return {
-    s: function s() {
-      it = it.call(o);
-    },
-    n: function n() {
-      var step = it.next();
-      normalCompletion = step.done;
-      return step;
-    },
-    e: function e(_e2) {
-      didErr = true;
-      err = _e2;
-    },
-    f: function f() {
-      try {
-        if (!normalCompletion && it["return"] != null) it["return"]();
-      } finally {
-        if (didErr) throw err;
-      }
-    }
-  };
-}
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
   try {
     var info = gen[key](arg);
@@ -528,60 +477,82 @@ function _toPrimitive(input, hint) {
     uploadImages: function uploadImages(e) {
       var _this = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var files, uploaded, _iterator, _step, file, form, res;
+        var files, form, res;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              files = _toConsumableArray(e.target.files);
-              uploaded = [];
-              _iterator = _createForOfIteratorHelper(files);
-              _context.prev = 3;
-              _iterator.s();
-            case 5:
-              if ((_step = _iterator.n()).done) {
-                _context.next = 15;
+              files = Array.from(e.target.files);
+              if (files.length) {
+                _context.next = 3;
                 break;
               }
-              file = _step.value;
+              return _context.abrupt("return");
+            case 3:
               form = new FormData();
-              form.append("file", file);
-              _context.next = 11;
-              return axios.post("/api/upload", form);
-            case 11:
-              res = _context.sent;
-              uploaded.push(res.data.url);
-            // ví dụ /storage/xxx.jpg
-            case 13:
-              _context.next = 5;
-              break;
-            case 15:
-              _context.next = 20;
-              break;
-            case 17:
-              _context.prev = 17;
-              _context.t0 = _context["catch"](3);
-              _iterator.e(_context.t0);
-            case 20:
-              _context.prev = 20;
-              _iterator.f();
-              return _context.finish(20);
-            case 23:
-              _this.emit({
-                imageSources: [].concat(_toConsumableArray(_this.images), uploaded)
+              files.forEach(function (file) {
+                form.append("images[]", file);
               });
-            case 24:
+              _context.prev = 5;
+              _context.next = 8;
+              return _this.axios.post("/api/cards/".concat(_this.$route.params.id, "/upload-images"), form, {
+                headers: {
+                  "Content-Type": "multipart/form-data"
+                }
+              });
+            case 8:
+              res = _context.sent;
+              _this.emit({
+                imageSources: [].concat(_toConsumableArray(_this.images), _toConsumableArray(res.data.paths))
+              });
+              _context.next = 15;
+              break;
+            case 12:
+              _context.prev = 12;
+              _context.t0 = _context["catch"](5);
+              console.error("Upload ảnh lỗi", _context.t0);
+            case 15:
+              e.target.value = "";
+            case 16:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[3, 17, 20, 23]]);
+        }, _callee, null, [[5, 12]]);
       }))();
     },
     removeImage: function removeImage(index) {
-      var arr = _toConsumableArray(this.images);
-      arr.splice(index, 1);
-      this.emit({
-        imageSources: arr
-      });
+      var _this2 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var imageUrl, arr;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              imageUrl = _this2.images[index];
+              arr = _toConsumableArray(_this2.images);
+              arr.splice(index, 1);
+              _this2.emit({
+                imageSources: arr
+              });
+              _context2.prev = 4;
+              _context2.next = 7;
+              return _this2.axios.post("/api/cards/".concat(_this2.$route.params.id, "/remove-image"), {
+                url: imageUrl
+              });
+            case 7:
+              _context2.next = 13;
+              break;
+            case 9:
+              _context2.prev = 9;
+              _context2.t0 = _context2["catch"](4);
+              console.error("Xoá ảnh lỗi", _context2.t0);
+              _this2.emit({
+                imageSources: _this2.images
+              });
+            case 13:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2, null, [[4, 9]]);
+      }))();
     }
   }
 });
@@ -624,7 +595,11 @@ var _hoisted_7 = {
   "class": "image-preview"
 };
 var _hoisted_8 = ["src"];
-var _hoisted_9 = ["onClick"];
+var _hoisted_9 = {
+  key: 0,
+  "class": "price-tag"
+};
+var _hoisted_10 = ["onClick"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" WISH MESSAGES "), _hoisted_2, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($options.wishes, function (wish, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
@@ -654,14 +629,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, null, 32 /* NEED_HYDRATION */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($options.images, function (img, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       key: img,
-      "class": "image-item"
+      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["image-item", {
+        paid: index > 0
+      }])
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
       src: img
-    }, null, 8 /* PROPS */, _hoisted_8), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    }, null, 8 /* PROPS */, _hoisted_8), index > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_9, "+10k")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       onClick: function onClick($event) {
         return $options.removeImage(index);
       }
-    }, "✕", 8 /* PROPS */, _hoisted_9)]);
+    }, "✕", 8 /* PROPS */, _hoisted_10)], 2 /* CLASS */);
   }), 128 /* KEYED_FRAGMENT */))])]);
 }
 
@@ -683,7 +660,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.wish-item[data-v-09e71410],\r\n.image-item[data-v-09e71410] {\r\n  display: flex;\r\n  gap: 8px;\r\n  margin-bottom: 8px;\n}\n.image-item img[data-v-09e71410] {\r\n  width: 80px;\r\n  height: 80px;\r\n  -o-object-fit: cover;\r\n     object-fit: cover;\n}\r\n\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.card-form[data-v-09e71410] {\r\n  background: #ffffff;\r\n  padding: 20px;\r\n  border-radius: 16px;\r\n  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);\r\n  max-width: 720px;\r\n  margin: 0 auto;\n}\nh3[data-v-09e71410] {\r\n  font-size: 15px;\r\n  font-weight: 600;\r\n  color: #0f172a;\r\n  margin-bottom: 12px;\n}\r\n\r\n/* ===== WISH ITEM ===== */\n.wish-item[data-v-09e71410] {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 8px;\r\n  margin-bottom: 10px;\n}\n.wish-item input[data-v-09e71410] {\r\n  flex: 1;\r\n  padding: 10px 12px;\r\n  border-radius: 10px;\r\n  border: 1px solid #e2e8f0;\r\n  font-size: 14px;\r\n  transition: all 0.2s ease;\n}\n.wish-item input[data-v-09e71410]:focus {\r\n  outline: none;\r\n  border-color: #6366f1;\r\n  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);\n}\n.wish-item button[data-v-09e71410] {\r\n  width: 34px;\r\n  height: 34px;\r\n  border-radius: 50%;\r\n  border: none;\r\n  background: #f1f5f9;\r\n  color: #475569;\r\n  cursor: pointer;\r\n  transition: all 0.2s ease;\n}\n.wish-item button[data-v-09e71410]:hover {\r\n  background: #fee2e2;\r\n  color: #dc2626;\n}\r\n\r\n/* add wish */\n.card-form > button[data-v-09e71410] {\r\n  margin-top: 6px;\r\n  padding: 10px 14px;\r\n  border-radius: 10px;\r\n  border: none;\r\n  background: #eef2ff;\r\n  color: #4f46e5;\r\n  font-weight: 500;\r\n  cursor: pointer;\r\n  transition: all 0.25s ease;\n}\n.card-form > button[data-v-09e71410]:hover {\r\n  background: #e0e7ff;\r\n  transform: translateY(-1px);\n}\nhr[data-v-09e71410] {\r\n  margin: 20px 0;\r\n  border: none;\r\n  border-top: 1px dashed #e5e7eb;\n}\r\n\r\n/* ===== IMAGE UPLOAD ===== */\ninput[type=\"file\"][data-v-09e71410] {\r\n  margin-bottom: 12px;\r\n  font-size: 13px;\n}\n.image-preview[data-v-09e71410] {\r\n  display: grid;\r\n  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));\r\n  gap: 12px;\n}\n.price-tag[data-v-09e71410] {\r\n  position: absolute;\r\n  bottom: 6px;\r\n  left: 6px;\r\n  background: rgba(79, 70, 229, 0.9);\r\n  color: #fff;\r\n  font-size: 11px;\r\n  font-weight: 600;\r\n  padding: 3px 8px;\r\n  border-radius: 999px;\r\n  pointer-events: none;\n}\n.image-item.paid[data-v-09e71410] {\r\n  outline: 2px solid #6366f1;\n}\n.image-item[data-v-09e71410] {\r\n  position: relative;\r\n  border-radius: 12px;\r\n  overflow: hidden;\r\n  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);\r\n  transition: all 0.25s ease;\n}\n.image-item[data-v-09e71410]:hover {\r\n  transform: translateY(-2px);\n}\n.image-item img[data-v-09e71410] {\r\n  width: 100%;\r\n  height: 90px;\r\n  -o-object-fit: cover;\r\n     object-fit: cover;\r\n  display: block;\n}\r\n\r\n/* remove image button */\n.image-item button[data-v-09e71410] {\r\n  position: absolute;\r\n  top: 6px;\r\n  right: 6px;\r\n  width: 26px;\r\n  height: 26px;\r\n  border-radius: 50%;\r\n  border: none;\r\n  background: rgba(0, 0, 0, 0.6);\r\n  color: #ffffff;\r\n  font-size: 14px;\r\n  cursor: pointer;\r\n  opacity: 0;\r\n  transition: all 0.2s ease;\n}\n.image-item:hover button[data-v-09e71410] {\r\n  opacity: 1;\n}\n.image-item button[data-v-09e71410]:hover {\r\n  background: #dc2626;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -732,7 +709,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _index_vue_vue_type_template_id_09e71410_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.vue?vue&type=template&id=09e71410&scoped=true */ "./resources/js/components/templates/create/HappyNewYeah/index.vue?vue&type=template&id=09e71410&scoped=true");
 /* harmony import */ var _index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./index.vue?vue&type=script&lang=js */ "./resources/js/components/templates/create/HappyNewYeah/index.vue?vue&type=script&lang=js");
 /* harmony import */ var _index_vue_vue_type_style_index_0_id_09e71410_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index.vue?vue&type=style&index=0&id=09e71410&scoped=true&lang=css */ "./resources/js/components/templates/create/HappyNewYeah/index.vue?vue&type=style&index=0&id=09e71410&scoped=true&lang=css");
-/* harmony import */ var E_Dev_devonline_tool_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_devonline_tool_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -740,7 +717,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,E_Dev_devonline_tool_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_index_vue_vue_type_template_id_09e71410_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-09e71410"],['__file',"resources/js/components/templates/create/HappyNewYeah/index.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_devonline_tool_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_index_vue_vue_type_template_id_09e71410_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-09e71410"],['__file',"resources/js/components/templates/create/HappyNewYeah/index.vue"]])
 /* hot reload */
 if (false) {}
 
