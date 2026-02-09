@@ -27,7 +27,7 @@ class AddIsPaidAndPaidAtToCardsTable extends Migration
     public function down()
     {
         Schema::table('cards', function (Blueprint $table) {
-           $table->dropColumn(' is_paid');
+           $table->dropColumn('is_paid');
            $table->dropColumn('paid_at');
         });
     }

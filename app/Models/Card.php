@@ -36,5 +36,14 @@ class Card extends Model
         return $this->belongsTo(Template::class);
     }
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function paidOrder()
+    {
+        return $this->hasOne(Order::class)->where('status', 'paid');
+    }
 
 }

@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// routes/web.php
+Route::get('/payment/payos/return', function () {
+    return view('payment.success');
+})->name('payos.return');
+
 Route::get('/c/{uuid}', [PublicCardController::class, 'show']);
 Route::get('{any}', function () {
     return view('layouts.app');

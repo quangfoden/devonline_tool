@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\API\CardController;
 use App\Http\Controllers\API\PaymentController;
+use App\Http\Controllers\API\PayOSController;
+use App\Http\Controllers\API\PayOSWebhookController;
 use App\Http\Controllers\API\TemplateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -143,10 +145,8 @@ Route::post('/cards/{uuid}/publish', [CardController::class, 'publish']);
 Route::post('/cards/{card}/payment', [PaymentController::class, 'createVNPay']);
 Route::get('/payment/vnpay/return', [PaymentController::class, 'vnpayReturn']);
 
-Route::post('/payments/payos/create', [PaymentController::class, 'createPayOs']);
-Route::post('/payments/payos/webhook', [PaymentController::class, 'handlePayOSWebhook']);
-
-
+Route::post('/payments/payos/create', [PayOSController::class, 'create']);
+Route::post('/payos/webhook', [PayOSWebhookController::class, 'handle']);
 
 
 

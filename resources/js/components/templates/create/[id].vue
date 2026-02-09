@@ -15,7 +15,7 @@
       💰 Giá: <strong>{{ formatVND(totalPrice) }}</strong>
     </p>
     <div class="btn-payment">
-      <button class="publish-btn" @click="payment()">Thanh toán Payos</button>
+      <button class="publish-btn" @click="payWithPayOS()">Thanh toán Payos</button>
       <button class="publish-btn2" @click="paymentVnp()">Thanh toán VNPAY</button>
     </div>
   </div>
@@ -66,7 +66,7 @@
 .autosave-status:has(:contains("Đang lưu")) {
   color: #0ea5e9;
 }
-.btn-payment{
+.btn-payment {
   position: fixed;
   right: 24px;
   bottom: 20px;
@@ -75,7 +75,8 @@
   align-items: center;
 }
 /* publish button */
-.publish-btn, .publish-btn2 {
+.publish-btn,
+.publish-btn2 {
   padding: 14px 28px;
   font-size: 15px;
   font-weight: 600;
@@ -209,16 +210,21 @@ export default {
         this.saving = false;
       }
     },
-    async payment() {
-      const res = await this.axios.post("/api/payments/payos/create", {
-        card_id: this.card.id,
-        amount: this.totalPrice,
-      });
+    async payWithPayOS() {
+      try {
+        const res = await this.axios.post("/api/payments/payos/create", {
+          card_id: this.$route.params.id,
+          amount: this.totalPrice,
+          description: "Thanh toán ảnh hiệu ứng",
+        });
 
-      window.location.href = res.data.checkout_url;
+        window.location.href = res.data.checkoutUrl;
+      } catch (e) {
+        alert("Không tạo được thanh toán");
+        console.error(e);
+      }
     },
     async paymentVnp() {
-      
       try {
         const res = await this.axios.post(`/api/cards/${this.draftId}/payment`);
         window.location.href = res.data.pay_url;
