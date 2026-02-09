@@ -10,8 +10,8 @@
       <a :href="publicUrl" target="_blank" class="btn primary"> 🔗 Mở card </a>
 
       <!-- QR Preview -->
-      <div class="qr-box">
-        <div v-if="qrLoading" class="qr-placeholder">Đang tạo mã...</div>
+      <div class="qr-box" :class="`style-${style}`">
+      
         <img
           :src="qrUrl"
           class="qr"
@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted , watch} from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
 import PaymentLoading from "@/components/templates/payment/PaymentLoading.vue";
@@ -63,14 +63,12 @@ const cardUuid = ref(null);
 /* ===== QR STYLE ===== */
 const style = ref("heart");
 
-const styles = ["heart", "classic", "pink", "mint", "dark"];
+const styles = ["classic", "heart", "pink"];
 
 const labels = {
-  heart: "❤️ Trái tim",
-  classic: "🔴 Cổ điển",
-  pink: "🎀 Hồng",
-  mint: "🌱 Mint",
-  dark: "🖤 Dark",
+  classic: "Mặc định",
+  heart: "Trái tim",
+  pink: "Hồng",
 };
 
 /* ===== QR URL ===== */
@@ -140,12 +138,48 @@ onUnmounted(() => {
 }
 
 .qr-box {
-  margin: 20px 0;
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin: 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* QR luôn nằm trên */
 .qr {
-  width: 220px;
-  max-width: 80%;
+  width: 180px;
+  height: 180px;
+  z-index: 2;
+  background: white;
+  padding: 8px;
+}
+
+/* ===== STYLE TRÁI TIM ===== */
+.style-heart::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #ef4444;
+  clip-path: path(
+    "M110 200
+     C110 200 10 130 10 70
+     C10 30 50 10 80 40
+     C110 10 150 30 150 70
+     C150 130 110 200 110 200 Z"
+  );
+  z-index: 1;
+}
+
+/* ===== STYLE HỒNG ===== */
+.style-pink::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #f472b6;
+  border-radius: 24px;
+  z-index: 1;
 }
 
 .qr-style {

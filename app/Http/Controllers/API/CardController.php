@@ -263,7 +263,7 @@ class CardController extends Controller
             ->where('is_paid', true)
             ->firstOrFail();
 
-        $style = $request->query('style', 'red');
+        $style = $request->query('style', 'heart');
 
         $png = $service->generate($card->public_url, $style);
 
