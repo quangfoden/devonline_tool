@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\CardController;
+use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\PayOSController;
 use App\Http\Controllers\API\PayOSWebhookController;
@@ -149,6 +150,8 @@ Route::post('/payments/payos/create', [PayOSController::class, 'create']);
 Route::post('/payos/webhook', [PayOSWebhookController::class, 'handle']);
 
 
+Route::get('/orders/{orderCode}/status', [OrderController::class, 'status']);
+Route::get('/cards/{uuid}/qr', [CardController::class, 'qr'])->name('cards.qr');
 
 
 

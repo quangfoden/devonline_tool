@@ -13,12 +13,17 @@ class PayOSController extends Controller
 {
     public function create(Request $request, PayOSService $payOS)
     {
-        $card = Card::where('uuid', $request->input('card_id'))->firstOrFail();
+        $card = Card::with('template')
+            ->where('uuid', $request->card_id)
+            ->firstOrFail();
 
-        $amount = $this->calculateImageAmount($card);
+        abort_if($card->is_paid, 400, 'Card đã được thanh toán');
+
+        $amount = $this->calculateAmount($card);
         abort_if($amount <= 0, 400, 'Không cần thanh toán');
 
-        $orderCode = random_int(100000000, 999999999);
+        $orderCode = (int) (now()->format('ymdHis') . random_int(10, 99));
+
         $order = Order::create([
             'card_id' => $card->id,
             'order_code' => $orderCode,
@@ -27,12 +32,11 @@ class PayOSController extends Controller
             'payment_method' => 'payos',
         ]);
 
-
         $payment = $payOS->createPayment([
-            'orderCode' => (int) $order->order_code,
+            'orderCode' => $order->order_code,
             'amount' => $amount,
-            'description' => 'Thanh toán thẻ #' . $card->id,
-            'returnUrl' => config('payos.return_url'),
+            'description' =>'Pay card #' . $card->id,
+            'returnUrl' => config('payos.return_url') . '?order=' . $order->order_code,
             'cancelUrl' => config('payos.return_url'),
         ]);
 
@@ -41,20 +45,13 @@ class PayOSController extends Controller
         ]);
     }
 
-
-
-    private function calculateImageAmount(Card $card): int
+    private function calculateAmount(Card $card): int
     {
-        // 1️⃣ Giá template
-        $templatePrice = (int) ($card->template->price ?? 0);
-
-        // 2️⃣ Giá ảnh phát sinh
+        $base = (int) ($card->template->price ?? 0);
         $images = $card->data['imageSources'] ?? [];
-        $extraImages = max(count($images) - 1, 0);
-        $imagePrice = $extraImages * 10000;
+        $extra = max(count($images) - 1, 0);
 
-        // 3️⃣ Tổng tiền
-        return $templatePrice + $imagePrice;
+        return $base + ($extra * 10000);
     }
 
 }

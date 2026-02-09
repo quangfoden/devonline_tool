@@ -16,7 +16,7 @@
     </p>
     <div class="btn-payment">
       <button class="publish-btn" @click="payWithPayOS()">Thanh toán Payos</button>
-      <button class="publish-btn2" @click="paymentVnp()">Thanh toán VNPAY</button>
+      <!-- <button class="publish-btn2" @click="paymentVnp()">Thanh toán VNPAY</button> -->
     </div>
   </div>
 </template>
@@ -214,8 +214,6 @@ export default {
       try {
         const res = await this.axios.post("/api/payments/payos/create", {
           card_id: this.$route.params.id,
-          amount: this.totalPrice,
-          description: "Thanh toán ảnh hiệu ứng",
         });
 
         window.location.href = res.data.checkoutUrl;

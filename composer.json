@@ -9,6 +9,8 @@
         "ext-ldap": "*",
         "ext-openssl": "*",
         "bensampo/laravel-enum": "4.2.0",
+        "chillerlan/php-qrcode": "^5.0",
+        "endroid/qr-code": "^6.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^3.11",
@@ -20,7 +22,6 @@
         "phpoffice/phpspreadsheet": "^1.28",
         "react/event-loop": "^1.4",
         "react/socket": "^1.13",
-        "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-permission": "^6.9",
         "wisembly/elephant.io": "^3.3",
         "yajra/laravel-datatables-oracle": "^9.0"

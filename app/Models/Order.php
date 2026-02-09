@@ -25,7 +25,7 @@ class Order extends Model
     protected $casts = [
         'amount' => 'integer',
         'payload' => 'array',
-        'order_code' => 'string',
+        'order_code' => 'integer',
     ];
 
     public function card()
@@ -52,10 +52,13 @@ class Order extends Model
             'payload' => $data,
         ]);
 
+        $this->card->publish();
+
         $this->card->update([
             'is_paid' => true,
             'paid_at' => now(),
         ]);
+
     }
 
     public function markFailed(string $reason = null, array $payload = [])

@@ -4,12 +4,22 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Card;
+use App\Services\HeartQrService;
+use Endroid\QrCode\QrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
+
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Logo\Logo;
+
 class CardController extends Controller
 {
     public function createDraft(Request $request)
@@ -244,13 +254,23 @@ class CardController extends Controller
         ]);
     }
 
-    public function qr($uuid)
-    {
-        $card = Card::where('uuid', $uuid)->firstOrFail();
 
-        return response(
-            QrCode::format('png')->size(300)->generate($card->public_url)
-        )->header('Content-Type', 'image/png');
+
+
+    public function qr($uuid, Request $request, HeartQrService $service)
+    {
+        $card = Card::where('uuid', $uuid)
+            ->where('is_paid', true)
+            ->firstOrFail();
+
+        $style = $request->query('style', 'red');
+
+        $png = $service->generate($card->public_url, $style);
+
+        return response($png, 200, [
+            'Content-Type' => 'image/png',
+            'Cache-Control' => 'public, max-age=86400',
+        ]);
     }
 
 }

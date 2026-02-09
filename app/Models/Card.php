@@ -46,4 +46,17 @@ class Card extends Model
         return $this->hasOne(Order::class)->where('status', 'paid');
     }
 
+    public function publish(): void
+    {
+        if ($this->status === 'published') {
+            return;
+        }
+
+        $this->update([
+            'status' => 'published',
+            'public_url' => url('/c/' . $this->uuid),
+        ]);
+    }
+
+
 }

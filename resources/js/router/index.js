@@ -44,8 +44,14 @@ export const routes = [
                 name: 'Create Template',
                 component: CreateCard
             },
+            {
+                path: '/payment/success',
+                name: 'Payment Success',
+                component: PaymentSuccess,
+            },
         ]
     },
+
 
     {
         path: '/p',
@@ -520,6 +526,7 @@ import LovePage from "../components/landing/pages/LovePage.vue";
 import HomePage from "../components/home/pages/HomePage.vue";
 import TemplateDemo from "../components/templates/preview/TemplateDemo.vue";
 import CreateCard from "../components/templates/create/[id].vue";
+import PaymentSuccess from "../components/templates/payment/PaymentSuccess.vue";
 import TermsCondsPage from "../components/home/pages/TermsCondsPage.vue";
 import ProductsPage from "../components/home/pages/ProductsPage.vue";
 import AboutPage from "../components/home/pages/AboutPage.vue";
