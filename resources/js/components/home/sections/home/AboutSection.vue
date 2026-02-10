@@ -1,5 +1,5 @@
 <template>
-    <section class="about">
+    <section class="about gsap-fade-up">
         <div class="about__container">
             <div class="about__header">
                 <h2 class="about__title">Cách hoạt động</h2>

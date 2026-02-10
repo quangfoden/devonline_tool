@@ -3,7 +3,7 @@
 
   <HeroSectione ref="home" data-section="home" />
   <AboutSection ref="about" data-section="about" />
-  <TemPlateSection ref="templates" data-section="templates" />
+  <TemPlateSection id="templates" ref="templates" data-section="templates" />
   <ReviewSection ref="reviews" data-section="reviews" />
 
   <CtaSection />

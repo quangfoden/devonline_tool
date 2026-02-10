@@ -43,9 +43,9 @@
   /* =========================
      Typography – Luxury & Love
      ========================= */
-  --font-display: "Playfair Display", serif;
+  --font-display: 'Playfair Display', serif;
   /* Title – sang */
-  --font-body: "Inter", "DM Sans", sans-serif;
+  --font-body: 'Inter', 'DM Sans', sans-serif;
   /* Body – hiện đại */
   /* Spacing */
   --spacing-xs: 0.5rem;
@@ -188,8 +188,7 @@ ul {
   right: 0;
   z-index: 1000;
   background: rgba(255, 255, 255, 0.95);
-  -webkit-backdrop-filter: blur(20px);
-          backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   box-shadow: var(--shadow-sm);
   padding: var(--spacing-sm) 0;
 }
@@ -670,8 +669,7 @@ ul {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.7);
-  -webkit-backdrop-filter: blur(4px);
-          backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;

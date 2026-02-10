@@ -6,18 +6,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="5lWlOU-WFeMjBAW2XEwXovpygOd6XJdH_zQpmsSYMkE" />
     <title>{{ $title ?? 'Tạo thiệp online miễn phí | DevOnline Shop' }}</title>
-    <meta name="description"
-        content="Tạo thiệp chúc mừng online miễn phí. Cá nhân hoá nội dung, gửi link, mã qr nhanh chóng.">
-    <meta content="Themesdesign" name="author" />
+    <meta name="description" content="{{ $description ?? 'Tạo thiệp chúc mừng online miễn phí. Cá nhân hoá nội dung, gửi link, mã qr nhanh chóng.' }}">
+    <meta name="keywords" content="{{ $keywords ?? 'thiệp online, tạo thiệp, thiệp chúc mừng, QR code, gửi thiệp' }}">
+    <meta name="author" content="{{ $author ?? config('app.name', 'DevOnline Shop') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="robots" content="noindex,nofollow">
+    <meta name="robots" content="{{ $robots ?? 'index,follow' }}">
+    <link rel="canonical" href="{{ $canonical ?? url()->current() }}">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Tạo thiệp online miễn phí | DevOnline Shop">
-    <meta property="og:description" content="Tạo thiệp chúc mừng online miễn phí, nhanh và đẹp.">
-    <meta property="og:image" content="{{ asset('images/og-image.png') }}">
-    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="{{ $og_site_name ?? config('app.name', 'DevOnline Shop') }}">
+    <meta property="og:title" content="{{ $og_title ?? ($title ?? 'Tạo thiệp online miễn phí | DevOnline Shop') }}">
+    <meta property="og:description" content="{{ $og_description ?? ($description ?? 'Tạo thiệp chúc mừng online miễn phí, nhanh và đẹp.') }}">
+    <meta property="og:image" content="{{ $og_image ?? asset('images/og-image.png') }}">
+    <meta property="og:url" content="{{ $og_url ?? url()->current() }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="{{ $twitter_site ?? '@devonline' }}">
+    <meta name="twitter:title" content="{{ $twitter_title ?? ($title ?? 'Tạo thiệp online miễn phí | DevOnline Shop') }}">
+    <meta name="twitter:description" content="{{ $twitter_description ?? ($description ?? 'Tạo thiệp chúc mừng online miễn phí, nhanh và đẹp.') }}">
+    <meta name="twitter:image" content="{{ $twitter_image ?? asset('images/og-image.png') }}">
+    <meta name="theme-color" content="{{ $theme_color ?? '#ff758c' }}">
+
+    {{-- Structured Data: WebSite + Organization for better SERP understanding --}}
+    <script type="application/ld+json">
+    {!! json_encode([
+        "@context" => "https://schema.org",
+        "@type" => "WebSite",
+        "name" => ($title ?? config('app.name','DevOnline Shop')),
+        "url" => url('/'),
+        "potentialAction" => [
+            "@type" => "SearchAction",
+            "target" => url('/')."?s={search_term_string}",
+            "query-input" => "required name=search_term_string"
+        ]
+    ], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}
+    </script>
+    <script type="application/ld+json">
+    {!! json_encode([
+        "@context" => "https://schema.org",
+        "@type" => "Organization",
+        "name" => config('app.name','DevOnline Shop'),
+        "url" => url('/'),
+        "logo" => asset('images/logo2.png')
+    ], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}
+    </script>
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('images/logo2.png') }}">
 

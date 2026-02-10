@@ -39,6 +39,7 @@
         "http": "^0.0.1-security",
         "jquery": "^3.7.1",
         "mitt": "^3.0.1",
+        "qrcode-generator": "^2.0.4",
         "sass": "^1.69.7",
         "sass-loader": "^8.0.2",
         "simple-keyboard": "^3.7.45",

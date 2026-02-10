@@ -68,11 +68,11 @@
   width: 5px;
 }
 
-body {
-  background-color: #f7f7f7 !important;
-}
 body .none-element {
   display: none;
+}
+body {
+  background-color: #f7f7f7 !important;
 }
 body .btn-all-add-edit {
   background: #252b3b;

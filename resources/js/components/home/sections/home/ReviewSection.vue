@@ -1,6 +1,6 @@
 <template>
     <section class="reviews">
-        <div class="reviews__container">
+        <div class="reviews__container gsap-zoom">
             <div class="reviews__header">
                 <h2 class="reviews__title">Đánh giá</h2>
                 <p class="reviews__subtitle">

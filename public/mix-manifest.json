@@ -1,9 +1,15 @@
 {
     "/assets/js/app.js": "/assets/js/app.js",
+    "/images/background-avatar.png?23202bcc83bddacc4a23ebcb79a964ec": "/images/background-avatar.png?23202bcc83bddacc4a23ebcb79a964ec",
+    "/images/avatar.png?e582e4ba7aae2cecd6587895a88ce3a5": "/images/avatar.png?e582e4ba7aae2cecd6587895a88ce3a5",
     "/assets/css/simple-typeahead.css": "/assets/css/simple-typeahead.css",
     "/assets/css/datatable.css": "/assets/css/datatable.css",
     "/assets/css/responsive.css": "/assets/css/responsive.css",
     "/assets/css/style.css": "/assets/css/style.css",
+    "/fonts/SourceSans3-Medium.ttf?be9ce6ac3e64725356ae67c9a7e8c27e": "/fonts/SourceSans3-Medium.ttf?be9ce6ac3e64725356ae67c9a7e8c27e",
+    "/fonts/SourceSans3-Bold.ttf?82c3c9bec7b83d9d5846338f81338054": "/fonts/SourceSans3-Bold.ttf?82c3c9bec7b83d9d5846338f81338054",
+    "/fonts/utm_micra.ttf?eb99e527aad5eb9a67274ed9c9edd149": "/fonts/utm_micra.ttf?eb99e527aad5eb9a67274ed9c9edd149",
+    "/images/bg-left-it.png?7abcbecde54ecee30c5920227051f849": "/images/bg-left-it.png?7abcbecde54ecee30c5920227051f849",
     "/assets/css/landing.css": "/assets/css/landing.css",
     "/assets/css/home.css": "/assets/css/home.css",
     "/assets/css/utils.css": "/assets/css/utils.css"

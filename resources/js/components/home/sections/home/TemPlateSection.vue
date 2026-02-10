@@ -11,7 +11,7 @@
       <div v-if="loading" class="templates__loading">Đang tải mẫu...</div>
       <div v-else class="templates__grid">
         <div
-          v-for="template in templates"
+          v-for="template in visibleTemplates"
           :key="template.id"
           class="template-card gsap-fade-up"
         >
@@ -75,6 +75,11 @@
           </div>
         </div>
       </div>
+      <div v-if="remainingCount > 0" class="templates__more">
+        <button class="load-more-btn" @click="showMore" :disabled="loading">
+          Xem thêm {{ Math.min(remainingCount, 6) }} mẫu
+        </button>
+      </div>
     </div>
   </section>
 </template>
@@ -85,11 +90,18 @@ export default {
       templates: [],
       loading: true,
       loadingSpam: false,
+      visibleCount: 6,
     };
   },
   computed: {
     isProcessing() {
       return this.$store.state.isProcessing;
+    },
+    visibleTemplates() {
+      return this.templates.slice(0, this.visibleCount);
+    },
+    remainingCount() {
+      return Math.max(0, this.templates.length - this.visibleCount);
     },
   },
   mounted() {
@@ -144,6 +156,54 @@ export default {
         this.loadingSpam = false;
       }
     },
+    showMore() {
+      // tăng thêm 6 mỗi lần, hoặc hiện toàn bộ nếu ít hơn
+      this.visibleCount = Math.min(this.templates.length, this.visibleCount + 6);
+    },
   },
 };
 </script>
+
+<style scoped>
+.templates__more {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.load-more-btn {
+  padding: 12px 26px;
+  border-radius: 999px;
+  background: var(--gradient-primary);
+  color: #fff;
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+
+  box-shadow: 0 10px 28px rgba(139, 47, 60, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.load-more-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: 0 14px 36px rgba(139, 47, 60, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.load-more-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 18px rgba(139, 47, 60, 0.28), inset 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Disabled */
+.load-more-btn:disabled {
+  background: var(--gradient-accent);
+  color: var(--color-text-light);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+</style>
