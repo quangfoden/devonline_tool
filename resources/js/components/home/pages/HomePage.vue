@@ -1,12 +1,13 @@
 <template>
-  <TopBar />
-  <HeroSectione id="home" class="gsap-fade-up" />
-  <AboutSection id="about" class="gsap-fade-left" />
-  <TemPlateSection id="templates"/>
-  <StatsSection class="gsap-zoom" />
-  <ReviewSection id="reviews" class="gsap-fade-up" />
+  <TopBar @go="scrollTo" />
+
+  <HeroSectione ref="home" data-section="home" />
+  <AboutSection ref="about" data-section="about" />
+  <TemPlateSection ref="templates" data-section="templates" />
+  <ReviewSection ref="reviews" data-section="reviews" />
+
   <CtaSection />
-  <FooterSection2/>
+  <FooterSection2 />
 </template>
 <script>
 import TopBar from "@components/home/partials/TopBar.vue";
@@ -31,9 +32,18 @@ export default {
   },
 
   data() {
-    return {
-    }
+    return {};
   },
+  methods: {
+    scrollTo(section) {
+      const target = this.$refs[section];
+      if (!target) return;
 
+      target.$el.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    },
+  },
 };
 </script>

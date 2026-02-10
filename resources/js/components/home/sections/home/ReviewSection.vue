@@ -2,7 +2,7 @@
     <section class="reviews">
         <div class="reviews__container">
             <div class="reviews__header">
-                <h2 class="reviews__title">Khách hàng nói gì</h2>
+                <h2 class="reviews__title">Đánh giá</h2>
                 <p class="reviews__subtitle">
                     Hàng ngàn người dùng đã tạo trang cá nhân và thiệp theo cách riêng của họ
                 </p>
