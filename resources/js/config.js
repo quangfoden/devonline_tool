@@ -1,5 +1,5 @@
 const config = {
-    notificationTimer: 3000,
+    notificationTimer: 1500,
     tiny_mce: {
         api_key: "5i8j4ohss0vt2ue6qzmyd4jzphmy5dbti00y61asvmgmht73",
         plugins: 'print preview paste importcss searchreplace autolink autosave save directionality ' +

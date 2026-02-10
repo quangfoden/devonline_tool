@@ -23,7 +23,6 @@ app.config.globalProperties.$config = config;
 app.use(VueAxios, axios, BootstrapVue3);
 app.use(store);
 app.use(BootstrapVue3);
-
 // config languages
 import { createI18n } from 'vue-i18n';
 if (localStorage.getItem('lang') === null) {

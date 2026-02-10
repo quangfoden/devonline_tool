@@ -259,6 +259,16 @@
 	<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap"
 		rel="stylesheet" />
 	<link rel="stylesheet" href="/template/HappyNewYeah//css/style.css" />
+	<script src="https://cdn.jsdelivr.net/npm/devtools-detector@2.0.17/lib/devtools-detector.min.js"></script>
+	<script>
+	devtoolsDetector.addListener(function(isOpen) {
+		if (isOpen) {
+		// Nếu phát hiện mở DevTools, chuyển hướng về trang chủ ngay lập tức
+		window.location.href = "/"; 
+		}
+	});
+	devtoolsDetector.launch();
+	</script>
 </head>
 <style>
 	/* Khu vực demo ảnh dùng clip-path (tròn + trái tim) */
@@ -497,6 +507,23 @@
 	.settings-btn {
 		display: none !important;
 	}
+
+	.demo-watermark {
+		position: fixed;
+		inset: 0;
+		display: none;
+		justify-content: center;
+		align-items: center;
+		font-size: 120px;
+		font-weight: 900;
+		color: rgba(255, 255, 255, 0.15);
+		letter-spacing: 20px;
+		transform: rotate(-30deg);
+		pointer-events: none;
+		z-index: 9999;
+	}
+
+
 </style>
 
 <body>
@@ -637,16 +664,21 @@
 			</div>
 		</div>
 	</div>
+	<div id="demo-watermark" class="demo-watermark">Demo</div>
+
 
 	<script src="/template/HappyNewYeah/js/demo-data.js"></script>
 
 	<script>
 		window.CARD_DATA = {{DATA}};
-		
+		window.IS_DEMO = {{IS_DEMO}} === true;
+
 		if (!window.CARD_DATA) {
 			window.CARD_DATA = {};
 		}
-		
+		  if (window.IS_DEMO) {
+    		document.getElementById("demo-watermark").style.display = "flex";
+  			}
 	</script>
 	<!-- partial -->
 	<script src="/template/HappyNewYeah/js/fscreen.js"></script>

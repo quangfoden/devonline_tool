@@ -7,111 +7,400 @@
       @update:modelValue="onUpdate"
     />
 
-    <div v-else class="loading">Đang tải mẫu...</div>
-    <p class="autosave-status">
+    <div v-else-if="loadError" class="error-box">
+      <div class="error-icon">💌</div>
+      <h3>Không tìm thấy mẫu</h3>
+      <p>Mẫu này có thể đã bị xoá hoặc chưa được cấu hình.</p>
+      <button class="back-btn" @click="$router.push('/')">
+        <span>←</span> Quay lại chọn mẫu
+      </button>
+    </div>
+
+    <div v-else class="loading">
+      <div class="loading-spinner"></div>
+      <p>Đang tải mẫu...</p>
+    </div>
+
+    <!-- Autosave status -->
+    <div class="autosave-status" v-if="!loadError">
+      <span class="status-icon" :class="{ saving: saving }">
+        {{ saving ? "⏳" : "✓" }}
+      </span>
       {{ autosaveText }}
-    </p>
-    <p class="price-info">
-      💰 Giá: <strong>{{ formatVND(totalPrice) }}</strong>
-    </p>
-    <div class="btn-payment">
-      <button class="publish-btn" @click="payWithPayOS()">Thanh toán Payos</button>
-      <!-- <button class="publish-btn2" @click="paymentVnp()">Thanh toán VNPAY</button> -->
+    </div>
+
+    <!-- Price info -->
+    <div class="price-card" v-if="!loadError">
+      <div class="price-label">Tổng thanh toán</div>
+      <div class="price-value">{{ formatVND(totalPrice) }}</div>
+    </div>
+
+    <!-- Payment buttons -->
+    <div class="payment-section" v-if="!loadError">
+      <!-- Preview button -->
+      <button class="payment-btn preview" @click="previewCard()">
+        <span class="btn-icon">👀</span>
+        <span class="btn-text">
+          <strong>Xem trước thiệp</strong>
+          <small>Mở bản xem thử</small>
+        </span>
+      </button>
+      <button class="payment-btn primary" @click="payWithPayOS()">
+        <span class="btn-icon">💳</span>
+        <span class="btn-text">
+          <strong>Thanh toán PayOS</strong>
+          <small>Nhanh chóng & bảo mật</small>
+        </span>
+      </button>
+      <!-- <button class="payment-btn secondary" @click="paymentVnp()">
+        <span class="btn-icon">🏦</span>
+        <span class="btn-text">
+          <strong>Thanh toán VNPAY</strong>
+          <small>Hỗ trợ đa ngân hàng</small>
+        </span>
+      </button> -->
     </div>
   </div>
 </template>
+
 <style scoped>
 .base-create {
   position: relative;
   min-height: 100vh;
-  padding: 24px 24px 120px;
-  background: #f8fafc;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-.price-info {
-  position: fixed;
-  bottom: 70px;
-  right: 24px;
-  background: #ffffff;
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-size: 14px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  padding: 32px 24px 180px;
+  background: var(--color-background);
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
-/* loading */
+/* ===== LOADING STATE ===== */
 .loading {
-  text-align: center;
-  padding: 60px 0;
-  font-size: 15px;
-  color: #64748b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 0;
+  gap: 20px;
 }
 
-/* autosave status */
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--color-accent-light);
+  border-top: 4px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading p {
+  font-size: 15px;
+  color: var(--color-text-light);
+  font-weight: 500;
+}
+
+/* ===== ERROR BOX ===== */
+.error-box {
+  max-width: 460px;
+  margin: 120px auto;
+  background: var(--color-surface);
+  padding: 40px 32px;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(139, 47, 60, 0.08);
+  border: 1px solid var(--color-border);
+}
+
+.error-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.error-box h3 {
+  margin-bottom: 12px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.error-box p {
+  font-size: 15px;
+  color: var(--color-text-light);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  background: var(--gradient-primary);
+  color: #ffffff;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(139, 47, 60, 0.25);
+}
+
+.back-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(139, 47, 60, 0.35);
+}
+
+.back-btn:active {
+  transform: translateY(-1px);
+}
+
+/* ===== AUTOSAVE STATUS ===== */
 .autosave-status {
   position: fixed;
   bottom: 24px;
   left: 24px;
-  font-size: 13px;
-  color: #64748b;
-  background: #ffffff;
-  padding: 6px 12px;
-  border-radius: 999px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--color-text-light);
+  background: var(--color-surface);
+  padding: 10px 18px;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(139, 47, 60, 0.08);
+  border: 1px solid var(--color-border);
   user-select: none;
-  transition: all 0.25s ease;
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
-/* trạng thái đang lưu */
-.autosave-status:has(:contains("Đang lưu")) {
-  color: #0ea5e9;
+.status-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-accent-light);
+  font-size: 12px;
+  transition: all 0.3s ease;
 }
-.btn-payment {
+
+.status-icon.saving {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+/* ===== PRICE CARD ===== */
+.price-card {
+  position: fixed;
+  bottom: 120px;
+  right: 24px;
+  background: var(--gradient-accent);
+  padding: 20px 24px;
+  border-radius: 20px;
+  min-width: 240px;
+  box-shadow: 0 12px 40px rgba(139, 47, 60, 0.12);
+  border: 1px solid var(--color-accent);
+  backdrop-filter: blur(10px);
+}
+
+.price-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.price-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-primary);
+  letter-spacing: -0.5px;
+}
+
+/* ===== PAYMENT SECTION ===== */
+.payment-section {
   position: fixed;
   right: 24px;
-  bottom: 20px;
+  bottom: 24px;
   display: flex;
   gap: 12px;
   align-items: center;
 }
-/* publish button */
-.publish-btn,
-.publish-btn2 {
-  padding: 14px 28px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #ffffff;
-  background: linear-gradient(135deg, #4f46e5, #6366f1);
+
+.payment-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
   border: none;
-  border-radius: 14px;
+  border-radius: 18px;
   cursor: pointer;
-  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.35);
-  transition: all 0.25s ease;
+  font-size: 15px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 24px rgba(139, 47, 60, 0.15);
+  position: relative;
+  overflow: hidden;
 }
-/* hover */
-.publish-btn:hover {
+
+.payment-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.payment-btn:hover::before {
+  opacity: 1;
+}
+
+.payment-btn.primary {
+  background: var(--gradient-primary);
+  color: #ffffff;
+}
+
+.payment-btn.secondary {
+  background: var(--color-surface);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+
+.payment-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(139, 47, 60, 0.25);
+}
+
+.payment-btn:active {
   transform: translateY(-2px);
-  box-shadow: 0 14px 40px rgba(79, 70, 229, 0.45);
 }
 
-/* click */
-.publish-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+.btn-icon {
+  font-size: 24px;
+  flex-shrink: 0;
 }
 
-/* mobile */
-@media (max-width: 640px) {
-  .publish-btn {
+.btn-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 2px;
+}
+
+.btn-text strong {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.btn-text small {
+  font-size: 12px;
+  opacity: 0.85;
+  font-weight: 400;
+}
+
+.payment-btn.secondary .btn-text strong {
+  color: var(--color-primary);
+}
+
+.payment-btn.secondary .btn-text small {
+  color: var(--color-text-light);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .base-create {
+    padding: 24px 16px 200px;
+  }
+
+  .payment-section {
     right: 16px;
+    left: 16px;
+    width: auto;
     bottom: 16px;
-    padding: 12px 20px;
-    font-size: 14px;
+  }
+
+  .price-card {
+    right: 16px;
+    left: 16px;
+    bottom: 140px;
   }
 
   .autosave-status {
     left: 16px;
-    bottom: 70px;
+    bottom: 220px;
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  .payment-btn {
+    padding: 14px 18px;
+  }
+
+  .btn-icon {
+    font-size: 20px;
+  }
+
+  .btn-text strong {
+    font-size: 14px;
+  }
+
+  .btn-text small {
+    font-size: 11px;
+  }
+  .image-remove-btn {
+    opacity: 1 !important;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .image-overlay {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .error-box {
+    margin: 60px auto;
+    padding: 32px 24px;
+  }
+
+  .price-value {
+    font-size: 24px;
   }
 }
 </style>
@@ -127,13 +416,14 @@ export default {
       saving: false,
       lastSavedAt: null,
       draftId: null,
+      loadError: false,
     };
   },
 
   computed: {
     autosaveText() {
       if (this.saving) return "Đang lưu...";
-      if (this.lastSavedAt) return "Đã lưu ✔";
+      if (this.lastSavedAt) return "Đã lưu";
       return "Chưa lưu";
     },
     totalPrice() {
@@ -147,17 +437,27 @@ export default {
   },
 
   async created() {
-    this.draftId = this.$route.params.id;
+    try {
+      this.draftId = this.$route.params.id;
 
-    const res = await this.axios.get(`/api/cards/${this.draftId}`);
-    this.formData = res.data.data || {};
-    this.card = res.data.card;
-    this.template = res.data.template;
-    const viewPath = this.template.view;
+      const res = await this.axios.get(`/api/cards/${this.draftId}`);
+      this.formData = res.data.data || {};
+      this.card = res.data.card;
+      this.template = res.data.template;
 
-    const module = await import(`@components/templates/create/${viewPath}/index.vue`);
+      const viewPath = this.template.view;
 
-    this.createComponent = module.default;
+      try {
+        const module = await import(`@components/templates/create/${viewPath}/index.vue`);
+        this.createComponent = module.default;
+      } catch (e) {
+        console.error("Không tìm thấy component:", viewPath, e);
+        this.loadError = true;
+      }
+    } catch (e) {
+      console.error("Lỗi load card / template", e);
+      this.loadError = true;
+    }
   },
 
   watch: {
@@ -209,6 +509,18 @@ export default {
       } finally {
         this.saving = false;
       }
+    },
+    previewCard() {
+      if (!this.draftId) return;
+
+      // đảm bảo autosave trước khi xem demo
+      if (this.autosaveTimer) {
+        clearTimeout(this.autosaveTimer);
+        this.autosave();
+      }
+
+      const demoUrl = `${window.location.origin}/demo/${this.draftId}`;
+      window.open(demoUrl, "_blank");
     },
     async payWithPayOS() {
       try {

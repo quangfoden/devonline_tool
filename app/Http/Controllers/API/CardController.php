@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
-
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
@@ -62,6 +63,7 @@ class CardController extends Controller
 
         return response()->json([
             'draft_id' => $card->uuid,
+            'demo_url' => url('/demo/' . $card->uuid),
         ]);
     }
 
@@ -161,10 +163,34 @@ class CardController extends Controller
     {
         $card = Card::where('uuid', $id)->firstOrFail();
 
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'images' => 'required|array|min:1',
+                'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:10000',
+            ],
+            [
+                // images
+                'images.required' => 'Vui lòng chọn ít nhất 1 ảnh.',
+                'images.array' => 'Dữ liệu ảnh không hợp lệ.',
+                'images.min' => 'Vui lòng chọn ít nhất 1 ảnh.',
 
-        $request->validate([
-            'images.*' => 'required|image|max:4096' // 4MB / ảnh
-        ]);
+                // images.*
+                'images.*.image' => 'File tải lên phải là hình ảnh.',
+                'images.*.mimes' => 'Ảnh chỉ hỗ trợ JPG, JPEG, PNG, WEBP.',
+                'images.*.max' => 'Dung lượng mỗi ảnh tối đa 10MB.',
+            ]
+        );
+
+        if ($validator->fails()) {
+            throw new ValidationException(
+                $validator,
+                response()->json([
+                    'message' => 'Dữ liệu không hợp lệ',
+                    'errors' => $validator->errors(),
+                ], 422)
+            );
+        }
 
         $paths = [];
 

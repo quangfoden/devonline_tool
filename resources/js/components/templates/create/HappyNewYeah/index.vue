@@ -1,291 +1,658 @@
-<template>
-  <div class="card-form">
-    <!-- WISH MESSAGES -->
-    <h3>Lời chúc</h3>
-
-    <div v-for="(wish, index) in wishes" :key="index" class="wish-item">
-      <input
-        :value="wish"
-        @input="updateWish(index, $event.target.value)"
-        placeholder="Nhập lời chúc..."
-      />
-      <button @click="removeWish(index)">✕</button>
-    </div>
-
-    <button @click="addWish">+ Thêm lời chúc</button>
-
-    <hr />
-
-    <!-- IMAGE UPLOAD -->
-    <h3>Ảnh hiệu ứng</h3>
-
-    <input type="file" multiple accept="image/*" @change="uploadImages" />
-
-    <div class="image-preview">
-      <div
-        v-for="(img, index) in images"
-        :key="img"
-        class="image-item"
-        :class="{ paid: index > 0 }">
-        <img :src="img" />
-
-        <span v-if="index > 0" class="price-tag">+10k</span>
-
-        <button @click="removeImage(index)">✕</button>
+  <template>
+    <div class="card-form">
+      <!-- HEADER -->
+      <div class="form-header">
+        <h2>✨ Tùy chỉnh thiệp của bạn</h2>
+        <p>Thêm lời chúc và hình ảnh để thiệp thêm ý nghĩa</p>
       </div>
+
+      <!-- WISH MESSAGES SECTION -->
+      <section class="form-section">
+        <div class="section-header">
+          <h3>💌 Lời chúc</h3>
+          <span class="count-badge">{{ wishes.length }}</span>
+        </div>
+
+        <div class="wishes-container">
+          <div v-for="(wish, index) in wishes" :key="index" class="wish-item">
+            <div class="wish-number">{{ index + 1 }}</div>
+            <input
+              :value="wish"
+              @input="updateWish(index, $event.target.value)"
+              placeholder="Viết lời chúc ý nghĩa..."
+              class="wish-input"
+            />
+            <button @click="removeWish(index)" class="remove-btn" title="Xóa lời chúc">
+              ✕
+            </button>
+          </div>
+
+          <button @click="addWish" class="add-btn">
+            <span class="btn-icon">+</span>
+            <span>Thêm lời chúc</span>
+          </button>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- IMAGE UPLOAD SECTION -->
+      <section class="form-section">
+        <div class="section-header">
+          <h3>🎨 Ảnh hiệu ứng</h3>
+          <span class="count-badge">{{ images.length }}</span>
+        </div>
+
+        <div class="upload-area">
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            @change="uploadImages"
+            id="image-upload"
+            class="file-input"
+          />
+          <label for="image-upload" class="upload-label">
+            <div class="upload-icon">📸</div>
+            <div class="upload-text">
+              <strong>Chọn ảnh từ thiết bị</strong>
+              <small>Hỗ trợ JPG, PNG, GIF • Tối đa 10MB/ảnh</small>
+            </div>
+          </label>
+        </div>
+
+        <div v-if="images.length > 0" class="image-grid">
+          <div
+            v-for="(img, index) in images"
+            :key="img"
+            class="image-card"
+            :class="{ 'is-paid': index > 0 }"
+          >
+            <img :src="img" :alt="`Ảnh ${index + 1}`" />
+
+            <div v-if="index === 0" class="image-badge free">Miễn phí</div>
+            <div v-else class="image-badge paid">+10.000₫</div>
+
+            <button @click="removeImage(index)" class="image-remove-btn" title="Xóa ảnh">
+              ✕
+            </button>
+
+            <div class="image-overlay">
+              <span class="image-index">#{{ index + 1 }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="images.length > 1" class="pricing-note">
+          <span class="note-icon">ℹ️</span>
+          Ảnh đầu tiên miễn phí, mỗi ảnh tiếp theo +10.000₫
+        </div>
+      </section>
     </div>
-  </div>
-</template>
-<script>
-export default {
-  props: {
-    modelValue: {
-      type: Object,
-      default: () => ({
-        WISH_MESSAGES: [],
-        imageSources: [],
-      }),
-    },
-  },
+  </template>
 
-  emits: ["update:modelValue"],
-
-  computed: {
-    wishes() {
-      return this.modelValue.WISH_MESSAGES || [];
-    },
-    images() {
-      return this.modelValue.imageSources || [];
-    },
-  },
-
-  methods: {
-    emit(data) {
-      this.$emit("update:modelValue", {
-        ...this.modelValue,
-        ...data,
-      });
+  <script>
+  export default {
+    props: {
+      modelValue: {
+        type: Object,
+        default: () => ({
+          WISH_MESSAGES: [],
+          imageSources: [],
+        }),
+      },
     },
 
-    // ===== WISHES =====
-    addWish() {
-      this.emit({
-        WISH_MESSAGES: [...this.wishes, ""],
-      });
+    emits: ["update:modelValue"],
+
+    computed: {
+      wishes() {
+        return this.modelValue.WISH_MESSAGES || [];
+      },
+      images() {
+        return this.modelValue.imageSources || [];
+      },
     },
 
-    updateWish(index, value) {
-      const arr = [...this.wishes];
-      arr[index] = value;
-      this.emit({ WISH_MESSAGES: arr });
-    },
+    methods: {
+      emit(data) {
+        this.$emit("update:modelValue", {
+          ...this.modelValue,
+          ...data,
+        });
+      },
 
-    removeWish(index) {
-      const arr = [...this.wishes];
-      arr.splice(index, 1);
-      this.emit({ WISH_MESSAGES: arr });
-    },
-
-    // ===== IMAGES =====
-    async uploadImages(e) {
-      const files = Array.from(e.target.files);
-      if (!files.length) return;
-
-      const form = new FormData();
-
-      files.forEach((file) => {
-        form.append("images[]", file);
-      });
-
-      try {
-        const res = await this.axios.post(
-          `/api/cards/${this.$route.params.id}/upload-images`,
-          form,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-
+      // ===== WISHES =====
+      addWish() {
         this.emit({
-          imageSources: [...this.images, ...res.data.paths],
+          WISH_MESSAGES: [...this.wishes, ""],
         });
-      } catch (e) {
-        console.error("Upload ảnh lỗi", e);
-      }
+      },
 
-      e.target.value = "";
-    },
-    async removeImage(index) {
-      const imageUrl = this.images[index];
+      updateWish(index, value) {
+        const arr = [...this.wishes];
+        arr[index] = value;
+        this.emit({ WISH_MESSAGES: arr });
+      },
 
-      const arr = [...this.images];
-      arr.splice(index, 1);
-      this.emit({ imageSources: arr });
+      removeWish(index) {
+        const arr = [...this.wishes];
+        arr.splice(index, 1);
+        this.emit({ WISH_MESSAGES: arr });
+      },
 
-      try {
-        await this.axios.post(`/api/cards/${this.$route.params.id}/remove-image`, {
-          url: imageUrl,
+      // ===== IMAGES =====
+      async uploadImages(e) {
+        const files = Array.from(e.target.files);
+        if (!files.length) return;
+
+        const form = new FormData();
+
+        files.forEach((file) => {
+          form.append("images[]", file);
         });
-      } catch (e) {
-        console.error("Xoá ảnh lỗi", e);
-        this.emit({ imageSources: this.images });
-      }
+
+        try {
+          const res = await this.axios.post(
+            `/api/cards/${this.$route.params.id}/upload-images`,
+            form,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+
+          this.emit({
+            imageSources: [...this.images, ...res.data.paths],
+          });
+
+          this.$swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Tải ảnh lên thành công!",
+            showConfirmButton: false,
+            timer: this.$config.notificationTimer ?? 1000,
+          });
+        } catch (err) {
+          if (err.response && err.response.status === 422) {
+            const errors = err.response.data.errors;
+
+            const firstError = Object.values(errors)[0][0];
+
+            this.$swal.fire({
+              position: "center-center",
+              icon: "error",
+              title: firstError,
+              showConfirmButton: false,
+              timer: this.$config.notificationTimer ?? 1000,
+            });
+          } else {
+            console.error("Lỗi tải ảnh lên", err);
+            this.$swal.fire({
+              position: "center-center",
+              icon: "error",
+              title: "Lỗi tải ảnh lên. Vui lòng thử lại.",
+              showConfirmButton: false,
+              timer: this.$config.notificationTimer ?? 1000,
+            });
+          }
+        }
+
+        e.target.value = "";
+      },
+      async removeImage(index) {
+        const imageUrl = this.images[index];
+
+        const arr = [...this.images];
+        arr.splice(index, 1);
+        this.emit({ imageSources: arr });
+
+        try {
+          await this.axios.post(`/api/cards/${this.$route.params.id}/remove-image`, {
+            url: imageUrl,
+          });
+        } catch (e) {
+          console.error("Xoá ảnh lỗi", e);
+          this.emit({ imageSources: this.images });
+        }
+      },
     },
-  },
-};
-</script>
+  };
+  </script>
 
-<style scoped>
-.card-form {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
-  max-width: 720px;
-  margin: 0 auto;
-}
+  <style scoped>
+  .card-form {
+    background: var(--color-surface);
+    padding: 32px;
+    border-radius: 24px;
+    box-shadow: 0 12px 48px rgba(139, 47, 60, 0.08);
+    max-width: 800px;
+    margin: 0 auto;
+    border: 1px solid var(--color-border);
+  }
 
-h3 {
-  font-size: 15px;
-  font-weight: 600;
-  color: #0f172a;
-  margin-bottom: 12px;
-}
+  /* ===== HEADER ===== */
+  .form-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--color-accent-light);
+  }
 
-/* ===== WISH ITEM ===== */
-.wish-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-}
+  .form-header h2 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--color-primary);
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
 
-.wish-item input {
-  flex: 1;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
-  font-size: 14px;
-  transition: all 0.2s ease;
-}
+  .form-header p {
+    font-size: 15px;
+    color: var(--color-text-light);
+    font-weight: 500;
+  }
 
-.wish-item input:focus {
-  outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-}
+  /* ===== SECTION ===== */
+  .form-section {
+    margin-bottom: 32px;
+  }
 
-.wish-item button {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: none;
-  background: #f1f5f9;
-  color: #475569;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
 
-.wish-item button:hover {
-  background: #fee2e2;
-  color: #dc2626;
-}
+  .section-header h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 
-/* add wish */
-.card-form > button {
-  margin-top: 6px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: none;
-  background: #eef2ff;
-  color: #4f46e5;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
+  .count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 10px;
+    background: var(--gradient-accent);
+    color: var(--color-primary);
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 14px;
+    border: 1px solid var(--color-accent);
+  }
 
-.card-form > button:hover {
-  background: #e0e7ff;
-  transform: translateY(-1px);
-}
+  .section-divider {
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--color-border) 20%,
+      var(--color-border) 80%,
+      transparent
+    );
+    margin: 40px 0;
+  }
 
-hr {
-  margin: 20px 0;
-  border: none;
-  border-top: 1px dashed #e5e7eb;
-}
+  /* ===== WISHES CONTAINER ===== */
+  .wishes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
 
-/* ===== IMAGE UPLOAD ===== */
-input[type="file"] {
-  margin-bottom: 12px;
-  font-size: 13px;
-}
+  .wish-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px;
+    background: var(--color-background);
+    border-radius: 16px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+  }
 
-.image-preview {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-  gap: 12px;
-}
-.price-tag {
-  position: absolute;
-  bottom: 6px;
-  left: 6px;
-  background: rgba(79, 70, 229, 0.9);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 999px;
-  pointer-events: none;
-}
+  .wish-item:hover {
+    border-color: var(--color-accent);
+  }
 
-.image-item.paid {
-  outline: 2px solid #6366f1;
-}
+  .wish-item:focus-within {
+    border-color: var(--color-primary);
+    background: var(--color-surface);
+    box-shadow: 0 4px 16px rgba(139, 47, 60, 0.08);
+  }
 
-.image-item {
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-  transition: all 0.25s ease;
-}
+  .wish-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--gradient-primary);
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
 
-.image-item:hover {
-  transform: translateY(-2px);
-}
+  .wish-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    color: var(--color-text);
+    font-weight: 500;
+    outline: none;
+  }
 
-.image-item img {
-  width: 100%;
-  height: 90px;
-  object-fit: cover;
-  display: block;
-}
+  .wish-input::placeholder {
+    color: var(--color-text-light);
+    font-weight: 400;
+  }
 
-/* remove image button */
-.image-item button {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(0, 0, 0, 0.6);
-  color: #ffffff;
-  font-size: 14px;
-  cursor: pointer;
-  opacity: 0;
-  transition: all 0.2s ease;
-}
+  .remove-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    border: none;
+    background: var(--color-accent-light);
+    color: var(--color-primary);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
 
-.image-item:hover button {
-  opacity: 1;
-}
+  .remove-btn:hover {
+    background: var(--color-primary);
+    color: white;
+    transform: rotate(90deg);
+  }
 
-.image-item button:hover {
-  background: #dc2626;
-}
-</style>
+  /* ===== ADD BUTTON ===== */
+  .add-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px 20px;
+    margin-top: 8px;
+    border-radius: 16px;
+    border: 2px dashed var(--color-border);
+    background: var(--color-background);
+    color: var(--color-primary);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .add-btn:hover {
+    border-color: var(--color-primary);
+    background: var(--color-accent-light);
+    transform: translateY(-2px);
+  }
+
+  .btn-icon {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  /* ===== FILE UPLOAD ===== */
+  .upload-area {
+    margin-bottom: 24px;
+  }
+
+  .file-input {
+    display: none;
+  }
+
+  .upload-label {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 24px;
+    border-radius: 20px;
+    border: 3px dashed var(--color-border);
+    background: var(--gradient-hero);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .upload-label:hover {
+    border-color: var(--color-primary);
+    background: var(--color-accent-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(139, 47, 60, 0.1);
+  }
+
+  .upload-icon {
+    font-size: 40px;
+    flex-shrink: 0;
+  }
+
+  .upload-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .upload-text strong {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .upload-text small {
+    font-size: 13px;
+    color: var(--color-text-light);
+    font-weight: 500;
+  }
+
+  /* ===== IMAGE GRID ===== */
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .image-card {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    box-shadow: 0 4px 16px rgba(139, 47, 60, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 3px solid transparent;
+  }
+
+  .image-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(139, 47, 60, 0.2);
+  }
+
+  .image-card.is-paid {
+    border-color: var(--color-primary);
+  }
+
+  .image-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ===== IMAGE BADGE ===== */
+  .image-badge {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(8px);
+    z-index: 2;
+  }
+
+  .image-badge.free {
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+  }
+
+  .image-badge.paid {
+    background: var(--color-primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(139, 47, 60, 0.3);
+  }
+
+  /* ===== IMAGE OVERLAY ===== */
+  .image-overlay {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    background: linear-gradient(135deg, rgba(139, 47, 60, 0.8), rgba(195, 91, 110, 0.6));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+  }
+
+  .image-card:hover .image-overlay {
+    opacity: 1;
+  }
+
+  .image-index {
+    color: white;
+    font-size: 24px;
+    font-weight: 800;
+  }
+
+  /* ===== REMOVE IMAGE BUTTON ===== */
+  .image-remove-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 3;
+    backdrop-filter: blur(4px);
+  }
+
+  .image-card:hover .image-remove-btn {
+    opacity: 1;
+  }
+
+  .image-remove-btn:hover {
+    background: var(--color-primary);
+    transform: rotate(90deg) scale(1.1);
+  }
+
+  /* ===== PRICING NOTE ===== */
+  .pricing-note {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    background: var(--color-accent-light);
+    border-left: 4px solid var(--color-primary);
+    border-radius: 12px;
+    font-size: 14px;
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  .note-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .card-form {
+      padding: 24px 20px;
+      border-radius: 20px;
+    }
+
+    .form-header h2 {
+      font-size: 24px;
+    }
+
+    .form-header p {
+      font-size: 14px;
+    }
+
+    .image-grid {
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 12px;
+    }
+
+    .upload-label {
+      padding: 20px;
+      gap: 12px;
+    }
+
+    .upload-icon {
+      font-size: 32px;
+    }
+
+    .upload-text strong {
+      font-size: 15px;
+    }
+
+    .upload-text small {
+      font-size: 12px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .card-form {
+      padding: 20px 16px;
+    }
+
+    .wish-number {
+      width: 32px;
+      height: 32px;
+      font-size: 13px;
+    }
+
+    .wish-input {
+      font-size: 14px;
+      padding: 10px 12px;
+    }
+
+    .remove-btn {
+      width: 32px;
+      height: 32px;
+    }
+  }
+  </style>

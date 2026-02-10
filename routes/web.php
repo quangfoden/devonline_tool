@@ -15,7 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 
+
 Route::get('/c/{uuid}', [PublicCardController::class, 'show']);
+Route::get('/demo/{uuid}', [PublicCardController::class, 'showDemo']);
+
 Route::get('{any}', function () {
     return view('layouts.app');
-})->where('any', '^(?!c/).*$');
+})->where('any', '^(?!c/|demo/).*$');

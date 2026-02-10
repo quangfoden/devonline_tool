@@ -10,8 +10,23 @@ class TemplateController extends Controller
 {
     public function index()
     {
-        return Template::select('id', 'name', 'slug', 'description','preview_data','preview_url', 'thumbnail')->get();
+        return Template::select(
+            'id',
+            'name',
+            'slug',
+            'description',
+            'preview_data',
+            'preview_url',
+            'thumbnail'
+        )
+            ->withCount([
+                'cards as used_count' => function ($q) {
+                    $q->where('is_paid', true);
+                }
+            ])
+            ->get();
     }
+
 
     public function show($slug)
     {
