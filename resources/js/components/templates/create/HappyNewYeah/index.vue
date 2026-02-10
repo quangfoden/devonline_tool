@@ -19,7 +19,7 @@
     <!-- IMAGE UPLOAD -->
     <h3>Ảnh hiệu ứng</h3>
 
-    <input type="file" multiple @change="uploadImages" />
+    <input type="file" multiple accept="image/*" @change="uploadImages" />
 
     <div class="image-preview">
       <div

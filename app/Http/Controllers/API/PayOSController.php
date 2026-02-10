@@ -27,11 +27,11 @@ class PayOSController extends Controller
         $order = Order::create([
             'card_id' => $card->id,
             'order_code' => $orderCode,
-            'amount' => $amount,
+            'amount' => (int) $amount,
             'status' => 'pending',
             'payment_method' => 'payos',
         ]);
-
+    
         $payment = $payOS->createPayment([
             'orderCode' => $order->order_code,
             'amount' => $amount,

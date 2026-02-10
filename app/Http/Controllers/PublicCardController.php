@@ -28,7 +28,6 @@ public function show($uuid)
     // Inject data
     $dataJson = json_encode($card->data ?? [], JSON_UNESCAPED_UNICODE);
    
-
     $html = str_replace('{{DATA}}', $dataJson, $html);
 
     return response($html)->header('Content-Type', 'text/html');

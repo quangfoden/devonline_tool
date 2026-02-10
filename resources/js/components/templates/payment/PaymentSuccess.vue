@@ -6,12 +6,14 @@
     <!-- SUCCESS -->
     <div v-else-if="state === 'paid'" class="success">
       <h2>🎉 Thanh toán thành công</h2>
-
-      <a :href="publicUrl" target="_blank" class="btn primary"> 🔗 Mở card </a>
+      <!-- PUBLIC LINK COPY -->
+      <div class="copy-box">
+        <input type="text" :value="publicUrl" readonly @focus="$event.target.select()" />
+        <button @click="copyLink">📋 Sao chép</button>
+      </div>
 
       <!-- QR Preview -->
       <div class="qr-box" :class="`style-${style}`">
-      
         <img
           :src="qrUrl"
           class="qr"
@@ -38,10 +40,31 @@
     <!-- TIMEOUT -->
     <div v-else class="timeout">
       <h2>⚠️ Đang xử lý giao dịch</h2>
-      <p>
-        Nếu bạn đã thanh toán, vui lòng đợi thêm vài giây <br />
-        hoặc kiểm tra lại sau.
+      <p class="support-text">
+        Nếu bạn đã thanh toán nhưng chưa nhận được sản phẩm, vui lòng liên hệ với chúng
+        tôi:
       </p>
+
+      <div class="support-icons">
+        <a
+          href="https://www.facebook.com/share/1DsRV6xZqa/"
+          target="_blank"
+          title="Facebook"
+        >
+          <i class="mdi mdi-facebook"></i>
+        </a>
+        <a
+          href="https://www.tiktok.com/@nvquangdev?is_from_webapp=1&sender_device=pc"
+          target="_blank"
+          title="TikTok"
+        >
+          <i class="mdi mdi-music-note"></i>
+        </a>
+        <a href="https://zalo.me/0377456265" target="_blank" title="Zalo">
+          <i class="mdi mdi-message-processing"></i>
+        </a>
+      </div>
+
       <a href="/" class="btn primary"> 🏠 Quay về trang chủ </a>
     </div>
   </div>
@@ -69,6 +92,13 @@ const labels = {
   classic: "Mặc định",
   heart: "Trái tim",
   pink: "Hồng",
+};
+
+/* ===== COPY LINK ===== */
+const copyLink = () => {
+  if (!publicUrl.value) return;
+  navigator.clipboard.writeText(publicUrl.value);
+  alert("Đã sao chép liên kết vào clipboard!");
 };
 
 /* ===== QR URL ===== */
@@ -128,104 +158,227 @@ onUnmounted(() => {
 <style scoped>
 .payment-page {
   min-height: 100vh;
-  padding: 40px 16px;
+  padding: 24px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-hero);
+  color: var(--color-text);
+}
+
+/* ===== CARD CHÍNH ===== */
+.payment-page > div {
+  width: 100%;
+  max-width: 420px;
+  background: var(--color-surface);
+  border-radius: 20px;
+  padding: 28px 22px 32px;
+  box-shadow: 0 20px 40px rgba(139, 47, 60, 0.12);
+  border: 1px solid var(--color-border);
   text-align: center;
-  background: #f8fafc;
 }
 
+/* ===== SUCCESS ===== */
 .success h2 {
-  margin-bottom: 16px;
+  font-size: 22px;
+  margin-bottom: 12px;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
+/* ===== QR BOX ===== */
 .qr-box {
   position: relative;
   width: 220px;
   height: 220px;
-  margin: 20px auto;
+  margin: 24px auto;
+  border-radius: 24px;
+  background: var(--gradient-accent);
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: inset 0 0 0 1px var(--color-border);
 }
 
-/* QR luôn nằm trên */
+/* QR */
 .qr {
-  width: 180px;
-  height: 180px;
-  z-index: 2;
+  width: 170px;
+  height: 170px;
   background: white;
-  padding: 8px;
+  padding: 10px;
+  border-radius: 16px;
+  z-index: 2;
+  transition: opacity 0.25s ease;
 }
 
-/* ===== STYLE TRÁI TIM ===== */
-.style-heart::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: #ef4444;
-  clip-path: path(
-    "M110 200
-     C110 200 10 130 10 70
-     C10 30 50 10 80 40
-     C110 10 150 30 150 70
-     C150 130 110 200 110 200 Z"
-  );
-  z-index: 1;
-}
-
-/* ===== STYLE HỒNG ===== */
-.style-pink::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: #f472b6;
-  border-radius: 24px;
-  z-index: 1;
-}
-
+/* ===== STYLE PICKER ===== */
 .qr-style {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
-  margin-bottom: 16px;
+  margin: 12px 0 18px;
+  flex-wrap: wrap;
 }
 
 .qr-style button {
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 1px solid #e5e7eb;
-  background: white;
+  padding: 6px 14px;
   font-size: 13px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-light);
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .qr-style button.active {
-  background: #ef4444;
+  background: var(--gradient-primary);
   color: white;
-  border-color: #ef4444;
+  border-color: transparent;
 }
 
+/* ===== BUTTON ===== */
 .btn {
-  display: inline-block;
-  padding: 10px 16px;
-  border-radius: 8px;
-  margin: 6px;
-  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px 18px;
+  border-radius: 14px;
   font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  margin: 6px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.btn.primary {
-  background: #3b82f6;
-  color: white;
+.btn:hover {
+  transform: translateY(-1px);
 }
 
 .btn.secondary {
-  background: #10b981;
-  color: white;
+  background: var(--color-accent-light);
+  color: var(--color-primary);
+  border: 1px solid var(--color-border);
 }
 
-.timeout {
-  max-width: 360px;
-  margin: auto;
+/* ===== TIMEOUT ===== */
+.timeout h2 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: var(--color-primary);
+}
+
+.timeout p {
+  font-size: 14px;
+  color: var(--color-text-light);
+  margin-bottom: 16px;
+}
+
+/* ===== SUPPORT ICONS ===== */
+.support-icons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 10px 0 18px;
+}
+
+.support-icons a {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-light);
+  font-size: 22px;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+}
+
+/* Hover chung */
+.support-icons a:hover {
+  transform: translateY(-2px);
+  background: var(--gradient-primary);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 10px 22px rgba(139, 47, 60, 0.35);
+}
+
+/* Màu riêng từng nền tảng (hover tinh tế) */
+.support-icons a:hover .mdi-facebook {
+  color: #fff;
+}
+
+.support-icons a:hover .mdi-music-note {
+  color: #fff;
+}
+
+.support-icons a:hover .mdi-message-processing {
+  color: #fff;
+}
+
+/* ===== COPY LINK BOX ===== */
+.copy-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 10px;
+}
+
+.copy-box input {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 13px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.copy-box input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.copy-box button {
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  background: var(--gradient-primary);
+  color: white;
+  white-space: nowrap;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 6px 14px rgba(139, 47, 60, 0.35);
+}
+
+.copy-box button:hover {
+  transform: translateY(-1px);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (min-width: 768px) {
+  .payment-page > div {
+    padding: 36px 32px 40px;
+  }
+
+  .success h2 {
+    font-size: 24px;
+  }
+
+  .qr-box {
+    width: 240px;
+    height: 240px;
+  }
+
+  .qr {
+    width: 185px;
+    height: 185px;
+  }
 }
 </style>

@@ -623,6 +623,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, "+ Thêm lời chúc"), _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" IMAGE UPLOAD "), _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "file",
     multiple: "",
+    accept: "image/*",
     onChange: _cache[1] || (_cache[1] = function () {
       return $options.uploadImages && $options.uploadImages.apply($options, arguments);
     })
