@@ -16,10 +16,10 @@ class PayOSWebhookController extends Controller
         $payload = $request->all();
 
         // 1️⃣ Verify signature
-        // if (!$payOS->verifyWebhook($payload)) {
-        //     Log::warning('Invalid webhook signature', $payload);
-        //     return response()->json(['message' => 'invalid signature'], 400);
-        // }
+        if (!$payOS->verifyWebhook($payload)) {
+            Log::warning('Invalid webhook signature', $payload);
+            return response()->json(['message' => 'invalid signature'], 400);
+        }
 
         $data = $payload['data'] ?? null;
 
