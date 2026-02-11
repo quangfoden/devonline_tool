@@ -36,9 +36,16 @@ class PayOSWebhookController extends Controller
 
         $data = $payload['data'] ?? null;
 
-        if (!$data || ($data['status'] ?? null) !== 'PAID') {
-            return response()->json(['message' => 'ignored']);
+        if (!$data) {
+            return response()->json(['message' => 'no data'], 400);
         }
+
+        if (($data['code'] ?? null) !== '00') {
+            Log::warning('Payment not success', $data);
+            return response()->json(['message' => 'payment not success']);
+        }
+
+
 
         return DB::transaction(function () use ($data) {
 
