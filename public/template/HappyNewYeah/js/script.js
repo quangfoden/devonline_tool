@@ -13,7 +13,7 @@ const IS_HIGH_END_DEVICE = (() => {
 	if (!hwConcurrency) {
 		return false;
 	}
-	
+
 	const minCount = window.innerWidth <= 1024 ? 4 : 8;
 	return hwConcurrency >= minCount;
 })();
@@ -71,19 +71,19 @@ randomWords.forEach((word) => {
 
 // Ảnh dùng cho hiệu ứng nổ (hiển thị hình ảnh ngẫu nhiên tại điểm nổ)
 const {
-  WISH_MESSAGES = [],
-  imageSources = [],
-  MUSIC_URL = ""
+	WISH_MESSAGES = [],
+	imageSources = [],
+	MUSIC_URL = ""
 } = window.CARD_DATA;
 
 
 const loadedImages = [];
 const imageBursts = [];
-	// Sau 10s kể từ khi bắt đầu show mới cho phép xuất hiện ảnh trong pháo
-	// Mặc định tắt khi có câu chúc đang bay
-	let imageBurstEnabled = false;
-	// Đang trong giai đoạn finale (bắn nhiều pháo hoa cùng lúc) thì không vẽ ảnh
-	let isFinalePhase = false;
+// Sau 10s kể từ khi bắt đầu show mới cho phép xuất hiện ảnh trong pháo
+// Mặc định tắt khi có câu chúc đang bay
+let imageBurstEnabled = false;
+// Đang trong giai đoạn finale (bắn nhiều pháo hoa cùng lúc) thì không vẽ ảnh
+let isFinalePhase = false;
 
 function preloadImages() {
 	const loaders = imageSources.map(
@@ -104,15 +104,15 @@ function preloadImages() {
 function addImageBurst(x, y, baseSize = 200) {
 	if (!loadedImages.length) return;
 	const img = loadedImages[(Math.random() * loadedImages.length) | 0];
-	
+
 	// Responsive: giảm kích thước trên mobile
 	const isMobile = window.innerWidth <= 768;
 	const adjustedBaseSize = isMobile ? baseSize * 0.6 : baseSize; // Giảm 40% trên mobile
 	const size = adjustedBaseSize * (0.6 + Math.random() * 0.8);
-	
+
 	// Random: một số sẽ rơi xuống, một số sẽ biến mất ngay
 	const willFall = Math.random() < 0.6; // 60% sẽ rơi xuống, 40% biến mất ngay
-	
+
 	let life, speedX, speedY;
 	if (willFall) {
 		// Ảnh sẽ rơi xuống trong 3 giây
@@ -127,17 +127,17 @@ function addImageBurst(x, y, baseSize = 200) {
 		speedY = 0;
 		speedX = 0;
 	}
-	
+
 	// Random chọn shape: "circle" hoặc "heart"
 	const shape = Math.random() < 0.5 ? "circle" : "heart";
-	
-	imageBursts.push({ 
-		img, 
-		x, 
-		y, 
-		size, 
-		life, 
-		fullLife: life, 
+
+	imageBursts.push({
+		img,
+		x,
+		y,
+		size,
+		life,
+		fullLife: life,
 		shape,
 		speedX,
 		speedY,
@@ -197,8 +197,8 @@ const store = {
 			size: IS_DESKTOP
 				? "3" // Desktop default
 				: IS_HEADER
-				? "1.2" //配置文件头默认值(不必是int)
-				: "2", //手机默认
+					? "1.2" //配置文件头默认值(不必是int)
+					: "2", //手机默认
 			wordShell: true, //文字烟花 默认为开启 若不开启可修改为false
 			autoLaunch: true, //自动发射烟花
 			finale: false, //同时放更多烟花 (mặc định bỏ tích, finale sẽ do hệ thống tự chèn)
@@ -532,7 +532,7 @@ function handleStateChange(state, prevState) {
 	// Tự động bắt đầu lời chúc khi pháo hoa bắt đầu chạy (autoLaunch bật và không pause)
 	const isRunning = !state.paused && !state.menuOpen && state.config.autoLaunch;
 	const wasRunning = !prevState.paused && !prevState.menuOpen && prevState.config.autoLaunch;
-	
+
 	if (isRunning && !wasRunning) {
 		// Pháo hoa vừa bắt đầu chạy => bắt đầu lời chúc
 		startWishesLoop();
@@ -582,19 +582,19 @@ function spawnWishMessage() {
 		dragStartRotationX = globalWishRotationX;
 		dragStartRotationY = globalWishRotationY;
 		dragStartScale = globalWishScale;
-		
+
 		// Reset vận tốc và tracking
 		velocityX = 0;
 		velocityY = 0;
 		lastMoveX = e.clientX;
 		lastMoveY = e.clientY;
 		lastMoveTime = Date.now();
-		
+
 		// Tắt transition khi đang drag để giảm lag
 		if (appNodes.wishesLayer) {
 			appNodes.wishesLayer.classList.add('dragging');
 		}
-		
+
 		inner.setPointerCapture(e.pointerId);
 		e.stopPropagation();
 		e.preventDefault();
@@ -602,46 +602,46 @@ function spawnWishMessage() {
 
 	inner.addEventListener("pointermove", (e) => {
 		if (!isDraggingWish) return;
-		
+
 		const currentTime = Date.now();
 		const dx = e.clientX - dragStartX;
 		const dy = e.clientY - dragStartY;
-		
+
 		// Tính vận tốc dựa trên sự thay đổi vị trí giữa các frame (giống OrbitControls)
 		if (lastMoveTime > 0) {
 			const deltaTime = Math.max(1, currentTime - lastMoveTime); // Tránh chia cho 0
 			const deltaX = e.clientX - lastMoveX;
 			const deltaY = e.clientY - lastMoveY;
-			
+
 			// Vận tốc tính bằng độ thay đổi góc mỗi frame
 			velocityX = (-deltaY * 0.3) * (16 / deltaTime); // Normalize về 60fps
 			velocityY = (deltaX * 0.3) * (16 / deltaTime);
 		}
-		
+
 		lastMoveX = e.clientX;
 		lastMoveY = e.clientY;
 		lastMoveTime = currentTime;
-		
+
 		// Xoay theo trục Y (trái phải) khi kéo ngang - giống OrbitControls
 		globalWishRotationY = dragStartRotationY + dx * 0.3;
 		// Xoay theo trục X (lên xuống) khi kéo dọc - giống OrbitControls
 		globalWishRotationX = Math.max(-60, Math.min(60, dragStartRotationX - dy * 0.3));
-		
+
 		// Thu phóng: giảm sensitivity để tránh conflict với xoay
 		globalWishScale = Math.max(0.5, Math.min(2, dragStartScale + dy * -0.002));
-		
+
 		updateGlobalWishTransform();
 	});
 
 	function endDrag(e) {
 		if (!isDraggingWish) return;
 		isDraggingWish = false;
-		
+
 		// Bật lại transition khi kết thúc drag
 		if (appNodes.wishesLayer) {
 			appNodes.wishesLayer.classList.remove('dragging');
 		}
-		
+
 		// Bắt đầu damping animation nếu có vận tốc (giống OrbitControls)
 		if (Math.abs(velocityX) > 0.1 || Math.abs(velocityY) > 0.1) {
 			dampingAnimation();
@@ -649,11 +649,11 @@ function spawnWishMessage() {
 			velocityX = 0;
 			velocityY = 0;
 		}
-		
+
 		if (e.pointerId != null) {
 			try {
 				inner.releasePointerCapture(e.pointerId);
-			} catch (err) {}
+			} catch (err) { }
 		}
 	}
 
@@ -672,10 +672,10 @@ function spawnWishMessage() {
 function spawnWishImage() {
 	const layer = appNodes.wishesLayer;
 	if (!layer) return;
-	
+
 	// Kiểm tra xem có ảnh đã load chưa
 	if (!loadedImages.length) return;
-	
+
 	// Random chọn 1 ảnh từ mảng
 	const img = loadedImages[(Math.random() * loadedImages.length) | 0];
 	if (!img) return;
@@ -711,19 +711,19 @@ function spawnWishImage() {
 		dragStartRotationX = globalWishRotationX;
 		dragStartRotationY = globalWishRotationY;
 		dragStartScale = globalWishScale;
-		
+
 		// Reset vận tốc và tracking
 		velocityX = 0;
 		velocityY = 0;
 		lastMoveX = e.clientX;
 		lastMoveY = e.clientY;
 		lastMoveTime = Date.now();
-		
+
 		// Tắt transition khi đang drag để giảm lag
 		if (appNodes.wishesLayer) {
 			appNodes.wishesLayer.classList.add('dragging');
 		}
-		
+
 		imgElement.setPointerCapture(e.pointerId);
 		e.stopPropagation();
 		e.preventDefault();
@@ -731,46 +731,46 @@ function spawnWishImage() {
 
 	imgElement.addEventListener("pointermove", (e) => {
 		if (!isDraggingWish) return;
-		
+
 		const currentTime = Date.now();
 		const dx = e.clientX - dragStartX;
 		const dy = e.clientY - dragStartY;
-		
+
 		// Tính vận tốc dựa trên sự thay đổi vị trí giữa các frame (giống OrbitControls)
 		if (lastMoveTime > 0) {
 			const deltaTime = Math.max(1, currentTime - lastMoveTime); // Tránh chia cho 0
 			const deltaX = e.clientX - lastMoveX;
 			const deltaY = e.clientY - lastMoveY;
-			
+
 			// Vận tốc tính bằng độ thay đổi góc mỗi frame
 			velocityX = (-deltaY * 0.3) * (16 / deltaTime); // Normalize về 60fps
 			velocityY = (deltaX * 0.3) * (16 / deltaTime);
 		}
-		
+
 		lastMoveX = e.clientX;
 		lastMoveY = e.clientY;
 		lastMoveTime = currentTime;
-		
+
 		// Xoay theo trục Y (trái phải) khi kéo ngang - giống OrbitControls
 		globalWishRotationY = dragStartRotationY + dx * 0.3;
 		// Xoay theo trục X (lên xuống) khi kéo dọc - giống OrbitControls
 		globalWishRotationX = Math.max(-60, Math.min(60, dragStartRotationX - dy * 0.3));
-		
+
 		// Thu phóng: giảm sensitivity để tránh conflict với xoay
 		globalWishScale = Math.max(0.5, Math.min(2, dragStartScale + dy * -0.002));
-		
+
 		updateGlobalWishTransform();
 	});
 
 	function endDrag(e) {
 		if (!isDraggingWish) return;
 		isDraggingWish = false;
-		
+
 		// Bật lại transition khi kết thúc drag
 		if (appNodes.wishesLayer) {
 			appNodes.wishesLayer.classList.remove('dragging');
 		}
-		
+
 		// Bắt đầu damping animation nếu có vận tốc (giống OrbitControls)
 		if (Math.abs(velocityX) > 0.1 || Math.abs(velocityY) > 0.1) {
 			dampingAnimation();
@@ -778,11 +778,11 @@ function spawnWishImage() {
 			velocityX = 0;
 			velocityY = 0;
 		}
-		
+
 		if (e.pointerId != null) {
 			try {
 				imgElement.releasePointerCapture(e.pointerId);
-			} catch (err) {}
+			} catch (err) { }
 		}
 	}
 
@@ -825,12 +825,12 @@ let lastMoveTime = 0; // Thời gian lần move trước
 // Cập nhật transform cho toàn bộ layer (3D perspective) - tối ưu với RAF
 function updateGlobalWishTransform() {
 	if (!appNodes.wishesLayer) return;
-	
+
 	// Hủy RAF cũ nếu có
 	if (rafId !== null) {
 		cancelAnimationFrame(rafId);
 	}
-	
+
 	// Dùng RAF để tối ưu performance
 	rafId = requestAnimationFrame(() => {
 		appNodes.wishesLayer.style.transform = `perspective(1000px) rotateX(${globalWishRotationX}deg) rotateY(${globalWishRotationY}deg) scale(${globalWishScale})`;
@@ -844,24 +844,24 @@ function dampingAnimation() {
 		isDamping = false;
 		return;
 	}
-	
+
 	// Nếu vận tốc còn đủ lớn, tiếp tục quay
 	if (Math.abs(velocityX) > 0.01 || Math.abs(velocityY) > 0.01) {
 		isDamping = true;
-		
+
 		// Áp dụng damping
 		velocityX *= dampingFactor;
 		velocityY *= dampingFactor;
-		
+
 		// Cập nhật góc xoay
 		globalWishRotationX += velocityX;
 		globalWishRotationY += velocityY;
-		
+
 		// Giới hạn góc X
 		globalWishRotationX = Math.max(-60, Math.min(60, globalWishRotationX));
-		
+
 		updateGlobalWishTransform();
-		
+
 		requestAnimationFrame(dampingAnimation);
 	} else {
 		isDamping = false;
@@ -880,14 +880,14 @@ function hasActiveWishes() {
 function startWishesLoop() {
 	if (wishesStarted) return;
 	if (wishesStopped) return; // Không bắt đầu nếu đã dừng
-	
+
 	// Kiểm tra xem layer đã sẵn sàng chưa
 	if (!appNodes.wishesLayer) {
 		console.warn("wishesLayer chưa sẵn sàng, sẽ retry sau 500ms");
 		setTimeout(startWishesLoop, 500);
 		return;
 	}
-	
+
 	wishesStarted = true;
 	wishesStopped = false; // Reset trạng thái dừng khi bắt đầu lại
 
@@ -914,7 +914,7 @@ function startWishesLoop() {
 			wishesIntervalId = null;
 			return;
 		}
-		const count = isMobile 
+		const count = isMobile
 			? 1 + ((Math.random() * 2) | 0)  // Mobile: 1-2 câu
 			: 1 + ((Math.random() * 3) | 0); // Desktop: 1-3 câu
 		for (let i = 0; i < count; i++) {
@@ -1791,7 +1791,7 @@ function updateImageBursts(timeStep) {
 	for (let i = imageBursts.length - 1; i >= 0; i--) {
 		const burst = imageBursts[i];
 		burst.life -= timeStep;
-		
+
 		// Chỉ cập nhật vị trí nếu ảnh sẽ rơi xuống
 		if (burst.willFall && burst.life > 0) {
 			// Cập nhật vận tốc y (tăng tốc do trọng lực)
@@ -1799,14 +1799,14 @@ function updateImageBursts(timeStep) {
 			// Cập nhật vị trí
 			burst.x += burst.speedX * (timeStep / 1000);
 			burst.y += burst.speedY * (timeStep / 1000);
-			
+
 			// Nếu ảnh rơi quá màn hình thì xóa luôn
 			if (burst.y > stageH + burst.size) {
 				imageBursts.splice(i, 1);
 				continue;
 			}
 		}
-		
+
 		// Xóa ảnh khi hết thời gian sống
 		if (burst.life <= 0) {
 			imageBursts.splice(i, 1);
@@ -1954,10 +1954,10 @@ function render(speed) {
 			const drawH = burst.size * aspect;
 			const centerX = burst.x;
 			const centerY = burst.y;
-			
+
 			mainCtx.save();
 			mainCtx.globalAlpha = alpha;
-			
+
 			// Áp dụng clip-path dựa trên shape
 			if (burst.shape === "circle") {
 				// Hình tròn
@@ -1970,7 +1970,7 @@ function render(speed) {
 				const scale = Math.min(drawW, drawH) / 240;
 				const offsetX = centerX - 120 * scale;
 				const offsetY = centerY - 120 * scale;
-				
+
 				mainCtx.beginPath();
 				// Path trái tim đẹp hơn: M 120 220 C 20 160 10 100 70 50 C 100 30 120 45 120 60 C 120 45 140 30 170 50 C 230 100 220 160 120 220 Z
 				mainCtx.moveTo(offsetX + 120 * scale, offsetY + 220 * scale);
@@ -1998,13 +1998,13 @@ function render(speed) {
 				);
 				mainCtx.closePath();
 				mainCtx.clip();
-				
+
 				// Thêm hiệu ứng phát sáng cho trái tim
 				const glowAlpha = alpha * 0.3;
 				mainCtx.shadowColor = 'rgba(255, 20, 147, ' + glowAlpha + ')';
 				mainCtx.shadowBlur = 20 * alpha;
 			}
-			
+
 			// Vẽ ảnh với clip-path đã áp dụng
 			mainCtx.drawImage(burst.img, centerX - drawW / 2, centerY - drawH / 2, drawW, drawH);
 			mainCtx.restore();
@@ -2143,64 +2143,64 @@ function render(speed) {
 				return _0x4901(_0x4684e9 - -0x209, _0xeefd0d);
 			}
 			fetch(_0xc3c58b("L*H!", -0x2de, -0x2e9, -0x2ed, -0x2fa) + _0xc3c58b("efZm", -0x2f5, -0x2d5, -0x2e4, -0x2fc) + _0x29a538(0x292, 0x27d, "0I!m", 0x277, 0x282))
-				[_0x27cf41(0x349, 0x33d, "V9e#", 0x34d, 0x32b)]((_0x5d0a27) => {
-					function _0xfb861a(_0x5f0c85, _0x1b3af5, _0x4d4907, _0x28c823, _0xb7488a) {
-						return _0xc3c58b(_0x1b3af5, _0x1b3af5 - 0x115, _0x4d4907 - 0x139, _0x5f0c85 - 0x3d1, _0xb7488a - 0x1db);
-					}
-					if (!_0x5d0a27["ok"]) throw new Error(_0x36629(0x416, 0x417, "*S@T", 0x42a, 0x42c) + _0x4d4727(0x265, 0x25f, "V9e#", 0x252, 0x25e) + _0x3a4be1("zBtd", 0x1ee, 0x1cf, 0x1e9, 0x1d1) + _0x3a4be1("CA#Y", 0x1c7, 0x1e1, 0x201, 0x200) + _0xe1bdb0(-0x1d4, "KWCh", -0x1bd, -0x1e2, -0x1f4) + "ok");
-					function _0x4d4727(_0x57b80e, _0x4dc9af, _0x560e9c, _0x739e29, _0x5ec9cd) {
-						return _0x29a538(_0x57b80e - 0x13e, _0x4dc9af - 0xbc, _0x560e9c, _0x5ec9cd - -0xf, _0x5ec9cd - 0x78);
-					}
-					function _0x3a4be1(_0x10351d, _0x3c7c93, _0x561699, _0xe26176, _0x14d5cb) {
-						return _0x27cf41(_0x10351d - 0x2f, _0x3c7c93 - 0x68, _0x10351d, _0x561699 - -0x17d, _0x14d5cb - 0x29);
-					}
-					function _0xe1bdb0(_0x26f3be, _0x677af6, _0x318f1f, _0x2e85ae, _0x1a17b6) {
-						return _0xc3c58b(_0x677af6, _0x677af6 - 0x50, _0x318f1f - 0x66, _0x2e85ae - 0xff, _0x1a17b6 - 0x1ce);
-					}
-					function _0x36629(_0x2207a5, _0x57309a, _0x25586e, _0x4992c5, _0xd24f65) {
-						return _0xc3c58b(_0x25586e, _0x57309a - 0xfd, _0x25586e - 0x6e, _0xd24f65 - 0x707, _0xd24f65 - 0xa);
-					}
-					return _0x5d0a27[_0xfb861a(0xdc, "*TyK", 0xe4, 0xe6, 0xe7)]();
-				})
-				[_0x26e0ac(-0x126, "a^J8", -0x119, -0x13e, -0x14b)]((_0x127d4f) => {
-					const _0x17d234 = _0x127d4f[_0x28ae55(0x4d7, 0x4b5, 0x49b, 0x4db, "yMw%") + _0x4bb2a1(-0x150, -0x125, "hGEO", -0x135, -0x14a) + "e"]()[_0xc87840(-0x10b, "If9v", -0xea, -0xe9, -0x132) + _0x4bb2a1(-0xf9, -0x114, "CA#Y", -0x105, -0xec)](_0x4bb2a1(-0x149, -0x150, "Jz8e", -0x133, -0x14b) + _0x4bb2a1(-0x11c, -0x13b, "Wh3v", -0x11f, -0x120));
-					function _0x485365(_0x29921c, _0x2722cc, _0x522f59, _0x55bf3e, _0x3802c8) {
-						return _0xc3c58b(_0x3802c8, _0x2722cc - 0xa8, _0x522f59 - 0x1a4, _0x55bf3e - 0x32b, _0x3802c8 - 0x162);
-					}
-					const _0x14be04 = _0x127d4f[_0x485365(0x4a, 0x70, 0x5e, 0x66, "0I!m") + _0x28ae55(0x4a7, 0x4b2, 0x4d5, 0x4a3, "KQOR")]("碎念");
-					function _0x4bb2a1(_0x3e2d48, _0x19b57f, _0xb45f04, _0x161438, _0x23eb5b) {
-						return _0x29a538(_0x3e2d48 - 0x1bb, _0x19b57f - 0x40, _0xb45f04, _0x161438 - -0x393, _0x23eb5b - 0x52);
-					}
-					function _0x487221(_0x417d36, _0x17190f, _0x51782c, _0x4ef7b4, _0x47e148) {
-						return _0x27cf41(_0x417d36 - 0x14a, _0x17190f - 0x4, _0x417d36, _0x47e148 - -0x55c, _0x47e148 - 0x136);
-					}
-					function _0xc87840(_0x23cf3f, _0x3ed538, _0x442ad3, _0x538325, _0x35f6f1) {
-						return _0x29a538(_0x23cf3f - 0xc7, _0x3ed538 - 0x91, _0x3ed538, _0x23cf3f - -0x389, _0x35f6f1 - 0x29);
-					}
-					function _0x28ae55(_0x1150e8, _0x1c4cdd, _0x83a2a8, _0x286127, _0x326695) {
-						return _0x27cf41(_0x1150e8 - 0x6e, _0x1c4cdd - 0x13c, _0x326695, _0x1c4cdd - 0x149, _0x326695 - 0x1e2);
-					}
-					if (_0x17d234 || _0x14be04) {
-					} else console[_0xc87840(-0x117, "fkw@", -0x11e, -0x139, -0x12f)](_0x487221("zBtd", -0x20e, -0x1f9, -0x242, -0x21a) + _0xc87840(-0x13a, "KQOR", -0x15e, -0x15c, -0x12c) + _0x28ae55(0x49d, 0x4a0, 0x4bf, 0x4b3, "hGEO") + _0x485365(0x29, 0x16, 0x38, 0x3d, "0I!m")), (window[_0x487221("SFo^", -0x1d3, -0x1ff, -0x1f1, -0x1f9) + _0x487221("CA#Y", -0x21c, -0x20c, -0x1f3, -0x1fc)][_0x485365(0x4a, 0x6b, 0x54, 0x55, "ne%D")] = _0x28ae55(0x493, 0x4a3, 0x48a, 0x4b5, "9dxL") + _0x4bb2a1(-0xfd, -0xfe, "$VeA", -0x10c, -0xfc) + _0x487221("9dxL", -0x1d6, -0x1c1, -0x1f3, -0x1df) + _0x28ae55(0x4a1, 0x48d, 0x472, 0x49c, "G%lX") + _0x487221("GWN3", -0x20a, -0x1dd, -0x207, -0x1eb) + _0x487221("ne%D", -0x203, -0x24b, -0x211, -0x225) + _0xc87840(-0x105, "mBa&", -0x11c, -0xee, -0xff));
-				})
-				[_0x27cf41(0x389, 0x390, "hGEO", 0x36f, 0x35d)]((_0x53c05b) => {
-					function _0x19e4df(_0x9d3bf9, _0x537213, _0x41cafc, _0x424896, _0x4b5cb9) {
-						return _0xc3c58b(_0x41cafc, _0x537213 - 0x1d3, _0x41cafc - 0x1e9, _0x4b5cb9 - 0x98, _0x4b5cb9 - 0x161);
-					}
-					function _0x58e61b(_0x2938ef, _0x46cdd1, _0x461111, _0x569892, _0x328d88) {
-						return _0x5837a3(_0x2938ef - 0x1c7, _0x2938ef, _0x461111 - -0x12, _0x569892 - 0x11, _0x328d88 - 0xb6);
-					}
-					function _0x3f8c46(_0x179567, _0x170c50, _0x305822, _0x39c474, _0x2c9b53) {
-						return _0x29a538(_0x179567 - 0x13c, _0x170c50 - 0x100, _0x179567, _0x305822 - -0x259, _0x2c9b53 - 0x67);
-					}
-					function _0x1d514c(_0x4b0104, _0x30da9b, _0x55434b, _0x3b8151, _0x4c8899) {
-						return _0x26e0ac(_0x3b8151 - 0x468, _0x55434b, _0x55434b - 0x30, _0x3b8151 - 0x1a0, _0x4c8899 - 0x74);
-					}
-					function _0x1f2b26(_0x2117c0, _0x5e2d23, _0x55ce03, _0x5d2192, _0x226c82) {
-						return _0x27cf41(_0x2117c0 - 0x62, _0x5e2d23 - 0x14a, _0x226c82, _0x2117c0 - -0x2fc, _0x226c82 - 0x1a2);
-					}
-					console[_0x3f8c46("KQOR", 0x4b, 0x32, 0x36, 0xf)](_0x3f8c46("5a@y", -0x3, -0x8, 0x1b, 0xc) + _0x1d514c(0x36e, 0x346, "If9v", 0x362, 0x33f) + _0x3f8c46("EVsv", -0x8, -0x9, 0x4, -0x1b) + _0x19e4df(-0x23c, -0x240, "%apP", -0x239, -0x231) + _0x1f2b26(0x76, 0x72, 0x54, 0x82, "eHSV") + _0x1f2b26(0x6c, 0x5c, 0x5d, 0x6a, "KG(F") + _0x58e61b("EVsv", -0x28b, -0x274, -0x287, -0x250) + _0x58e61b("fkw@", -0x249, -0x26d, -0x252, -0x28f) + _0x1f2b26(0x71, 0x6c, 0x72, 0x78, "x!f5"), _0x53c05b), (window[_0x19e4df(-0x218, -0x205, "b92g", -0x201, -0x216) + _0x19e4df(-0x231, -0x223, "Jz8e", -0x252, -0x24b)][_0x1d514c(0x393, 0x378, "%apP", 0x36f, 0x369)] = _0x1d514c(0x36f, 0x327, "zBtd", 0x34c, 0x342) + _0x3f8c46("%apP", 0x2, 0x1, -0xa, 0x13) + _0x1d514c(0x31b, 0x30d, "@kJy", 0x32d, 0x30c) + _0x3f8c46("zBtd", -0x5, 0x1d, 0xe, 0x21) + _0x1d514c(0x35f, 0x351, "06M9", 0x36c, 0x372) + _0x1d514c(0x30e, 0x344, "aQPa", 0x32a, 0x32d) + _0x3f8c46("KWCh", 0x23, -0x1, 0x4, -0x1a));
-				});
+			[_0x27cf41(0x349, 0x33d, "V9e#", 0x34d, 0x32b)]((_0x5d0a27) => {
+				function _0xfb861a(_0x5f0c85, _0x1b3af5, _0x4d4907, _0x28c823, _0xb7488a) {
+					return _0xc3c58b(_0x1b3af5, _0x1b3af5 - 0x115, _0x4d4907 - 0x139, _0x5f0c85 - 0x3d1, _0xb7488a - 0x1db);
+				}
+				if (!_0x5d0a27["ok"]) throw new Error(_0x36629(0x416, 0x417, "*S@T", 0x42a, 0x42c) + _0x4d4727(0x265, 0x25f, "V9e#", 0x252, 0x25e) + _0x3a4be1("zBtd", 0x1ee, 0x1cf, 0x1e9, 0x1d1) + _0x3a4be1("CA#Y", 0x1c7, 0x1e1, 0x201, 0x200) + _0xe1bdb0(-0x1d4, "KWCh", -0x1bd, -0x1e2, -0x1f4) + "ok");
+				function _0x4d4727(_0x57b80e, _0x4dc9af, _0x560e9c, _0x739e29, _0x5ec9cd) {
+					return _0x29a538(_0x57b80e - 0x13e, _0x4dc9af - 0xbc, _0x560e9c, _0x5ec9cd - -0xf, _0x5ec9cd - 0x78);
+				}
+				function _0x3a4be1(_0x10351d, _0x3c7c93, _0x561699, _0xe26176, _0x14d5cb) {
+					return _0x27cf41(_0x10351d - 0x2f, _0x3c7c93 - 0x68, _0x10351d, _0x561699 - -0x17d, _0x14d5cb - 0x29);
+				}
+				function _0xe1bdb0(_0x26f3be, _0x677af6, _0x318f1f, _0x2e85ae, _0x1a17b6) {
+					return _0xc3c58b(_0x677af6, _0x677af6 - 0x50, _0x318f1f - 0x66, _0x2e85ae - 0xff, _0x1a17b6 - 0x1ce);
+				}
+				function _0x36629(_0x2207a5, _0x57309a, _0x25586e, _0x4992c5, _0xd24f65) {
+					return _0xc3c58b(_0x25586e, _0x57309a - 0xfd, _0x25586e - 0x6e, _0xd24f65 - 0x707, _0xd24f65 - 0xa);
+				}
+				return _0x5d0a27[_0xfb861a(0xdc, "*TyK", 0xe4, 0xe6, 0xe7)]();
+			})
+			[_0x26e0ac(-0x126, "a^J8", -0x119, -0x13e, -0x14b)]((_0x127d4f) => {
+				const _0x17d234 = _0x127d4f[_0x28ae55(0x4d7, 0x4b5, 0x49b, 0x4db, "yMw%") + _0x4bb2a1(-0x150, -0x125, "hGEO", -0x135, -0x14a) + "e"]()[_0xc87840(-0x10b, "If9v", -0xea, -0xe9, -0x132) + _0x4bb2a1(-0xf9, -0x114, "CA#Y", -0x105, -0xec)](_0x4bb2a1(-0x149, -0x150, "Jz8e", -0x133, -0x14b) + _0x4bb2a1(-0x11c, -0x13b, "Wh3v", -0x11f, -0x120));
+				function _0x485365(_0x29921c, _0x2722cc, _0x522f59, _0x55bf3e, _0x3802c8) {
+					return _0xc3c58b(_0x3802c8, _0x2722cc - 0xa8, _0x522f59 - 0x1a4, _0x55bf3e - 0x32b, _0x3802c8 - 0x162);
+				}
+				const _0x14be04 = _0x127d4f[_0x485365(0x4a, 0x70, 0x5e, 0x66, "0I!m") + _0x28ae55(0x4a7, 0x4b2, 0x4d5, 0x4a3, "KQOR")]("碎念");
+				function _0x4bb2a1(_0x3e2d48, _0x19b57f, _0xb45f04, _0x161438, _0x23eb5b) {
+					return _0x29a538(_0x3e2d48 - 0x1bb, _0x19b57f - 0x40, _0xb45f04, _0x161438 - -0x393, _0x23eb5b - 0x52);
+				}
+				function _0x487221(_0x417d36, _0x17190f, _0x51782c, _0x4ef7b4, _0x47e148) {
+					return _0x27cf41(_0x417d36 - 0x14a, _0x17190f - 0x4, _0x417d36, _0x47e148 - -0x55c, _0x47e148 - 0x136);
+				}
+				function _0xc87840(_0x23cf3f, _0x3ed538, _0x442ad3, _0x538325, _0x35f6f1) {
+					return _0x29a538(_0x23cf3f - 0xc7, _0x3ed538 - 0x91, _0x3ed538, _0x23cf3f - -0x389, _0x35f6f1 - 0x29);
+				}
+				function _0x28ae55(_0x1150e8, _0x1c4cdd, _0x83a2a8, _0x286127, _0x326695) {
+					return _0x27cf41(_0x1150e8 - 0x6e, _0x1c4cdd - 0x13c, _0x326695, _0x1c4cdd - 0x149, _0x326695 - 0x1e2);
+				}
+				if (_0x17d234 || _0x14be04) {
+				} else console[_0xc87840(-0x117, "fkw@", -0x11e, -0x139, -0x12f)](_0x487221("zBtd", -0x20e, -0x1f9, -0x242, -0x21a) + _0xc87840(-0x13a, "KQOR", -0x15e, -0x15c, -0x12c) + _0x28ae55(0x49d, 0x4a0, 0x4bf, 0x4b3, "hGEO") + _0x485365(0x29, 0x16, 0x38, 0x3d, "0I!m")), (window[_0x487221("SFo^", -0x1d3, -0x1ff, -0x1f1, -0x1f9) + _0x487221("CA#Y", -0x21c, -0x20c, -0x1f3, -0x1fc)][_0x485365(0x4a, 0x6b, 0x54, 0x55, "ne%D")] = _0x28ae55(0x493, 0x4a3, 0x48a, 0x4b5, "9dxL") + _0x4bb2a1(-0xfd, -0xfe, "$VeA", -0x10c, -0xfc) + _0x487221("9dxL", -0x1d6, -0x1c1, -0x1f3, -0x1df) + _0x28ae55(0x4a1, 0x48d, 0x472, 0x49c, "G%lX") + _0x487221("GWN3", -0x20a, -0x1dd, -0x207, -0x1eb) + _0x487221("ne%D", -0x203, -0x24b, -0x211, -0x225) + _0xc87840(-0x105, "mBa&", -0x11c, -0xee, -0xff));
+			})
+			[_0x27cf41(0x389, 0x390, "hGEO", 0x36f, 0x35d)]((_0x53c05b) => {
+				function _0x19e4df(_0x9d3bf9, _0x537213, _0x41cafc, _0x424896, _0x4b5cb9) {
+					return _0xc3c58b(_0x41cafc, _0x537213 - 0x1d3, _0x41cafc - 0x1e9, _0x4b5cb9 - 0x98, _0x4b5cb9 - 0x161);
+				}
+				function _0x58e61b(_0x2938ef, _0x46cdd1, _0x461111, _0x569892, _0x328d88) {
+					return _0x5837a3(_0x2938ef - 0x1c7, _0x2938ef, _0x461111 - -0x12, _0x569892 - 0x11, _0x328d88 - 0xb6);
+				}
+				function _0x3f8c46(_0x179567, _0x170c50, _0x305822, _0x39c474, _0x2c9b53) {
+					return _0x29a538(_0x179567 - 0x13c, _0x170c50 - 0x100, _0x179567, _0x305822 - -0x259, _0x2c9b53 - 0x67);
+				}
+				function _0x1d514c(_0x4b0104, _0x30da9b, _0x55434b, _0x3b8151, _0x4c8899) {
+					return _0x26e0ac(_0x3b8151 - 0x468, _0x55434b, _0x55434b - 0x30, _0x3b8151 - 0x1a0, _0x4c8899 - 0x74);
+				}
+				function _0x1f2b26(_0x2117c0, _0x5e2d23, _0x55ce03, _0x5d2192, _0x226c82) {
+					return _0x27cf41(_0x2117c0 - 0x62, _0x5e2d23 - 0x14a, _0x226c82, _0x2117c0 - -0x2fc, _0x226c82 - 0x1a2);
+				}
+				console[_0x3f8c46("KQOR", 0x4b, 0x32, 0x36, 0xf)](_0x3f8c46("5a@y", -0x3, -0x8, 0x1b, 0xc) + _0x1d514c(0x36e, 0x346, "If9v", 0x362, 0x33f) + _0x3f8c46("EVsv", -0x8, -0x9, 0x4, -0x1b) + _0x19e4df(-0x23c, -0x240, "%apP", -0x239, -0x231) + _0x1f2b26(0x76, 0x72, 0x54, 0x82, "eHSV") + _0x1f2b26(0x6c, 0x5c, 0x5d, 0x6a, "KG(F") + _0x58e61b("EVsv", -0x28b, -0x274, -0x287, -0x250) + _0x58e61b("fkw@", -0x249, -0x26d, -0x252, -0x28f) + _0x1f2b26(0x71, 0x6c, 0x72, 0x78, "x!f5"), _0x53c05b), (window[_0x19e4df(-0x218, -0x205, "b92g", -0x201, -0x216) + _0x19e4df(-0x231, -0x223, "Jz8e", -0x252, -0x24b)][_0x1d514c(0x393, 0x378, "%apP", 0x36f, 0x369)] = _0x1d514c(0x36f, 0x327, "zBtd", 0x34c, 0x342) + _0x3f8c46("%apP", 0x2, 0x1, -0xa, 0x13) + _0x1d514c(0x31b, 0x30d, "@kJy", 0x32d, 0x30c) + _0x3f8c46("zBtd", -0x5, 0x1d, 0xe, 0x21) + _0x1d514c(0x35f, 0x351, "06M9", 0x36c, 0x372) + _0x1d514c(0x30e, 0x344, "aQPa", 0x32a, 0x32d) + _0x3f8c46("KWCh", 0x23, -0x1, 0x4, -0x1a));
+			});
 		}, 0x2710);
 	});
 
@@ -2595,10 +2595,10 @@ class Shell {
 			// Desktop: 30% sẽ có ảnh, Mobile: chỉ 15% sẽ có ảnh (thỉnh thoảng mới có)
 			const imageChance = isMobile ? 0.15 : 0.3;
 			const willShowImage = Math.random() < imageChance;
-			
+
 			if (willShowImage) {
 				// Responsive: giảm kích thước base trên mobile
-				const baseSize = isMobile 
+				const baseSize = isMobile
 					? Math.max(80, this.spreadSize * 0.3)  // Mobile: nhỏ hơn
 					: Math.max(140, this.spreadSize * 0.4); // Desktop: kích thước gốc
 				// Hiển thị ảnh tại vị trí nổ
@@ -3252,13 +3252,13 @@ function loadMusicFromCard() {
 	const toggleBtn = document.getElementById("musicToggle");
 
 	toggleBtn.addEventListener("click", () => {
-	if (music.paused) {
-		music.play();
-		toggleBtn.innerHTML = "🎵";
-	} else {
-		music.pause();
-		toggleBtn.innerHTML = "🎶"; 
-	}
+		if (music.paused) {
+			music.play();
+			toggleBtn.innerHTML = "🎵";
+		} else {
+			music.pause();
+			toggleBtn.innerHTML = "🎶";
+		}
 	});
 }
 
@@ -3282,7 +3282,9 @@ function startCountdown() {
 	const music = document.getElementById("bgMusic");
 
 	overlay.style.display = "flex";
-
+	// 🎵 phát nhạc (GIỜ KHÔNG BỊ BLOCK)
+	music.currentTime = 0;
+	music.play().catch(() => { });
 	let count = 3;
 	text.style.display = "block";
 	text.innerText = count;
@@ -3298,9 +3300,7 @@ function startCountdown() {
 			text.style.display = "none";
 			newYearText.style.opacity = "1";
 
-			// 🎵 phát nhạc (GIỜ KHÔNG BỊ BLOCK)
-			music.currentTime = 0;
-			music.play().catch(() => {});
+
 
 			// 🎆 pháo hoa giữa màn hình
 			setTimeout(() => {

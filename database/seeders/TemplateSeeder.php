@@ -18,10 +18,10 @@ class TemplateSeeder extends Seeder
 
         DB::table('templates')->insert([
             [
-                'name' => 'Thiệp năm mới rực rỡ',
+                'name' => 'New Year 2026',
                 'slug' => 'newyear-fireworks',
-                'price' => 0,
-                'description' => 'Thiệp chúc mừng năm mới với hiệu ứng pháo hoa',
+                'price' => 20000,
+                'description' => 'Website dành cho năm mới với hiệu ứng pháo hoa đẹp mắt',
                 'view' => 'HappyNewYeah',
                 'preview_url' => 'template/HappyNewYeah/index.html',
                 'thumbnail' => 'template/HappyNewYeah/thumbnail.png',

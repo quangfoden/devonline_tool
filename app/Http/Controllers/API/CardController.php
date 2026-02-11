@@ -281,6 +281,145 @@ class CardController extends Controller
     }
 
 
+    public function uploadMusic(Request $request, $id)
+    {
+        $card = Card::where('uuid', $id)->firstOrFail();
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'music' => 'required|file|mimes:mp3,wav|max:10000',
+            ]
+        );
+
+        if ($validator->fails()) {
+            throw new ValidationException(
+                $validator,
+                response()->json([
+                    'message' => 'Dữ liệu không hợp lệ',
+                    'errors' => $validator->errors(),
+                ], 422)
+            );
+        }
+
+        $data = $card->data ?? [];
+
+        /*
+        ==========================
+        🔥 1. XOÁ NHẠC CŨ NẾU CÓ
+        ==========================
+        */
+        if (!empty($data['MUSIC_URL'])) {
+
+            $oldUrl = $data['MUSIC_URL'];
+
+            // Lấy phần path kể cả khi có domain
+            $path = parse_url($oldUrl, PHP_URL_PATH);
+
+            if ($path && str_starts_with($path, '/storage/')) {
+
+                // Bỏ /storage/ đi
+                $oldPath = substr($path, strlen('/storage/'));
+
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
+        }
+
+
+
+        /*
+        ==========================
+        🎵 2. LƯU FILE MỚI
+        ==========================
+        */
+        $file = $request->file('music');
+
+        $name = uniqid() . '.' . $file->getClientOriginalExtension();
+        $folder = "cards/{$card->uuid}/music";
+        $path = "{$folder}/{$name}";
+
+        Storage::disk('public')->putFileAs(
+            $folder,
+            $file,
+            $name
+        );
+
+        $url = Storage::url($path);
+
+        $data['MUSIC_URL'] = $url;
+
+        $card->update(['data' => $data]);
+
+        return response()->json([
+            'path' => $url
+        ]);
+    }
+
+    public function removeMusic(Request $request, $id)
+    {
+        $card = Card::where('uuid', $id)->firstOrFail();
+
+        $data = $card->data ?? [];
+
+        if (!empty($data['MUSIC_URL'])) {
+
+            $oldUrl = $data['MUSIC_URL'];
+
+            // Lấy path kể cả khi có domain
+            $path = parse_url($oldUrl, PHP_URL_PATH);
+
+            if ($path && str_starts_with($path, '/storage/')) {
+
+                // Bỏ /storage/
+                $oldPath = substr($path, strlen('/storage/'));
+
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
+
+            // Set về null
+            $data['MUSIC_URL'] = null;
+
+            $card->update([
+                'data' => $data
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Đã xoá nhạc thành công'
+        ]);
+    }
+
+
+    public function selectPresetMusic(Request $request, $id)
+    {
+        $card = Card::where('uuid', $id)->firstOrFail();
+
+        $data = $card->data ?? [];
+
+        // nếu trước đó là nhạc upload → xoá
+        if (!empty($data['MUSIC_URL']) && str_contains($data['MUSIC_URL'], "/storage/cards/")) {
+
+            $oldPath = str_replace('/storage/', '', $data['MUSIC_URL']);
+
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
+            }
+        }
+
+        $data['MUSIC_URL'] = $request->music;
+
+        $card->update(['data' => $data]);
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+
 
 
     public function qr($uuid, Request $request, HeartQrService $service)

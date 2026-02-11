@@ -226,7 +226,8 @@ function _toPrimitive(t, r) {
       "default": function _default() {
         return {
           WISH_MESSAGES: [],
-          imageSources: []
+          imageSources: [],
+          MUSIC_URL: null
         };
       }
     }
@@ -238,7 +239,24 @@ function _toPrimitive(t, r) {
     },
     images: function images() {
       return this.modelValue.imageSources || [];
+    },
+    selectedMusic: function selectedMusic() {
+      return this.modelValue.MUSIC_URL || null;
     }
+  },
+  data: function data() {
+    return {
+      presetMusics: [{
+        name: "Một năm mới bình an",
+        url: "/template/HappyNewYeah/music/happy2.mp3"
+      }, {
+        name: "Một năm mới bình an (dài)",
+        url: "/template/HappyNewYeah/music/happy.mp3"
+      }, {
+        name: "Ngắm pháo hoa cùng nhau",
+        url: "/template/HappyNewYeah/music/happy1.mp3"
+      }]
+    };
   },
   methods: {
     emit: function emit(data) {
@@ -386,6 +404,120 @@ function _toPrimitive(t, r) {
           }
         }, _callee2, null, [[1, 3]]);
       }))();
+    },
+    // ===== MUSIC =====
+    selectPreset: function selectPreset(url) {
+      var _this3 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+        var _t3;
+        return _regenerator().w(function (_context3) {
+          while (1) switch (_context3.p = _context3.n) {
+            case 0:
+              _context3.p = 0;
+              _context3.n = 1;
+              return _this3.axios.post("/api/cards/".concat(_this3.$route.params.id, "/select-preset-music"), {
+                music: url
+              });
+            case 1:
+              _this3.emit({
+                MUSIC_URL: url
+              });
+              _context3.n = 3;
+              break;
+            case 2:
+              _context3.p = 2;
+              _t3 = _context3.v;
+              console.error(_t3);
+            case 3:
+              return _context3.a(2);
+          }
+        }, _callee3, null, [[0, 2]]);
+      }))();
+    },
+    uploadMusic: function uploadMusic(e) {
+      var _this4 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+        var file, form, res, _t4;
+        return _regenerator().w(function (_context4) {
+          while (1) switch (_context4.p = _context4.n) {
+            case 0:
+              file = e.target.files[0];
+              if (file) {
+                _context4.n = 1;
+                break;
+              }
+              return _context4.a(2);
+            case 1:
+              form = new FormData();
+              form.append("music", file);
+              _context4.p = 2;
+              _context4.n = 3;
+              return _this4.axios.post("/api/cards/".concat(_this4.$route.params.id, "/upload-music"), form, {
+                headers: {
+                  "Content-Type": "multipart/form-data"
+                }
+              });
+            case 3:
+              res = _context4.v;
+              _this4.emit({
+                MUSIC_URL: res.data.path
+              });
+              _this4.$swal.fire({
+                toast: true,
+                position: "top-end",
+                icon: "success",
+                title: "Tải nhạc thành công!",
+                showConfirmButton: false,
+                timer: 1000
+              });
+              _context4.n = 5;
+              break;
+            case 4:
+              _context4.p = 4;
+              _t4 = _context4.v;
+              _this4.$swal.fire({
+                icon: "error",
+                title: "Lỗi tải nhạc"
+              });
+            case 5:
+              e.target.value = "";
+            case 6:
+              return _context4.a(2);
+          }
+        }, _callee4, null, [[2, 4]]);
+      }))();
+    },
+    removeMusic: function removeMusic() {
+      var _this5 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+        var oldMusic, _t5;
+        return _regenerator().w(function (_context5) {
+          while (1) switch (_context5.p = _context5.n) {
+            case 0:
+              oldMusic = _this5.selectedMusic;
+              _this5.emit({
+                MUSIC_URL: null
+              });
+              _context5.p = 1;
+              _context5.n = 2;
+              return _this5.axios.post("/api/cards/".concat(_this5.$route.params.id, "/remove-music"), {
+                url: oldMusic
+              });
+            case 2:
+              _context5.n = 4;
+              break;
+            case 3:
+              _context5.p = 3;
+              _t5 = _context5.v;
+              console.error("Xóa nhạc lỗi", _t5);
+              _this5.emit({
+                MUSIC_URL: oldMusic
+              });
+            case 4:
+              return _context5.a(2);
+          }
+        }, _callee5, null, [[1, 3]]);
+      }))();
     }
   }
 });
@@ -438,6 +570,7 @@ var _hoisted_3 = {
   "class": "section-header"
 };
 var _hoisted_4 = {
+  key: 0,
   "class": "count-badge"
 };
 var _hoisted_5 = {
@@ -455,66 +588,114 @@ var _hoisted_10 = {
   "class": "section-header"
 };
 var _hoisted_11 = {
+  key: 0,
   "class": "count-badge"
 };
 var _hoisted_12 = {
   "class": "upload-area"
 };
-var _hoisted_13 = {
-  key: 0,
-  "class": "image-grid"
-};
-var _hoisted_14 = ["src", "alt"];
+var _hoisted_13 = ["src", "alt"];
+var _hoisted_14 = ["onClick"];
 var _hoisted_15 = {
-  key: 0,
-  "class": "image-badge free"
-};
-var _hoisted_16 = {
-  key: 1,
-  "class": "image-badge paid"
-};
-var _hoisted_17 = ["onClick"];
-var _hoisted_18 = {
   "class": "image-overlay"
 };
-var _hoisted_19 = {
+var _hoisted_16 = {
   "class": "image-index"
 };
-var _hoisted_20 = {
+var _hoisted_17 = {
   key: 1,
-  "class": "pricing-note"
+  "class": "info-note"
 };
+var _hoisted_18 = {
+  "class": "form-section"
+};
+var _hoisted_19 = {
+  "class": "section-header"
+};
+var _hoisted_20 = {
+  key: 0,
+  "class": "price-badge"
+};
+var _hoisted_21 = {
+  "class": "music-options"
+};
+var _hoisted_22 = ["onClick"];
+var _hoisted_23 = {
+  "class": "upload-area compact"
+};
+var _hoisted_24 = {
+  key: 0,
+  "class": "music-preview"
+};
+var _hoisted_25 = {
+  "class": "audio-player"
+};
+var _hoisted_26 = ["src"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" HEADER "), _cache[7] || (_cache[7] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" HEADER "), _cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "form-header"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", null, "✨ Tùy chỉnh thiệp của bạn"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Thêm lời chúc và hình ảnh để thiệp thêm ý nghĩa")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" WISH MESSAGES SECTION "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "💌 Lời chúc", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.wishes.length), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($options.wishes, function (wish, index) {
-    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
-      key: index,
-      "class": "wish-item"
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(index + 1), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-      value: wish,
-      onInput: function onInput($event) {
-        return $options.updateWish(index, $event.target.value);
-      },
-      placeholder: "Viết lời chúc ý nghĩa...",
-      "class": "wish-input"
-    }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_7), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-      onClick: function onClick($event) {
-        return $options.removeWish(index);
-      },
-      "class": "remove-btn",
-      title: "Xóa lời chúc"
-    }, " ✕ ", 8 /* PROPS */, _hoisted_8)]);
-  }), 128 /* KEYED_FRAGMENT */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "header-icon"
+  }, "✨"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", null, "Tùy chỉnh thiệp"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Thêm lời chúc, hình ảnh và nhạc nền để thiệp thêm ý nghĩa")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" WISH MESSAGES SECTION "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_cache[4] || (_cache[4] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "section-title"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    "class": "section-icon"
+  }, "💌"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Lời chúc")], -1 /* CACHED */)), $options.wishes.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.wishes.length), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(vue__WEBPACK_IMPORTED_MODULE_0__.TransitionGroup, {
+    name: "wish-list"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($options.wishes, function (wish, index) {
+        return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+          key: "wish-".concat(index),
+          "class": "wish-item"
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(index + 1), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+          value: wish,
+          onInput: function onInput($event) {
+            return $options.updateWish(index, $event.target.value);
+          },
+          placeholder: "Viết lời chúc của bạn...",
+          "class": "wish-input",
+          maxlength: "200"
+        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_7), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+          onClick: function onClick($event) {
+            return $options.removeWish(index);
+          },
+          "class": "remove-btn",
+          title: "Xóa"
+        }, _toConsumableArray(_cache[5] || (_cache[5] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+          width: "16",
+          height: "16",
+          viewBox: "0 0 16 16",
+          fill: "none"
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
+          d: "M12 4L4 12M4 4L12 12",
+          stroke: "currentColor",
+          "stroke-width": "2",
+          "stroke-linecap": "round"
+        })], -1 /* CACHED */)])), 8 /* PROPS */, _hoisted_8)]);
+      }), 128 /* KEYED_FRAGMENT */))];
+    }),
+    _: 1 /* STABLE */
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     onClick: _cache[0] || (_cache[0] = function () {
       return $options.addWish && $options.addWish.apply($options, arguments);
     }),
     "class": "add-btn"
-  }, _toConsumableArray(_cache[3] || (_cache[3] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-    "class": "btn-icon"
-  }, "+", -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Thêm lời chúc", -1 /* CACHED */)])))])]), _cache[8] || (_cache[8] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-    "class": "section-divider"
-  }, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" IMAGE UPLOAD SECTION "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [_cache[4] || (_cache[4] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "🎨 Ảnh hiệu ứng", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.images.length), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, _toConsumableArray(_cache[6] || (_cache[6] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+    width: "20",
+    height: "20",
+    viewBox: "0 0 20 20",
+    fill: "none"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
+    d: "M10 4V16M4 10H16",
+    stroke: "currentColor",
+    "stroke-width": "2",
+    "stroke-linecap": "round"
+  })], -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Thêm lời chúc mới", -1 /* CACHED */)])))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" IMAGE UPLOAD SECTION "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [_cache[7] || (_cache[7] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "section-title"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    "class": "section-icon"
+  }, "🎨"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Hình ảnh")], -1 /* CACHED */)), $options.images.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.images.length), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "file",
     multiple: "",
     accept: "image/*",
@@ -523,32 +704,135 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     id: "image-upload",
     "class": "file-input"
-  }, null, 32 /* NEED_HYDRATION */), _cache[5] || (_cache[5] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": "image-upload",
-    "class": "upload-label"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-    "class": "upload-icon"
-  }, "📸"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-    "class": "upload-text"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Chọn ảnh từ thiết bị"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", null, "Hỗ trợ JPG, PNG, GIF • Tối đa 10MB/ảnh")])], -1 /* CACHED */))]), $options.images.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($options.images, function (img, index) {
+  }, null, 32 /* NEED_HYDRATION */), _cache[8] || (_cache[8] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<label for=\"image-upload\" class=\"upload-label\" data-v-09e71410><svg class=\"upload-icon\" width=\"48\" height=\"48\" viewBox=\"0 0 48 48\" fill=\"none\" data-v-09e71410><path d=\"M24 14V34M14 24H34\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" data-v-09e71410></path><rect x=\"6\" y=\"6\" width=\"36\" height=\"36\" rx=\"8\" stroke=\"currentColor\" stroke-width=\"3\" data-v-09e71410></rect></svg><div class=\"upload-text\" data-v-09e71410><strong data-v-09e71410>Tải ảnh lên</strong><small data-v-09e71410>JPG, PNG, GIF · Tối đa 10MB</small></div></label>", 1))]), $options.images.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.TransitionGroup, {
+    key: 0,
+    name: "image-grid",
+    tag: "div",
+    "class": "image-grid"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($options.images, function (img, index) {
+        return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+          key: img,
+          "class": "image-card"
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+          src: img,
+          alt: "\u1EA2nh ".concat(index + 1),
+          loading: "lazy"
+        }, null, 8 /* PROPS */, _hoisted_13), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+          "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["image-badge", {
+            free: index === 0,
+            paid: index > 0
+          }])
+        }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(index === 0 ? 'Miễn phí' : '+10K'), 3 /* TEXT, CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+          onClick: function onClick($event) {
+            return $options.removeImage(index);
+          },
+          "class": "image-remove-btn",
+          title: "Xóa ảnh"
+        }, _toConsumableArray(_cache[9] || (_cache[9] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+          width: "14",
+          height: "14",
+          viewBox: "0 0 14 14",
+          fill: "none"
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
+          d: "M11 3L3 11M3 3L11 11",
+          stroke: "currentColor",
+          "stroke-width": "2",
+          "stroke-linecap": "round"
+        })], -1 /* CACHED */)])), 8 /* PROPS */, _hoisted_14), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_16, "#" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(index + 1), 1 /* TEXT */)])]);
+      }), 128 /* KEYED_FRAGMENT */))];
+    }),
+    _: 1 /* STABLE */
+  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $options.images.length > 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_17, _toConsumableArray(_cache[10] || (_cache[10] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 16 16",
+    fill: "none"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("circle", {
+    cx: "8",
+    cy: "8",
+    r: "7",
+    stroke: "currentColor",
+    "stroke-width": "1.5"
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
+    d: "M8 7V11M8 5V5.5",
+    stroke: "currentColor",
+    "stroke-width": "1.5",
+    "stroke-linecap": "round"
+  })], -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Ảnh đầu tiên miễn phí, mỗi ảnh thêm +10.000₫", -1 /* CACHED */)])))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" MUSIC SECTION "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [_cache[11] || (_cache[11] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "section-title"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    "class": "section-icon"
+  }, "🎵"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Nhạc nền")], -1 /* CACHED */)), $options.selectedMusic ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_20, "+10K")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Preset Music "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.presetMusics, function (music) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
-      key: img,
-      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["image-card", {
-        'is-paid': index > 0
-      }])
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
-      src: img,
-      alt: "\u1EA2nh ".concat(index + 1)
-    }, null, 8 /* PROPS */, _hoisted_14), index === 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, "Miễn phí")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_16, "+10.000₫")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      key: music.url,
+      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["music-option", {
+        active: $options.selectedMusic === music.url
+      }]),
       onClick: function onClick($event) {
-        return $options.removeImage(index);
-      },
-      "class": "image-remove-btn",
-      title: "Xóa ảnh"
-    }, " ✕ ", 8 /* PROPS */, _hoisted_17), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_19, "#" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(index + 1), 1 /* TEXT */)])], 2 /* CLASS */);
-  }), 128 /* KEYED_FRAGMENT */))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $options.images.length > 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_20, _toConsumableArray(_cache[6] || (_cache[6] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-    "class": "note-icon"
-  }, "ℹ️", -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Ảnh đầu tiên miễn phí, mỗi ảnh tiếp theo +10.000₫ ", -1 /* CACHED */)])))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]);
+        return $options.selectPreset(music.url);
+      }
+    }, [_cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+      width: "20",
+      height: "20",
+      viewBox: "0 0 20 20",
+      fill: "none"
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
+      d: "M15 6V14C15 15.1046 14.1046 16 13 16C11.8954 16 11 15.1046 11 14C11 12.8954 11.8954 12 13 12C13.3506 12 13.6872 12.0602 14 12.1707V8L8 9.33333V15C8 16.1046 7.10457 17 6 17C4.89543 17 4 16.1046 4 15C4 13.8954 4.89543 13 6 13C6.35064 13 6.68721 13.0602 7 13.1707V7L15 5V6Z",
+      fill: "currentColor"
+    })], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(music.name), 1 /* TEXT */)], 10 /* CLASS, PROPS */, _hoisted_22);
+  }), 128 /* KEYED_FRAGMENT */))]), _cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "divider"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "hoặc")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Upload Music "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "file",
+    accept: "audio/*",
+    onChange: _cache[2] || (_cache[2] = function () {
+      return $options.uploadMusic && $options.uploadMusic.apply($options, arguments);
+    }),
+    id: "music-upload",
+    "class": "file-input"
+  }, null, 32 /* NEED_HYDRATION */), _cache[13] || (_cache[13] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": "music-upload",
+    "class": "upload-label compact"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+    width: "24",
+    height: "24",
+    viewBox: "0 0 24 24",
+    fill: "none"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
+    d: "M12 15V3M12 3L8 7M12 3L16 7M3 17V18C3 19.1046 3.89543 20 5 20H19C20.1046 20 21 19.1046 21 18V17",
+    stroke: "currentColor",
+    "stroke-width": "2",
+    "stroke-linecap": "round",
+    "stroke-linejoin": "round"
+  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Tải nhạc từ thiết bị (MP3 · Max 10MB)")], -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Music Preview "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(vue__WEBPACK_IMPORTED_MODULE_0__.Transition, {
+    name: "fade"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [$options.selectedMusic ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("audio", {
+        src: $options.selectedMusic,
+        controls: "",
+        controlsList: "nodownload"
+      }, null, 8 /* PROPS */, _hoisted_26)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": "remove-music-btn",
+        onClick: _cache[3] || (_cache[3] = function () {
+          return $options.removeMusic && $options.removeMusic.apply($options, arguments);
+        })
+      }, _toConsumableArray(_cache[14] || (_cache[14] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+        width: "16",
+        height: "16",
+        viewBox: "0 0 16 16",
+        fill: "none"
+      }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
+        d: "M12 4L4 12M4 4L12 12",
+        stroke: "currentColor",
+        "stroke-width": "2",
+        "stroke-linecap": "round"
+      })], -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Xóa nhạc", -1 /* CACHED */)])))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
+    }),
+    _: 1 /* STABLE */
+  })])]);
 }
 
 /***/ },
@@ -569,7 +853,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.card-form[data-v-09e71410] {\r\n  background: var(--color-surface);\r\n  padding: 32px;\r\n  border-radius: 24px;\r\n  box-shadow: 0 12px 48px rgba(139, 47, 60, 0.08);\r\n  max-width: 800px;\r\n  margin: 0 auto;\r\n  border: 1px solid var(--color-border);\n}\r\n\r\n/* ===== HEADER ===== */\n.form-header[data-v-09e71410] {\r\n  text-align: center;\r\n  margin-bottom: 40px;\r\n  padding-bottom: 24px;\r\n  border-bottom: 2px solid var(--color-accent-light);\n}\n.form-header h2[data-v-09e71410] {\r\n  font-size: 28px;\r\n  font-weight: 800;\r\n  color: var(--color-primary);\r\n  margin-bottom: 8px;\r\n  letter-spacing: -0.5px;\n}\n.form-header p[data-v-09e71410] {\r\n  font-size: 15px;\r\n  color: var(--color-text-light);\r\n  font-weight: 500;\n}\r\n\r\n/* ===== SECTION ===== */\n.form-section[data-v-09e71410] {\r\n  margin-bottom: 32px;\n}\n.section-header[data-v-09e71410] {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  margin-bottom: 20px;\n}\n.section-header h3[data-v-09e71410] {\r\n  font-size: 18px;\r\n  font-weight: 700;\r\n  color: var(--color-text);\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 8px;\n}\n.count-badge[data-v-09e71410] {\r\n  display: inline-flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  min-width: 28px;\r\n  height: 28px;\r\n  padding: 0 10px;\r\n  background: var(--gradient-accent);\r\n  color: var(--color-primary);\r\n  font-size: 13px;\r\n  font-weight: 700;\r\n  border-radius: 14px;\r\n  border: 1px solid var(--color-accent);\n}\n.section-divider[data-v-09e71410] {\r\n  height: 2px;\r\n  background: linear-gradient(\r\n    to right,\r\n    transparent,\r\n    var(--color-border) 20%,\r\n    var(--color-border) 80%,\r\n    transparent\r\n  );\r\n  margin: 40px 0;\n}\r\n\r\n/* ===== WISHES CONTAINER ===== */\n.wishes-container[data-v-09e71410] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 12px;\n}\n.wish-item[data-v-09e71410] {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 12px;\r\n  padding: 4px;\r\n  background: var(--color-background);\r\n  border-radius: 16px;\r\n  border: 2px solid transparent;\r\n  transition: all 0.3s ease;\n}\n.wish-item[data-v-09e71410]:hover {\r\n  border-color: var(--color-accent);\n}\n.wish-item[data-v-09e71410]:focus-within {\r\n  border-color: var(--color-primary);\r\n  background: var(--color-surface);\r\n  box-shadow: 0 4px 16px rgba(139, 47, 60, 0.08);\n}\n.wish-number[data-v-09e71410] {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  width: 36px;\r\n  height: 36px;\r\n  background: var(--gradient-primary);\r\n  color: white;\r\n  font-weight: 700;\r\n  font-size: 14px;\r\n  border-radius: 12px;\r\n  flex-shrink: 0;\n}\n.wish-input[data-v-09e71410] {\r\n  flex: 1;\r\n  padding: 12px 16px;\r\n  border: none;\r\n  background: transparent;\r\n  font-size: 15px;\r\n  color: var(--color-text);\r\n  font-weight: 500;\r\n  outline: none;\n}\n.wish-input[data-v-09e71410]::-moz-placeholder {\r\n  color: var(--color-text-light);\r\n  font-weight: 400;\n}\n.wish-input[data-v-09e71410]::placeholder {\r\n  color: var(--color-text-light);\r\n  font-weight: 400;\n}\n.remove-btn[data-v-09e71410] {\r\n  width: 36px;\r\n  height: 36px;\r\n  border-radius: 12px;\r\n  border: none;\r\n  background: var(--color-accent-light);\r\n  color: var(--color-primary);\r\n  font-size: 16px;\r\n  font-weight: 700;\r\n  cursor: pointer;\r\n  transition: all 0.3s ease;\r\n  flex-shrink: 0;\n}\n.remove-btn[data-v-09e71410]:hover {\r\n  background: var(--color-primary);\r\n  color: white;\r\n  transform: rotate(90deg);\n}\r\n\r\n/* ===== ADD BUTTON ===== */\n.add-btn[data-v-09e71410] {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  gap: 8px;\r\n  width: 100%;\r\n  padding: 14px 20px;\r\n  margin-top: 8px;\r\n  border-radius: 16px;\r\n  border: 2px dashed var(--color-border);\r\n  background: var(--color-background);\r\n  color: var(--color-primary);\r\n  font-size: 15px;\r\n  font-weight: 600;\r\n  cursor: pointer;\r\n  transition: all 0.3s ease;\n}\n.add-btn[data-v-09e71410]:hover {\r\n  border-color: var(--color-primary);\r\n  background: var(--color-accent-light);\r\n  transform: translateY(-2px);\n}\n.btn-icon[data-v-09e71410] {\r\n  font-size: 20px;\r\n  font-weight: 700;\n}\r\n\r\n/* ===== FILE UPLOAD ===== */\n.upload-area[data-v-09e71410] {\r\n  margin-bottom: 24px;\n}\n.file-input[data-v-09e71410] {\r\n  display: none;\n}\n.upload-label[data-v-09e71410] {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 16px;\r\n  padding: 24px;\r\n  border-radius: 20px;\r\n  border: 3px dashed var(--color-border);\r\n  background: var(--gradient-hero);\r\n  cursor: pointer;\r\n  transition: all 0.3s ease;\n}\n.upload-label[data-v-09e71410]:hover {\r\n  border-color: var(--color-primary);\r\n  background: var(--color-accent-light);\r\n  transform: translateY(-2px);\r\n  box-shadow: 0 8px 24px rgba(139, 47, 60, 0.1);\n}\n.upload-icon[data-v-09e71410] {\r\n  font-size: 40px;\r\n  flex-shrink: 0;\n}\n.upload-text[data-v-09e71410] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 4px;\n}\n.upload-text strong[data-v-09e71410] {\r\n  font-size: 16px;\r\n  font-weight: 700;\r\n  color: var(--color-text);\n}\n.upload-text small[data-v-09e71410] {\r\n  font-size: 13px;\r\n  color: var(--color-text-light);\r\n  font-weight: 500;\n}\r\n\r\n/* ===== IMAGE GRID ===== */\n.image-grid[data-v-09e71410] {\r\n  display: grid;\r\n  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));\r\n  gap: 16px;\r\n  margin-bottom: 16px;\n}\n.image-card[data-v-09e71410] {\r\n  position: relative;\r\n  border-radius: 16px;\r\n  overflow: hidden;\r\n  aspect-ratio: 1;\r\n  box-shadow: 0 4px 16px rgba(139, 47, 60, 0.1);\r\n  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);\r\n  border: 3px solid transparent;\n}\n.image-card[data-v-09e71410]:hover {\r\n  transform: translateY(-4px) scale(1.02);\r\n  box-shadow: 0 12px 32px rgba(139, 47, 60, 0.2);\n}\n.image-card.is-paid[data-v-09e71410] {\r\n  border-color: var(--color-primary);\n}\n.image-card img[data-v-09e71410] {\r\n  width: 100%;\r\n  height: 100%;\r\n  -o-object-fit: cover;\r\n     object-fit: cover;\r\n  display: block;\n}\r\n\r\n/* ===== IMAGE BADGE ===== */\n.image-badge[data-v-09e71410] {\r\n  position: absolute;\r\n  bottom: 8px;\r\n  left: 8px;\r\n  padding: 6px 12px;\r\n  border-radius: 12px;\r\n  font-size: 11px;\r\n  font-weight: 700;\r\n  text-transform: uppercase;\r\n  letter-spacing: 0.5px;\r\n  backdrop-filter: blur(8px);\r\n  z-index: 2;\n}\n.image-badge.free[data-v-09e71410] {\r\n  background: rgba(255, 255, 255, 0.95);\r\n  color: var(--color-primary);\r\n  border: 1px solid var(--color-primary);\n}\n.image-badge.paid[data-v-09e71410] {\r\n  background: var(--color-primary);\r\n  color: white;\r\n  box-shadow: 0 4px 12px rgba(139, 47, 60, 0.3);\n}\r\n\r\n/* ===== IMAGE OVERLAY ===== */\n.image-overlay[data-v-09e71410] {\r\n  position: absolute;\r\n  top: 8px;\r\n  left: 8px;\r\n  right: 8px;\r\n  bottom: 8px;\r\n  background: linear-gradient(135deg, rgba(139, 47, 60, 0.8), rgba(195, 91, 110, 0.6));\r\n  opacity: 0;\r\n  transition: opacity 0.3s ease;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  border-radius: 12px;\n}\n.image-card:hover .image-overlay[data-v-09e71410] {\r\n  opacity: 1;\n}\n.image-index[data-v-09e71410] {\r\n  color: white;\r\n  font-size: 24px;\r\n  font-weight: 800;\n}\r\n\r\n/* ===== REMOVE IMAGE BUTTON ===== */\n.image-remove-btn[data-v-09e71410] {\r\n  position: absolute;\r\n  top: 8px;\r\n  right: 8px;\r\n  width: 32px;\r\n  height: 32px;\r\n  border-radius: 50%;\r\n  border: none;\r\n  background: rgba(0, 0, 0, 0.7);\r\n  color: white;\r\n  font-size: 16px;\r\n  font-weight: 700;\r\n  cursor: pointer;\r\n  opacity: 0;\r\n  transition: all 0.3s ease;\r\n  z-index: 3;\r\n  backdrop-filter: blur(4px);\n}\n.image-card:hover .image-remove-btn[data-v-09e71410] {\r\n  opacity: 1;\n}\n.image-remove-btn[data-v-09e71410]:hover {\r\n  background: var(--color-primary);\r\n  transform: rotate(90deg) scale(1.1);\n}\r\n\r\n/* ===== PRICING NOTE ===== */\n.pricing-note[data-v-09e71410] {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 10px;\r\n  padding: 14px 18px;\r\n  background: var(--color-accent-light);\r\n  border-left: 4px solid var(--color-primary);\r\n  border-radius: 12px;\r\n  font-size: 14px;\r\n  color: var(--color-text);\r\n  font-weight: 500;\n}\n.note-icon[data-v-09e71410] {\r\n  font-size: 18px;\r\n  flex-shrink: 0;\n}\r\n\r\n/* ===== RESPONSIVE ===== */\n@media (max-width: 768px) {\n.card-form[data-v-09e71410] {\r\n    padding: 24px 20px;\r\n    border-radius: 20px;\n}\n.form-header h2[data-v-09e71410] {\r\n    font-size: 24px;\n}\n.form-header p[data-v-09e71410] {\r\n    font-size: 14px;\n}\n.image-grid[data-v-09e71410] {\r\n    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));\r\n    gap: 12px;\n}\n.upload-label[data-v-09e71410] {\r\n    padding: 20px;\r\n    gap: 12px;\n}\n.upload-icon[data-v-09e71410] {\r\n    font-size: 32px;\n}\n.upload-text strong[data-v-09e71410] {\r\n    font-size: 15px;\n}\n.upload-text small[data-v-09e71410] {\r\n    font-size: 12px;\n}\n}\n@media (max-width: 480px) {\n.card-form[data-v-09e71410] {\r\n    padding: 20px 16px;\n}\n.wish-number[data-v-09e71410] {\r\n    width: 32px;\r\n    height: 32px;\r\n    font-size: 13px;\n}\n.wish-input[data-v-09e71410] {\r\n    font-size: 14px;\r\n    padding: 10px 12px;\n}\n.remove-btn[data-v-09e71410] {\r\n    width: 32px;\r\n    height: 32px;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\r\n/* ===== VARIABLES ===== */\n[data-v-09e71410]:root {\r\n  --primary: #8b2f3c;\r\n  --primary-light: #c35b6e;\r\n  --accent: #ffe5e9;\r\n  --surface: #ffffff;\r\n  --background: #fafafa;\r\n  --border: #e5e7eb;\r\n  --text: #1f2937;\r\n  --text-light: #6b7280;\r\n  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);\r\n  --shadow: 0 4px 6px rgba(0, 0, 0, 0.07);\r\n  --shadow-lg: 0 10px 25px rgba(139, 47, 60, 0.1);\r\n  --radius: 16px;\r\n  --radius-sm: 12px;\r\n  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);\n}\r\n\r\n/* ===== CARD FORM ===== */\n.card-form[data-v-09e71410] {\r\n  background: var(--surface);\r\n  padding: 32px;\r\n  border-radius: var(--radius);\r\n  box-shadow: var(--shadow-lg);\r\n  max-width: 720px;\r\n  margin: 0 auto;\n}\r\n\r\n/* ===== HEADER ===== */\n.form-header[data-v-09e71410] {\r\n  text-align: center;\r\n  margin-bottom: 32px;\r\n  padding-bottom: 24px;\r\n  border-bottom: 1px solid var(--border);\n}\n.header-icon[data-v-09e71410] {\r\n  font-size: 48px;\r\n  margin-bottom: 12px;\r\n  animation: float-09e71410 3s ease-in-out infinite;\n}\n@keyframes float-09e71410 {\n0%, 100% { transform: translateY(0);\n}\n50% { transform: translateY(-8px);\n}\n}\n.form-header h2[data-v-09e71410] {\r\n  font-size: 28px;\r\n  font-weight: 700;\r\n  color: var(--text);\r\n  margin: 0 0 8px 0;\r\n  letter-spacing: -0.5px;\n}\n.form-header p[data-v-09e71410] {\r\n  font-size: 15px;\r\n  color: var(--text-light);\r\n  margin: 0;\r\n  line-height: 1.5;\n}\r\n\r\n/* ===== SECTION ===== */\n.form-section[data-v-09e71410] {\r\n  margin-bottom: 32px;\n}\n.form-section[data-v-09e71410]:last-child {\r\n  margin-bottom: 0;\n}\n.section-header[data-v-09e71410] {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  margin-bottom: 16px;\n}\n.section-title[data-v-09e71410] {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 8px;\n}\n.section-icon[data-v-09e71410] {\r\n  font-size: 24px;\n}\n.section-title h3[data-v-09e71410] {\r\n  font-size: 18px;\r\n  font-weight: 600;\r\n  color: var(--text);\r\n  margin: 0;\n}\n.count-badge[data-v-09e71410] {\r\n  display: inline-flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  min-width: 24px;\r\n  height: 24px;\r\n  padding: 0 8px;\r\n  background: var(--primary);\r\n  color: white;\r\n  font-size: 12px;\r\n  font-weight: 600;\r\n  border-radius: 12px;\n}\n.price-badge[data-v-09e71410] {\r\n  display: inline-flex;\r\n  align-items: center;\r\n  padding: 4px 10px;\r\n  background: var(--primary);\r\n  color: white;\r\n  font-size: 13px;\r\n  font-weight: 600;\r\n  border-radius: 12px;\n}\r\n\r\n/* ===== WISHES ===== */\n.wishes-container[data-v-09e71410] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 10px;\n}\n.wish-item[data-v-09e71410] {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 10px;\r\n  padding: 8px;\r\n  background: var(--background);\r\n  border-radius: var(--radius-sm);\r\n  border: 2px solid transparent;\r\n  transition: var(--transition);\n}\n.wish-item[data-v-09e71410]:hover {\r\n  background: var(--surface);\r\n  border-color: var(--accent);\n}\n.wish-item[data-v-09e71410]:focus-within {\r\n  border-color: var(--primary);\r\n  box-shadow: 0 0 0 3px rgba(139, 47, 60, 0.1);\n}\n.wish-number[data-v-09e71410] {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  width: 32px;\r\n  height: 32px;\r\n  background: var(--primary);\r\n  color: white;\r\n  font-weight: 600;\r\n  font-size: 14px;\r\n  border-radius: 8px;\r\n  flex-shrink: 0;\n}\n.wish-input[data-v-09e71410] {\r\n  flex: 1;\r\n  padding: 8px 12px;\r\n  border: none;\r\n  background: transparent;\r\n  font-size: 15px;\r\n  color: var(--text);\r\n  outline: none;\n}\n.wish-input[data-v-09e71410]::-moz-placeholder {\r\n  color: var(--text-light);\n}\n.wish-input[data-v-09e71410]::placeholder {\r\n  color: var(--text-light);\n}\n.remove-btn[data-v-09e71410] {\r\n  width: 32px;\r\n  height: 32px;\r\n  border-radius: 8px;\r\n  border: none;\r\n  background: transparent;\r\n  color: var(--text-light);\r\n  cursor: pointer;\r\n  transition: var(--transition);\r\n  flex-shrink: 0;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\n}\n.remove-btn[data-v-09e71410]:hover {\r\n  background: var(--primary);\r\n  color: white;\n}\r\n\r\n/* ===== ADD BUTTON ===== */\n.add-btn[data-v-09e71410] {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  gap: 8px;\r\n  width: 100%;\r\n  padding: 12px 20px;\r\n  margin-top: 4px;\r\n  border-radius: var(--radius-sm);\r\n  border: 2px dashed var(--border);\r\n  background: transparent;\r\n  color: var(--primary);\r\n  font-size: 15px;\r\n  font-weight: 500;\r\n  cursor: pointer;\r\n  transition: var(--transition);\n}\n.add-btn[data-v-09e71410]:hover {\r\n  border-color: var(--primary);\r\n  background: var(--accent);\n}\n.add-btn svg[data-v-09e71410] {\r\n  stroke: currentColor;\n}\r\n\r\n/* ===== FILE UPLOAD ===== */\n.upload-area[data-v-09e71410] {\r\n  margin-bottom: 16px;\n}\n.upload-area.compact[data-v-09e71410] {\r\n  margin-bottom: 0;\n}\n.file-input[data-v-09e71410] {\r\n  display: none;\n}\n.upload-label[data-v-09e71410] {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  gap: 16px;\r\n  padding: 24px;\r\n  border-radius: var(--radius-sm);\r\n  border: 2px dashed var(--border);\r\n  background: var(--background);\r\n  cursor: pointer;\r\n  transition: var(--transition);\n}\n.upload-label.compact[data-v-09e71410] {\r\n  padding: 16px;\r\n  gap: 12px;\n}\n.upload-label[data-v-09e71410]:hover {\r\n  border-color: var(--primary);\r\n  background: var(--accent);\n}\n.upload-icon[data-v-09e71410] {\r\n  stroke: var(--primary);\r\n  flex-shrink: 0;\n}\n.upload-label.compact svg[data-v-09e71410] {\r\n  width: 24px;\r\n  height: 24px;\n}\n.upload-text[data-v-09e71410] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 4px;\r\n  text-align: left;\n}\n.upload-label.compact .upload-text[data-v-09e71410] {\r\n  flex-direction: row;\r\n  gap: 0;\r\n  text-align: center;\n}\n.upload-text strong[data-v-09e71410] {\r\n  font-size: 15px;\r\n  font-weight: 600;\r\n  color: var(--text);\n}\n.upload-text small[data-v-09e71410] {\r\n  font-size: 13px;\r\n  color: var(--text-light);\n}\n.upload-label.compact span[data-v-09e71410] {\r\n  font-size: 14px;\r\n  color: var(--text);\n}\r\n\r\n/* ===== IMAGE GRID ===== */\n.image-grid[data-v-09e71410] {\r\n  display: grid;\r\n  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));\r\n  gap: 12px;\r\n  margin-bottom: 16px;\n}\n.image-card[data-v-09e71410] {\r\n  position: relative;\r\n  border-radius: var(--radius-sm);\r\n  overflow: hidden;\r\n  aspect-ratio: 1;\r\n  box-shadow: var(--shadow);\r\n  transition: var(--transition);\r\n  border: 2px solid transparent;\n}\n.image-card[data-v-09e71410]:hover {\r\n  transform: translateY(-4px);\r\n  box-shadow: var(--shadow-lg);\r\n  border-color: var(--primary);\n}\n.image-card img[data-v-09e71410] {\r\n  width: 100%;\r\n  height: 100%;\r\n  -o-object-fit: cover;\r\n     object-fit: cover;\r\n  display: block;\n}\n.image-badge[data-v-09e71410] {\r\n  position: absolute;\r\n  bottom: 8px;\r\n  left: 8px;\r\n  padding: 4px 8px;\r\n  border-radius: 6px;\r\n  font-size: 11px;\r\n  font-weight: 600;\r\n  text-transform: uppercase;\r\n  letter-spacing: 0.5px;\r\n  backdrop-filter: blur(8px);\r\n  z-index: 2;\n}\n.image-badge.free[data-v-09e71410] {\r\n  background: rgba(255, 255, 255, 0.9);\r\n  color: var(--primary);\n}\n.image-badge.paid[data-v-09e71410] {\r\n  background: var(--primary);\r\n  color: white;\n}\n.image-overlay[data-v-09e71410] {\r\n  position: absolute;\r\n  inset: 0;\r\n  background: rgba(139, 47, 60, 0.8);\r\n  opacity: 0;\r\n  transition: var(--transition);\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\n}\n.image-card:hover .image-overlay[data-v-09e71410] {\r\n  opacity: 1;\n}\n.image-index[data-v-09e71410] {\r\n  color: white;\r\n  font-size: 20px;\r\n  font-weight: 700;\n}\n.image-remove-btn[data-v-09e71410] {\r\n  position: absolute;\r\n  top: 8px;\r\n  right: 8px;\r\n  width: 28px;\r\n  height: 28px;\r\n  border-radius: 50%;\r\n  border: none;\r\n  background: rgba(0, 0, 0, 0.6);\r\n  color: white;\r\n  cursor: pointer;\r\n  opacity: 0;\r\n  transition: var(--transition);\r\n  z-index: 3;\r\n  backdrop-filter: blur(4px);\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\n}\n.image-card:hover .image-remove-btn[data-v-09e71410] {\r\n  opacity: 1;\n}\n.image-remove-btn[data-v-09e71410]:hover {\r\n  background: var(--primary);\r\n  transform: scale(1.1);\n}\r\n\r\n/* ===== INFO NOTE ===== */\n.info-note[data-v-09e71410] {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 10px;\r\n  padding: 12px 16px;\r\n  background: var(--accent);\r\n  border-radius: var(--radius-sm);\r\n  font-size: 14px;\r\n  color: var(--text);\n}\n.info-note svg[data-v-09e71410] {\r\n  stroke: var(--primary);\r\n  flex-shrink: 0;\n}\r\n\r\n/* ===== MUSIC OPTIONS ===== */\n.music-options[data-v-09e71410] {\r\n  display: grid;\r\n  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));\r\n  gap: 10px;\r\n  margin-bottom: 16px;\n}\n.music-option[data-v-09e71410] {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 8px;\r\n  padding: 12px;\r\n  border-radius: var(--radius-sm);\r\n  border: 2px solid var(--border);\r\n  background: var(--background);\r\n  cursor: pointer;\r\n  transition: var(--transition);\r\n  font-size: 14px;\r\n  color: var(--text);\n}\n.music-option[data-v-09e71410]:hover {\r\n  border-color: var(--primary);\r\n  background: var(--accent);\n}\n.music-option.active[data-v-09e71410] {\r\n  background: var(--primary);\r\n  color: white;\r\n  border-color: var(--primary);\n}\n.music-option svg[data-v-09e71410] {\r\n  flex-shrink: 0;\n}\n.music-option span[data-v-09e71410] {\r\n  overflow: hidden;\r\n  text-overflow: ellipsis;\r\n  white-space: nowrap;\n}\r\n\r\n/* ===== DIVIDER ===== */\n.divider[data-v-09e71410] {\r\n  text-align: center;\r\n  margin: 16px 0;\r\n  position: relative;\n}\n.divider[data-v-09e71410]::before,\r\n.divider[data-v-09e71410]::after {\r\n  content: '';\r\n  position: absolute;\r\n  top: 50%;\r\n  width: calc(50% - 40px);\r\n  height: 1px;\r\n  background: var(--border);\n}\n.divider[data-v-09e71410]::before {\r\n  left: 0;\n}\n.divider[data-v-09e71410]::after {\r\n  right: 0;\n}\n.divider span[data-v-09e71410] {\r\n  font-size: 13px;\r\n  color: var(--text-light);\r\n  font-weight: 500;\r\n  padding: 0 16px;\r\n  background: var(--surface);\n}\r\n\r\n/* ===== MUSIC PREVIEW ===== */\n.music-preview[data-v-09e71410] {\r\n  margin-top: 16px;\r\n  padding: 16px;\r\n  background: var(--background);\r\n  border-radius: var(--radius-sm);\n}\n.audio-player[data-v-09e71410] {\r\n  margin-bottom: 12px;\n}\n.audio-player audio[data-v-09e71410] {\r\n  width: 100%;\r\n  height: 40px;\r\n  border-radius: 8px;\n}\n.remove-music-btn[data-v-09e71410] {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  gap: 6px;\r\n  width: 100%;\r\n  padding: 10px;\r\n  border-radius: 8px;\r\n  border: 2px solid var(--primary);\r\n  background: transparent;\r\n  color: var(--primary);\r\n  font-weight: 500;\r\n  font-size: 14px;\r\n  cursor: pointer;\r\n  transition: var(--transition);\n}\n.remove-music-btn[data-v-09e71410]:hover {\r\n  background: var(--primary);\r\n  color: white;\n}\r\n\r\n/* ===== ANIMATIONS ===== */\n.wish-list-enter-active[data-v-09e71410],\r\n.wish-list-leave-active[data-v-09e71410] {\r\n  transition: all 0.3s ease;\n}\n.wish-list-enter-from[data-v-09e71410] {\r\n  opacity: 0;\r\n  transform: translateX(-20px);\n}\n.wish-list-leave-to[data-v-09e71410] {\r\n  opacity: 0;\r\n  transform: translateX(20px);\n}\n.image-grid-enter-active[data-v-09e71410],\r\n.image-grid-leave-active[data-v-09e71410] {\r\n  transition: all 0.3s ease;\n}\n.image-grid-enter-from[data-v-09e71410] {\r\n  opacity: 0;\r\n  transform: scale(0.8);\n}\n.image-grid-leave-to[data-v-09e71410] {\r\n  opacity: 0;\r\n  transform: scale(0.8);\n}\n.fade-enter-active[data-v-09e71410],\r\n.fade-leave-active[data-v-09e71410] {\r\n  transition: opacity 0.3s ease;\n}\n.fade-enter-from[data-v-09e71410],\r\n.fade-leave-to[data-v-09e71410] {\r\n  opacity: 0;\n}\r\n\r\n/* ===== RESPONSIVE ===== */\n@media (max-width: 768px) {\n.card-form[data-v-09e71410] {\r\n    padding: 24px 20px;\n}\n.form-header h2[data-v-09e71410] {\r\n    font-size: 24px;\n}\n.header-icon[data-v-09e71410] {\r\n    font-size: 40px;\n}\n.section-icon[data-v-09e71410] {\r\n    font-size: 20px;\n}\n.section-title h3[data-v-09e71410] {\r\n    font-size: 16px;\n}\n.image-grid[data-v-09e71410] {\r\n    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));\r\n    gap: 10px;\n}\n.music-options[data-v-09e71410] {\r\n    grid-template-columns: 1fr;\n}\n.upload-label[data-v-09e71410] {\r\n    padding: 20px 16px;\n}\n.upload-icon[data-v-09e71410] {\r\n    width: 40px;\r\n    height: 40px;\n}\n}\n@media (max-width: 480px) {\n.card-form[data-v-09e71410] {\r\n    padding: 20px 16px;\n}\n.form-header[data-v-09e71410] {\r\n    margin-bottom: 24px;\r\n    padding-bottom: 20px;\n}\n.form-header h2[data-v-09e71410] {\r\n    font-size: 22px;\n}\n.form-header p[data-v-09e71410] {\r\n    font-size: 14px;\n}\n.form-section[data-v-09e71410] {\r\n    margin-bottom: 24px;\n}\n.wish-number[data-v-09e71410] {\r\n    width: 28px;\r\n    height: 28px;\r\n    font-size: 13px;\n}\n.wish-input[data-v-09e71410] {\r\n    font-size: 14px;\n}\n.remove-btn[data-v-09e71410] {\r\n    width: 28px;\r\n    height: 28px;\n}\n.add-btn[data-v-09e71410] {\r\n    padding: 10px 16px;\r\n    font-size: 14px;\n}\n.image-grid[data-v-09e71410] {\r\n    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));\r\n    gap: 8px;\n}\n.upload-label[data-v-09e71410] {\r\n    flex-direction: column;\r\n    padding: 16px;\r\n    gap: 12px;\n}\n.upload-label.compact[data-v-09e71410] {\r\n    flex-direction: row;\n}\n.upload-text[data-v-09e71410] {\r\n    text-align: center;\n}\n.upload-text strong[data-v-09e71410] {\r\n    font-size: 14px;\n}\n.upload-text small[data-v-09e71410] {\r\n    font-size: 12px;\n}\n.music-option[data-v-09e71410] {\r\n    padding: 10px;\r\n    font-size: 13px;\n}\n.info-note[data-v-09e71410] {\r\n    padding: 10px 12px;\r\n    font-size: 13px;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

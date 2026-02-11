@@ -140,6 +140,9 @@ Route::post('/cards/{uuid}/autosave', [CardController::class, 'autosave']);
 Route::post('/cards/{uuid}/upload-images', [CardController::class, 'uploadImages']);
 Route::post('/cards/{uuid}/upload-image', [CardController::class, 'uploadImage']);
 Route::post('/cards/{uuid}/remove-image', [CardController::class, 'removeImage']);
+Route::post('/cards/{uuid}/upload-music', [CardController::class, 'uploadMusic']);
+Route::post('/cards/{uuid}/remove-music', [CardController::class, 'removeMusic']);
+Route::post('/cards/{uuid}/select-preset-music', [CardController::class, 'selectPresetMusic']);
 Route::post('/cards/{uuid}/save', [CardController::class, 'saveCard']);
 Route::post('/cards/{uuid}/publish', [CardController::class, 'publish']);
 

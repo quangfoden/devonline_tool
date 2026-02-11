@@ -45,13 +45,40 @@ class PayOSController extends Controller
         ]);
     }
 
-    private function calculateAmount(Card $card): int
-    {
-        $base = (int) ($card->template->price ?? 0);
-        $images = $card->data['imageSources'] ?? [];
-        $extra = max(count($images) - 1, 0);
+    private function calculateAmount(Card $card)
+{
+    $templatePrice = (int) ($card->template->price ?? 0);
 
-        return $base + ($extra * 10000);
+    $data = $card->data ?? [];
+
+    /*
+    ==========================
+    🖼 TÍNH ẢNH
+    ==========================
+    */
+    $images = $data['imageSources'] ?? [];
+
+    $extraImages = max(0, count($images) - 1);
+    $imagePrice = $extraImages * 10000;
+
+    /*
+    ==========================
+    🎵 TÍNH NHẠC
+    ==========================
+    */
+    $musicPrice = 0;
+
+    if (!empty($data['MUSIC_URL'])) {
+        $musicPrice = 10000;
     }
+
+    /*
+    ==========================
+    💰 TỔNG
+    ==========================
+    */
+    return $templatePrice + $imagePrice + $musicPrice;
+}
+
 
 }
