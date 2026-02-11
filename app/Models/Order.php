@@ -47,19 +47,22 @@ class Order extends Model
     {
         $this->update([
             'status' => 'paid',
-            'paid_amount' => $data['amount'] ?? $this->amount,
+            'paid_amount' => $data['paid_amount'] ?? null,
             'transaction_id' => $data['transactionId'] ?? null,
-            'payload' => $data,
+            'payload' => $data['raw'] ?? [],
         ]);
 
-        $this->card->publish();
+        if ($this->card && !$this->card->is_paid) {
 
-        $this->card->update([
-            'is_paid' => true,
-            'paid_at' => now(),
-        ]);
+            $this->card->publish();
 
+            $this->card->update([
+                'is_paid' => true,
+                'paid_at' => now(),
+            ]);
+        }
     }
+
 
     public function markFailed(string $reason = null, array $payload = [])
     {

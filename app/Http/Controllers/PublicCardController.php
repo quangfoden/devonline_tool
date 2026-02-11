@@ -29,7 +29,7 @@ class PublicCardController extends Controller
         $dataJson = json_encode($card->data ?? [], JSON_UNESCAPED_UNICODE);
 
         $html = str_replace('{{DATA}}', $dataJson, $html);
-
+        $html = str_replace('{{IS_DEMO}}', 'false', $html);
         return response($html)->header('Content-Type', 'text/html');
     }
 
