@@ -17,10 +17,22 @@ class PayOSWebhookController extends Controller
         $payload = $request->all();
 
         // 1️⃣ Verify signature
-        if (!$payOS->verifyWebhook($payload)) {
+        try {
+            $verified = $payOS->verifyWebhook($payload);
+            Log::info('Verify result', ['verified' => $verified]);
+        } catch (\Throwable $e) {
+            Log::error('Verify exception', [
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+            ]);
+            return response()->json(['error' => 'verify exception'], 500);
+        }
+
+        if (!$verified) {
             Log::warning('Invalid webhook signature', $payload);
             return response()->json(['message' => 'invalid signature'], 400);
         }
+
 
         $data = $payload['data'] ?? null;
 
@@ -36,7 +48,7 @@ class PayOSWebhookController extends Controller
                 ->first();
 
             if (!$order) {
-                // Log::error('Order not found', $data);
+                Log::error('Order not found', $data);
                 return response()->json(['message' => 'order not found'], 404);
             }
 
@@ -51,11 +63,11 @@ class PayOSWebhookController extends Controller
             // 4️⃣ Thiếu tiền => không cho thành công
             if ($paidAmount < $expectedAmount) {
 
-                // Log::warning('Underpaid order', [
-                //     'order_id' => $order->id,
-                //     'expected' => $expectedAmount,
-                //     'paid' => $paidAmount,
-                // ]);
+                Log::warning('Underpaid order', [
+                    'order_id' => $order->id,
+                    'expected' => $expectedAmount,
+                    'paid' => $paidAmount,
+                ]);
 
                 return response()->json([
                     'message' => 'paid not enough'
@@ -63,13 +75,13 @@ class PayOSWebhookController extends Controller
             }
 
             // 5️⃣ Dư tiền => vẫn thành công nhưng log lại
-            // if ($paidAmount > $expectedAmount) {
-            //     Log::info('Overpaid order', [
-            //         'order_id' => $order->id,
-            //         'expected' => $expectedAmount,
-            //         'paid' => $paidAmount,
-            //     ]);
-            // }
+            if ($paidAmount > $expectedAmount) {
+                Log::info('Overpaid order', [
+                    'order_id' => $order->id,
+                    'expected' => $expectedAmount,
+                    'paid' => $paidAmount,
+                ]);
+            }
 
             // 6️⃣ Mark paid
             $order->markPaid([
