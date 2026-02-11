@@ -3228,7 +3228,7 @@ if (IS_HEADER) {
 
 		Promise.all(promises).then(() => {
 			loadMusicFromCard();
-			init();
+
 
 			// KHÔNG auto start ở đây nữa
 			setupStartButton();
@@ -3236,7 +3236,7 @@ if (IS_HEADER) {
 	}, 0);
 }
 
-const DEMO_MUSIC = "/template/HappyNewYeah/audio/happy.mp3";
+const DEMO_MUSIC = "/template/HappyNewYeah/music/happy2.mp3";
 
 function loadMusicFromCard() {
 	const music = document.getElementById("bgMusic");
@@ -3299,7 +3299,7 @@ function startCountdown() {
 
 			text.style.display = "none";
 			newYearText.style.opacity = "1";
-
+			init();
 
 
 			// 🎆 pháo hoa giữa màn hình

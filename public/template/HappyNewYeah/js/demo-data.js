@@ -19,5 +19,5 @@ window.CARD_DATA = {
     "/template/HappyNewYeah/images/love5.jpg",
   ],
 
-  MUSIC_URL: "/template/HappyNewYeah/audio/happy.mp3"
+  MUSIC_URL: "/template/HappyNewYeah/music/happy2.mp3"
 };

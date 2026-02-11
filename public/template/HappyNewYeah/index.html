@@ -13,6 +13,9 @@
 	<link rel="apple-touch-icon-precomposed" href="/template/HappyNewYeah//images/favicon.png" />
 	<!-- Thư viện CSS Clip Path Helper -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/clippy.js/1.0.0/clippy.min.css" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gravitas+One&display=swap" rel="stylesheet">
 	<style>
 		/* Khu vực demo ảnh dùng clip-path (tròn + trái tim) */
 		.shape-gallery {
@@ -532,28 +535,30 @@
   justify-content: center;
   align-items: center;
   z-index: 10000;
-  background: radial-gradient(circle at top left, #ff9a9e, transparent 40%),
-              radial-gradient(circle at bottom right, #a18cd1, transparent 40%),
-              #0f0c29;
 }
 
 #startBtn {
-  padding: 18px 60px;
-  font-size: 28px;
-  font-weight: bold;
-  letter-spacing: 3px;
+	 font-family: "Gravitas One", serif;
+  padding: 20px 70px;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 4px;
   color: white;
   border: none;
-  border-radius: 60px;
+  border-radius: 80px;
   cursor: pointer;
-  background: linear-gradient(45deg, #ff512f, #dd2476);
-  box-shadow: 0 0 25px rgba(255, 80, 120, 0.8);
-  transition: 0.3s ease;
+  background: linear-gradient(45deg, #ff4da6, #ff1f7a);
+  box-shadow:
+    0 0 30px rgba(255, 0, 128, 0.6),
+    0 10px 40px rgba(255, 0, 128, 0.4);
+  transition: all 0.3s ease;
 }
 
 #startBtn:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 50px rgba(255, 80, 120, 1);
+  box-shadow:
+    0 0 60px rgba(255, 0, 150, 1),
+    0 15px 50px rgba(255, 0, 150, 0.6);
 }
 
 /* ================= COUNTDOWN ================= */
@@ -572,25 +577,29 @@
 
 /* Số countdown */
 #countdownText {
-  font-size: 160px;
-  font-weight: bold;
-  background: linear-gradient(45deg, #ffcc00, #ff0066);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 40px rgba(255, 0, 120, 0.8);
-  animation: bounce 1s ease infinite;
+   font-family: "Gravitas One", serif;
+  font-size: 220px;
+  font-weight: 900;
+  color: #ff4da6;
+  text-shadow:
+    0 0 20px rgba(255, 0, 128, 0.8),
+    0 0 40px rgba(255, 0, 150, 0.6),
+    0 0 80px rgba(255, 0, 180, 0.5);
+  animation: zoomCountdown 1s ease infinite;
 }
 
-@keyframes bounce {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.25); }
-  100% { transform: scale(1); }
+@keyframes zoomCountdown {
+	0% { transform: scale(1); }
+	50% { transform: scale(1.25); }
+	100% { transform: scale(1); }
 }
 
 /* Happy New Year */
 #newYearText {
+	 font-family: "Gravitas One", serif;
+	 font-weight: bold;
   margin-top: 30px;
-  font-size: 64px;
+  font-size: 100px;
   font-weight: bold;
   opacity: 0;
   transition: opacity 1.5s ease;
@@ -599,7 +608,7 @@
 }
 
 #newYearText span {
-  background: linear-gradient(90deg, #ffcc00, #ff0066, #00f2ff);
+  background: linear-gradient(90deg, rgba(255, 0, 128, 0.8), #ff0066, #00f2ff);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
