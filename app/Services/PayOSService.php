@@ -22,8 +22,9 @@ class PayOSService
         return $this->payOS->createPaymentLink($data);
     }
 
-    public function verifyWebhook(array $payload): bool
+    public function verifyWebhook(array $payload): array
     {
-        return $this->payOS->verifyWebhook($payload);
+        return $this->payOS->verifyPaymentWebhookData($payload);
     }
+
 }
