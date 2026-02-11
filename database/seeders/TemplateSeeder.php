@@ -24,7 +24,7 @@ class TemplateSeeder extends Seeder
                 'description' => 'Website dành cho năm mới với hiệu ứng pháo hoa đẹp mắt',
                 'view' => 'HappyNewYeah',
                 'preview_url' => 'template/HappyNewYeah/index.html',
-                'thumbnail' => 'template/HappyNewYeah/thumbnail.png',
+                'thumbnail' => 'template/HappyNewYeah/images/thumbnail.png',
                 'is_active' => 1,
                 'schema' => json_encode([
                     'fields' => [
