@@ -22,7 +22,7 @@ class TemplateSeeder extends Seeder
                 'slug' => 'newyear-fireworks',
                 'price' => 0,
                 'description' => 'Thiệp chúc mừng năm mới với hiệu ứng pháo hoa',
-                'view' => 'NewYearFireworks',
+                'view' => 'HappyNewYeah',
                 'preview_url' => 'template/HappyNewYeah/index.html',
                 'thumbnail' => 'templates/newyear-fireworks/thumbnail.png',
                 'is_active' => 1,
