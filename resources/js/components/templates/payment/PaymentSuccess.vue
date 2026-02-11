@@ -260,45 +260,40 @@ const qrUrl = computed(() => {
   return `/api/cards/${cardUuid.value}/qr?style=${style.value}`;
 });
 
-/* ===== POLLING ===== */
-let timer = null;
-let attempts = 0;
-const maxAttempts = 15;
+onMounted(() => {
+  const orderCode = route.query.orderCode;
 
-const check = async () => {
-  attempts++;
+  if (window.opener) {
+    window.opener.postMessage(
+      {
+        type: "PAYMENT_SUCCESS",
+        orderCode: orderCode,
+      },
+      window.location.origin
+    );
 
+    window.close();
+  } else {
+    state.value = "loading";
+    checkStatus(orderCode);
+  }
+});
+const checkStatus = async (code) => {
   try {
-    const code = route.query.orderCode;
-    if (!code) return;
-
     const res = await axios.get(`/api/orders/${code}/status`);
 
     if (res.data.status === "paid") {
       state.value = "paid";
       publicUrl.value = res.data.public_url;
       cardUuid.value = res.data.card_uuid;
-      clearInterval(timer);
-      return;
+    } else {
+      state.value = "timeout";
     }
   } catch (e) {
-    console.error(e);
-  }
-
-  if (attempts >= maxAttempts) {
     state.value = "timeout";
-    clearInterval(timer);
   }
 };
 
-onMounted(() => {
-  check();
-  timer = setInterval(check, 2000);
-});
-
-onUnmounted(() => {
-  clearInterval(timer);
-});
 </script>
 
 <style scoped>

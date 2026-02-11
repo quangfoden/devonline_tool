@@ -460,6 +460,14 @@ export default {
     }
   },
 
+  mounted() {
+    window.addEventListener("message", this.handlePaymentMessage);
+  },
+
+  beforeUnmount() {
+    window.removeEventListener("message", this.handlePaymentMessage);
+  },
+
   watch: {
     formData: {
       deep: true,
@@ -512,8 +520,6 @@ export default {
     },
     previewCard() {
       if (!this.draftId) return;
-
-      // đảm bảo autosave trước khi xem demo
       if (this.autosaveTimer) {
         clearTimeout(this.autosaveTimer);
         this.autosave();
@@ -522,16 +528,36 @@ export default {
       const demoUrl = `${window.location.origin}/demo/${this.draftId}`;
       window.open(demoUrl, "_blank");
     },
+
+    handlePaymentMessage(event) {
+      if (event.origin !== window.location.origin) return;
+
+      if (event.data.type === "PAYMENT_SUCCESS") {
+        this.$router.push({
+          name: "payment-page",
+          query: { orderCode: event.data.orderCode },
+        });
+      }
+    },
+
     async payWithPayOS() {
       try {
         const res = await this.axios.post("/api/payments/payos/create", {
           card_id: this.$route.params.id,
         });
 
-        window.location.href = res.data.checkoutUrl;
+        const width = 500;
+        const height = 700;
+        const left = window.screenX + (window.innerWidth - width) / 2;
+        const top = window.screenY + (window.innerHeight - height) / 2;
+
+        this.paymentPopup = window.open(
+          res.data.checkoutUrl,
+          "PayOS",
+          `width=${width},height=${height},left=${left},top=${top}`
+        );
       } catch (e) {
         alert("Không tạo được thanh toán");
-        console.error(e);
       }
     },
     async paymentVnp() {

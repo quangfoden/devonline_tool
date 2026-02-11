@@ -73,6 +73,7 @@ randomWords.forEach((word) => {
 const {
   WISH_MESSAGES = [],
   imageSources = [],
+  MUSIC_URL = ""
 } = window.CARD_DATA;
 
 
@@ -3222,16 +3223,104 @@ const soundManager = {
 if (IS_HEADER) {
 	init();
 } else {
-	// Allow status to render, then preload assets and start app.
 	setTimeout(() => {
-		// Tải trước âm thanh và ảnh nổ
 		var promises = [soundManager.preload(), preloadImages()];
 
-		// 在 soundManager 加载完毕后调用 init
-		Promise.all(promises).then(init, (reason) => {
-			console.log("资源文件加载失败");
+		Promise.all(promises).then(() => {
+			loadMusicFromCard();
 			init();
-			return Promise.reject(reason);
+
+			// KHÔNG auto start ở đây nữa
+			setupStartButton();
 		});
 	}, 0);
+}
+
+const DEMO_MUSIC = "/template/HappyNewYeah/audio/happy.mp3";
+
+function loadMusicFromCard() {
+	const music = document.getElementById("bgMusic");
+
+	const finalMusic =
+		typeof MUSIC_URL === "string" && MUSIC_URL.trim() !== ""
+			? MUSIC_URL
+			: DEMO_MUSIC;
+
+	music.src = finalMusic;
+
+
+	const toggleBtn = document.getElementById("musicToggle");
+
+	toggleBtn.addEventListener("click", () => {
+	if (music.paused) {
+		music.play();
+		toggleBtn.innerHTML = "🎵";
+	} else {
+		music.pause();
+		toggleBtn.innerHTML = "🎶"; 
+	}
+	});
+}
+
+
+function setupStartButton() {
+	const startBtn = document.getElementById("startBtn");
+	const startScreen = document.getElementById("startScreen");
+
+	startBtn.addEventListener("click", () => {
+		startScreen.style.display = "none";
+
+		// Sau click mới bắt đầu countdown
+		startCountdown();
+	});
+}
+
+function startCountdown() {
+	const overlay = document.getElementById("countdownOverlay");
+	const text = document.getElementById("countdownText");
+	const newYearText = document.getElementById("newYearText");
+	const music = document.getElementById("bgMusic");
+
+	overlay.style.display = "flex";
+
+	let count = 3;
+	text.style.display = "block";
+	text.innerText = count;
+
+	const interval = setInterval(() => {
+		count--;
+
+		if (count > 0) {
+			text.innerText = count;
+		} else {
+			clearInterval(interval);
+
+			text.style.display = "none";
+			newYearText.style.opacity = "1";
+
+			// 🎵 phát nhạc (GIỜ KHÔNG BỊ BLOCK)
+			music.currentTime = 0;
+			music.play().catch(() => {});
+
+			// 🎆 pháo hoa giữa màn hình
+			setTimeout(() => {
+				const centerX = stageW / 2;
+				const centerY = stageH / 2;
+
+				for (let i = 0; i < 4; i++) {
+					const shell = new Shell({
+						spreadSize: 600,
+						starLife: 1500,
+						starDensity: 1.3,
+						color: "random"
+					});
+					shell.burst(centerX, centerY);
+				}
+			}, 300);
+
+			setTimeout(() => {
+				overlay.style.display = "none";
+			}, 3000);
+		}
+	}, 1000);
 }

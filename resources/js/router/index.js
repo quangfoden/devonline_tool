@@ -46,7 +46,7 @@ export const routes = [
             },
             {
                 path: '/payment/success',
-                name: 'Payment Success',
+                name: 'payment-page',
                 component: PaymentSuccess,
             },
         ]

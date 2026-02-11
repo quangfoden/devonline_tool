@@ -259,7 +259,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap"
 		rel="stylesheet" />
 	<link rel="stylesheet" href="/template/HappyNewYeah//css/style.css" />
-	<script src="https://cdn.jsdelivr.net/npm/devtools-detector@2.0.17/lib/devtools-detector.min.js"></script>
+	<!-- <script src="https://cdn.jsdelivr.net/npm/devtools-detector@2.0.17/lib/devtools-detector.min.js"></script>
 	<script>
 	devtoolsDetector.addListener(function(isOpen) {
 		if (isOpen) {
@@ -268,7 +268,7 @@
 		}
 	});
 	devtoolsDetector.launch();
-	</script>
+	</script> -->
 </head>
 <style>
 	/* Khu vực demo ảnh dùng clip-path (tròn + trái tim) */
@@ -523,11 +523,181 @@
 		z-index: 9999;
 	}
 
+/* ================= START SCREEN ================= */
+
+#startScreen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  background: radial-gradient(circle at top left, #ff9a9e, transparent 40%),
+              radial-gradient(circle at bottom right, #a18cd1, transparent 40%),
+              #0f0c29;
+}
+
+#startBtn {
+  padding: 18px 60px;
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  color: white;
+  border: none;
+  border-radius: 60px;
+  cursor: pointer;
+  background: linear-gradient(45deg, #ff512f, #dd2476);
+  box-shadow: 0 0 25px rgba(255, 80, 120, 0.8);
+  transition: 0.3s ease;
+}
+
+#startBtn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 50px rgba(255, 80, 120, 1);
+}
+
+/* ================= COUNTDOWN ================= */
+
+#countdownOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(8px);
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Số countdown */
+#countdownText {
+  font-size: 160px;
+  font-weight: bold;
+  background: linear-gradient(45deg, #ffcc00, #ff0066);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 40px rgba(255, 0, 120, 0.8);
+  animation: bounce 1s ease infinite;
+}
+
+@keyframes bounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+/* Happy New Year */
+#newYearText {
+  margin-top: 30px;
+  font-size: 64px;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+  text-align: center;
+  position: relative;
+}
+
+#newYearText span {
+  background: linear-gradient(90deg, #ffcc00, #ff0066, #00f2ff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientMove 3s linear infinite;
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ================= MUSIC BUTTON ================= */
+
+#musicToggle {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  background: linear-gradient(45deg, #ff512f, #dd2476);
+  color: white;
+  box-shadow: 0 0 20px rgba(255, 80, 120, 0.8);
+  z-index: 20000;
+  transition: 0.3s ease;
+}
+
+#musicToggle:hover {
+  transform: scale(1.15);
+}
+
+@media (max-width: 480px) {
+  #musicToggle {
+	width: 30px;
+	height: 30px;
+	font-size: 12px;
+  }
+}
+
+/* ================= PARTICLE EFFECT ================= */
+
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: gold;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: flyUp 2s ease-out forwards;
+}
+
+@keyframes flyUp {
+  0% {
+    opacity: 1;
+    transform: translate(0,0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--x), var(--y)) scale(0.2);
+  }
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width:768px){
+  #countdownText { font-size: 90px; }
+  #newYearText { font-size: 30px; padding: 0 20px; }
+}
+
+
 
 </style>
 
 <body>
 	<!-- partial:index.partial.html -->
+	 <!-- partial:index.partial.html -->
+	<div id="startScreen">
+	<button id="startBtn">START</button>
+	</div>
+
+	<div id="countdownOverlay">
+	<div id="countdownText">3</div>
+	<div id="newYearText">
+		<span>Happy New Year 2026</span>
+	</div>
+	</div>
+
+	<!-- Nút bật tắt nhạc -->
+	<button id="musicToggle">🎵</button>
+
+	<audio id="bgMusic" loop></audio>
+
+
+	<audio id="bgMusic" loop></audio>
 	<!-- SVG Spritesheet -->
 	<div style="height: 0; width: 0; position: absolute; visibility: hidden">
 		<svg xmlns="http://www.w3.org/2000/svg">

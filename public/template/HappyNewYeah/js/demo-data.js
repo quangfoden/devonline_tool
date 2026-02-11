@@ -21,4 +21,6 @@ window.CARD_DATA = {
     "/template/HappyNewYeah/images/image-4.jpeg",
     "/template/HappyNewYeah/images/image-5.jpeg",
   ],
+
+  MUSIC_URL: "/template/HappyNewYeah/audio/happy.mp3"
 };

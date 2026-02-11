@@ -18,6 +18,23 @@ class TemplateSeeder extends Seeder
 
         DB::table('templates')->insert([
             [
+                'name' => 'Thiệp năm mới rực rỡ',
+                'slug' => 'newyear-fireworks',
+                'price' => 0,
+                'description' => 'Thiệp chúc mừng năm mới với hiệu ứng pháo hoa',
+                'view' => 'NewYearFireworks',
+                'preview_url' => 'template/HappyNewYeah/index.html',
+                'thumbnail' => 'templates/newyear-fireworks/thumbnail.png',
+                'is_active' => 1,
+                'schema' => json_encode(['fields' => [
+                    'title'=>['type'=>'text'],'message'=>['type'=>'textarea'],'music'=>['type'=>'audio']
+                ]]),
+                'preview_data' => json_encode(['title'=>'Chúc mừng năm mới','message'=>'Chúc bạn một năm mới an khang thịnh vượng','music'=>null]),
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+
+            [
                 'name' => 'Thiệp sinh nhật tối giản',
                 'slug' => 'birthday-minimal',
                 'price' => 0,
@@ -78,23 +95,6 @@ class TemplateSeeder extends Seeder
                     'title'=>['type'=>'text'],'details'=>['type'=>'textarea'],'images'=>['type'=>'image','max'=>4]
                 ]]),
                 'preview_data' => json_encode(['title'=>'Lễ kỷ niệm','details'=>'Mời bạn đến dự buổi lễ','images'=>[]]),
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-
-            [
-                'name' => 'Thiệp năm mới rực rỡ',
-                'slug' => 'newyear-fireworks',
-                'price' => 0,
-                'description' => 'Thiệp chúc mừng năm mới với hiệu ứng pháo hoa',
-                'view' => 'NewYearFireworks',
-                'preview_url' => null,
-                'thumbnail' => 'templates/newyear-fireworks/thumbnail.png',
-                'is_active' => 1,
-                'schema' => json_encode(['fields' => [
-                    'title'=>['type'=>'text'],'message'=>['type'=>'textarea'],'music'=>['type'=>'audio']
-                ]]),
-                'preview_data' => json_encode(['title'=>'Chúc mừng năm mới','message'=>'Chúc bạn một năm mới an khang thịnh vượng','music'=>null]),
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
