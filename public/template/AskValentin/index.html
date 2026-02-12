@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#ff69b4">
+  <title>A Letter for You ♡</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="preload" as="image" href="/template/AskValentin/images/image1.gif">
+  <link rel="preload" as="image" href="/template/AskValentin/images/image2.gif">
+  <link rel="preload" as="image" href="/template/AskValentin/images/image3.gif">
+  <link rel="preload" as="image" href="/template/AskValentin/images/image4.gif">
+  <link rel="preload" as="image" href="/template/AskValentin/images/image5.gif">
+  <link rel="preload" as="image" href="/template/AskValentin/images/image6.gif">
+  <link rel="preload" as="image" href="/template/AskValentin/images/image7.gif">
+
+  <link rel="stylesheet" href="/template/AskValentin/style.css">
+
+
+  <style>
+
+    	.demo-watermark {
+		position: fixed;
+		inset: 0;
+		display: none;
+		justify-content: center;
+		align-items: center;
+		font-size: 120px;
+		font-weight: 900;
+		color: rgba(255, 255, 255, 0.15);
+		letter-spacing: 20px;
+		transform: rotate(-30deg);
+		pointer-events: none;
+		z-index: 9999;
+	}
+  </style>
+</head>
+<body>
+
+<div class="scene-bg"></div>
+
+<!-- Floating hearts -->
+<div class="hearts-container" id="heartsContainer"></div>
+
+<!-- Dust particles -->
+<canvas id="dust"></canvas>
+
+<!-- Fireworks canvas -->
+<canvas id="fireworks"></canvas>
+
+<!-- Music control -->
+<div class="music-control" id="musicControl">
+  <i class="fas fa-volume-up" id="musicIcon"></i>
+</div>
+
+<!-- Hidden audio element -->
+<audio id="bgMusic" loop></audio>
+
+
+<div class="stage">
+  <div class="book-wrap">
+    <div class="spine"></div>
+    <div class="book" id="book">
+      <div class="page-shadow-2"></div>
+      <div class="page-shadow-1"></div>
+      
+      <!-- Cover page -->
+      <div class="cover" id="cover">
+        <i class="fas fa-heart cover-heart"></i>
+        <h1 class="cover-title">Tình Thư</h1>
+        <p class="cover-subtitle">Dành Cho Em</p>
+        <p class="cover-instruction"><i class="fas fa-sparkles"></i> Nhấn để mở <i class="fas fa-sparkles"></i></p>
+      </div>
+      
+      <!-- Pages will be injected here -->
+    </div>
+  </div>
+</div>
+	<div id="demo-watermark" class="demo-watermark">Demo</div>
+<script src="/template/AskValentin/demo-data.js"></script>
+<script>
+ window.CARD_DATA = {{DATA}};
+window.IS_DEMO = {{IS_DEMO}} === true;
+
+if (
+  typeof window.CARD_DATA !== "object" ||
+  window.CARD_DATA === null ||
+  Array.isArray(window.CARD_DATA)
+) {
+  window.CARD_DATA = {};
+}
+
+if (!Array.isArray(window.CARD_DATA.pages)) {
+  window.CARD_DATA.pages = [];
+}
+
+if (!window.CARD_DATA.MUSIC_URL) {
+  window.CARD_DATA.MUSIC_URL = "";
+}
+
+if (window.IS_DEMO) {
+  document.getElementById("demo-watermark").style.display = "flex";
+}
+
+    </script>
+<script>
+
+  (() => {
+    
+  const PAGES = window.CARD_DATA.pages || [];
+  if (!PAGES.length) {
+  PAGES.push({
+    q: "Em sẽ làm người yêu anh chứ?",
+    sub: "— Trả lời anh nhé —",
+    image: "/template/AskValentin/images/image1.gif"
+  });
+}
+
+const MUSIC_URL = window.CARD_DATA.MUSIC_URL || "";
+
+  /* ── Music control ── */
+  const music = document.getElementById('bgMusic');
+  const musicControl = document.getElementById('musicControl');
+  const musicIcon = document.getElementById('musicIcon');
+  let isMuted = true;
+if (MUSIC_URL) {
+  music.src = MUSIC_URL;
+}
+  musicControl.addEventListener('click', () => {
+    if (isMuted) {
+      music.play();
+      isMuted = false;
+      musicControl.classList.remove('muted');
+      musicIcon.className = 'fas fa-volume-up';
+    } else {
+      music.pause();
+      isMuted = true;
+      musicControl.classList.add('muted');
+      musicIcon.className = 'fas fa-volume-mute';
+    }
+  });
+
+  /* ── Floating hearts ── */
+  const heartsContainer = document.getElementById('heartsContainer');
+  function createHeart() {
+    const heart = document.createElement('i');
+    heart.className = 'heart fas fa-heart';
+    heart.style.left = Math.random() * 100 + '%';
+    heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+    heart.style.fontSize = (Math.random() * 10 + 15) + 'px';
+    heartsContainer.appendChild(heart);
+    
+    setTimeout(() => heart.remove(), 7000);
+  }
+  
+  setInterval(createHeart, 800);
+
+  /* ── Dust particles ── */
+  const dc = document.getElementById('dust');
+  const dx = dc.getContext('2d');
+  let dp = [];
+
+  function initDust() {
+    dc.width = innerWidth; 
+    dc.height = innerHeight;
+    dp = Array.from({length: 60}, () => ({
+      x: Math.random() * innerWidth, 
+      y: Math.random() * innerHeight,
+      r: Math.random() * 1.2 + 0.3,
+      vx: (Math.random() - 0.5) * 0.25, 
+      vy: -(Math.random() * 0.32 + 0.08),
+      a: Math.random() * 0.45 + 0.1,
+      da: (Math.random() * 0.004 + 0.001) * (Math.random() < 0.5 ? 1 : -1),
+    }));
+  }
+  initDust();
+  window.addEventListener('resize', initDust);
+
+  (function animateDust() {
+    dx.clearRect(0, 0, dc.width, dc.height);
+    dp.forEach(p => {
+      p.x += p.vx; 
+      p.y += p.vy;
+      p.a = Math.max(0.05, Math.min(0.55, p.a + p.da));
+      if (p.a <= 0.05 || p.a >= 0.55) p.da *= -1;
+      if (p.y < -5) p.y = dc.height + 5;
+      if (p.x < -5) p.x = dc.width + 5;
+      if (p.x > dc.width + 5) p.x = -5;
+      dx.beginPath(); 
+      dx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      dx.fillStyle = `rgba(255,182,217,${p.a})`; 
+      dx.fill();
+    });
+    requestAnimationFrame(animateDust);
+  })();
+
+  /* ── Fireworks ── */
+  const fw = document.getElementById('fireworks');
+  const fctx = fw.getContext('2d');
+  let fireworks = [];
+  let particles = [];
+
+  function initFireworks() {
+    fw.width = innerWidth;
+    fw.height = innerHeight;
+  }
+  initFireworks();
+  window.addEventListener('resize', initFireworks);
+
+  class Firework {
+    constructor() {
+      this.x = Math.random() * fw.width;
+      this.y = fw.height;
+      this.targetY = Math.random() * fw.height * 0.4 + 50;
+      this.speed = Math.random() * 3 + 4;
+      this.angle = Math.PI / 2;
+      this.brightness = Math.random() * 30 + 50;
+      this.exploded = false;
+      this.color = ['#ff69b4', '#ff1493', '#ffb6d9', '#c72c5e', '#ffc0cb'][Math.floor(Math.random() * 5)];
+    }
+
+    update() {
+      if (!this.exploded) {
+        this.y -= this.speed;
+        if (this.y <= this.targetY) {
+          this.explode();
+          this.exploded = true;
+        }
+      }
+    }
+
+    draw() {
+      if (!this.exploded) {
+        fctx.beginPath();
+        fctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+        fctx.fillStyle = `hsl(330, ${this.brightness}%, ${this.brightness}%)`;
+        fctx.fill();
+      }
+    }
+
+    explode() {
+      const particleCount = Math.random() * 30 + 50;
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle(this.x, this.y, this.color));
+      }
+    }
+  }
+
+  class Particle {
+    constructor(x, y, color) {
+      this.x = x;
+      this.y = y;
+      this.color = color;
+      this.radius = Math.random() * 2 + 1;
+      this.speed = Math.random() * 5 + 2;
+      this.angle = Math.random() * Math.PI * 2;
+      this.vx = Math.cos(this.angle) * this.speed;
+      this.vy = Math.sin(this.angle) * this.speed;
+      this.gravity = 0.08;
+      this.friction = 0.98;
+      this.alpha = 1;
+      this.decay = Math.random() * 0.015 + 0.015;
+    }
+
+    update() {
+      this.vx *= this.friction;
+      this.vy *= this.friction;
+      this.vy += this.gravity;
+      this.x += this.vx;
+      this.y += this.vy;
+      this.alpha -= this.decay;
+    }
+
+    draw() {
+      fctx.save();
+      fctx.globalAlpha = this.alpha;
+      fctx.beginPath();
+      fctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      fctx.fillStyle = this.color;
+      fctx.fill();
+      fctx.restore();
+    }
+  }
+
+  function animateFireworks() {
+    fctx.fillStyle = 'rgba(255, 245, 250, 0.1)';
+    fctx.fillRect(0, 0, fw.width, fw.height);
+
+    // Launch new fireworks randomly
+    if (Math.random() < 0.05) {
+      fireworks.push(new Firework());
+    }
+
+    // Update and draw fireworks
+    fireworks.forEach((firework, index) => {
+      firework.update();
+      firework.draw();
+      if (firework.exploded) {
+        fireworks.splice(index, 1);
+      }
+    });
+
+    // Update and draw particles
+    particles.forEach((particle, index) => {
+      particle.update();
+      particle.draw();
+      if (particle.alpha <= 0) {
+        particles.splice(index, 1);
+      }
+    });
+
+    requestAnimationFrame(animateFireworks);
+  }
+
+  animateFireworks();
+
+  /* ── Data ── */
+  const IMGS = [
+    './images/image1.gif', './images/image2.gif', './images/image3.gif',
+    './images/image4.gif', './images/image5.gif', './images/image6.gif',
+    './images/image7.gif'
+  ];
+  const ALTS = [
+    'Cute kitten with flowers', 'Sad kitten looking up', 'Kitten begging',
+    'Heartbroken kitten', 'Crying kitten', 'Devastated kitten', 'Happy kitten celebrating'
+  ];
+
+  const Y = [
+    {fs: 'clamp(0.9rem,3.2vw,1.05rem)', p: '0.7rem 2.1rem', w: 'clamp(95px,26vw,125px)', h: '44px'},
+    {fs: 'clamp(1.05rem,3.7vw,1.2rem)', p: '0.75rem 2.2rem', w: 'clamp(115px,30vw,145px)', h: '48px'},
+    {fs: 'clamp(1.25rem,4.7vw,1.6rem)', p: '0.85rem 2.3rem', w: 'clamp(135px,34vw,170px)', h: '54px'},
+    {fs: 'clamp(1.6rem,5.8vw,2.1rem)', p: '0.92rem 2.4rem', w: 'clamp(160px,38vw,200px)', h: '62px'},
+    {fs: 'clamp(1.9rem,6.8vw,2.6rem)', p: '1rem 2.5rem', w: 'clamp(180px,42vw,230px)', h: '72px'},
+    {fs: 'clamp(2.1rem,7.8vw,3rem)', p: '1.1rem 2.6rem', w: 'clamp(200px,46vw,250px)', h: '82px'},
+  ];
+
+  /* ── State ── */
+  let current = 0;
+  let flipping = false;
+  let coverOpened = false;
+  const book = document.getElementById('book');
+  const cover = document.getElementById('cover');
+
+  /* ── Build page element ── */
+ function mkPage(idx) {
+  const d = PAGES[idx];
+  const y = Y[Math.min(idx, Y.length - 1)];
+  const el = document.createElement('div');
+  el.className = 'page';
+  el.dataset.idx = idx;
+
+  el.innerHTML = `
+    <div class="page-inner">
+      <div class="orn"><i class="fas fa-heart"></i></div>
+      <div class="rule">✦ Lá thư dành cho em ✦</div>
+
+      <div class="frame">
+        <img src="${d.image}" alt="Romantic image" loading="eager">
+      </div>
+
+      <h1 class="q-text">${d.q}</h1>
+      <p class="q-sub">- ${d.sub} -</p>
+
+      <div class="spc"></div>
+
+      <div class="btns">
+        <button class="btn-y"
+          style="--yfs:${y.fs};--yp:${y.p};--yw:${y.w};--yh:${y.h}">
+          DẠ <i class="fas fa-heart"></i>
+        </button>
+        <button class="btn-n">Không</button>
+      </div>
+    </div>
+    <span class="pg-num">tr. ${idx + 1}</span>
+  `;
+
+  return el;
+}
+
+
+  /* ── Open cover ── */
+  cover.addEventListener('click', () => {
+    if (coverOpened) return;
+    coverOpened = true;
+    cover.classList.add('opened');
+    music.play().then(() => {
+    isMuted = false;
+    musicControl.classList.remove('muted');
+    musicIcon.className = 'fas fa-volume-up';
+  }).catch(error => {
+    console.log("Trình duyệt chặn nhạc: ", error);
+  });
+    setTimeout(() => {
+      showFirst();
+    }, 400);
+  });
+
+  /* ── Show first page ── */
+  function showFirst() {
+    const el = mkPage(0);
+    el.classList.add('active');
+    el.style.zIndex = '3';
+    book.appendChild(el);
+    bind(el, 0);
+  }
+
+  /* ── Flip animation ── */
+  function flipTo(nextIdx) {
+    if (flipping) return;
+    flipping = true;
+
+    const outEl = book.querySelector(`.page[data-idx="${current}"]`);
+    const inEl = mkPage(nextIdx);
+
+    inEl.style.zIndex = '4';
+    inEl.classList.add('in', 'active');
+    book.appendChild(inEl);
+
+    void inEl.getBoundingClientRect();
+
+    outEl.style.zIndex = '5';
+    outEl.classList.add('out');
+
+    setTimeout(() => {
+      inEl.classList.add('show');
+    }, 450);
+
+    setTimeout(() => {
+      outEl.remove();
+
+      inEl.style.transition = 'none';
+      inEl.style.transform = 'rotateY(0deg)';
+      inEl.classList.remove('in', 'show');
+      inEl.style.zIndex = '3';
+
+      const body = inEl.querySelector('.q-body:not(.gone)');
+      if (body) requestAnimationFrame(() => body.classList.add('vis'));
+
+      current = nextIdx;
+      flipping = false;
+      bind(inEl, nextIdx);
+    }, 950);
+  }
+
+  /* ── Yes handler ── */
+  function handleYes() {
+    if (flipping) return;
+    flipping = true;
+
+    const active = book.querySelector(`.page[data-idx="${current}"]`);
+    if (!active) return;
+
+    const img = active.querySelector('img');
+    const q = active.querySelector('.q-text');
+    const sub = active.querySelector('.q-sub');
+    const btns = active.querySelector('.btns');
+    const orn = active.querySelector('.orn');
+    const body = active.querySelector('.q-body');
+
+    if (img) { 
+       img.src = '/template/AskValentin/images/image7.gif';
+    }
+    if (q) { 
+      q.innerHTML = 'Tuyệt vời!! <i class="fas fa-heart"></i>'; 
+      q.style.color = 'var(--pink-main)'; 
+    }
+    if (sub) { 
+      sub.textContent = '— Em yêu của anh thật tuyệt —'; 
+      sub.style.opacity = '1'; 
+    }
+    if (btns) { 
+      btns.style.display = 'none'; 
+    }
+    if (orn) { 
+      orn.innerHTML = '<i class="fas fa-gift"></i>'; 
+    }
+    if (body) {
+      body.classList.remove('gone');
+      body.style.visibility = '';
+      body.innerHTML = 'Nguyện ở bên em trọn đời. <i class="fas fa-infinity"></i>';
+      requestAnimationFrame(() => body.classList.add('vis'));
+    }
+
+    /* Heart confetti */
+    const heart = confetti.shapeFromPath({
+      path: 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z',
+    });
+    const cfg = {
+      spread: 360, 
+      ticks: 140, 
+      gravity: 0.15, 
+      decay: 0.93, 
+      startVelocity: 22,
+      shapes: [heart],
+      colors: ['#ff69b4', '#ff1493', '#ffb6d9', '#c72c5e', '#ffc0cb', '#ffe0f0']
+    };
+    [
+      [0, 60, 1.9], 
+      [280, 30, 3], 
+      [550, 12, 4.5], 
+      [1500, 55, 2.2, 30]
+    ].forEach(([d, c, s, v]) =>
+      setTimeout(() => confetti({...cfg, particleCount: c, scalar: s, startVelocity: v || 22}), d)
+    );
+  }
+
+  /* ── Bind buttons ── */
+  function bind(el, idx) {
+    el.querySelector('.btn-y')?.addEventListener('click', handleYes);
+    el.querySelector('.btn-n')?.addEventListener('click', () => {
+      if (idx < PAGES.length - 1) flipTo(idx + 1);
+    });
+  }
+})();
+</script>
+</body>
+</html>

@@ -350,20 +350,20 @@
   }
 
   .payment-section {
-   position: initial;
+    position: initial;
   }
 
   .price-card {
-   position: initial;
-   padding: 10px 15px;
-   text-align: center;
-   margin-bottom: 10px; 
+    position: initial;
+    padding: 10px 15px;
+    text-align: center;
+    margin-bottom: 10px;
   }
 
   .autosave-status {
-   bottom: initial;
-   top: 5px;
-   left: 5px;
+    bottom: initial;
+    top: 5px;
+    left: 5px;
   }
 
   .payment-btn {
@@ -371,7 +371,7 @@
     width: 100%;
   }
 
-  .payment-btn .btn-icon{
+  .payment-btn .btn-icon {
     display: none;
   }
 
@@ -432,10 +432,23 @@ export default {
     totalPrice() {
       const basePrice = Number(this.template?.price || 0);
 
-      const images = this.formData.imageSources || [];
-      const extraImages = Math.max(0, images.length - 1);
+      let imageCount = 0;
+
+      // 1️⃣ imageSources (template cũ)
+      if (Array.isArray(this.formData.imageSources)) {
+        imageCount += this.formData.imageSources.filter(Boolean).length;
+      }
+
+      // 2️⃣ pages (Valentin)
+      if (Array.isArray(this.formData.pages)) {
+        imageCount += this.formData.pages.filter((p) => p?.image).length;
+      }
+
+      // Nếu có cả 2 loại thì sẽ cộng tổng lại
+      const extraImages = Math.max(0, imageCount - 1);
 
       const hasMusic = !!this.formData.MUSIC_URL;
+
       return basePrice + extraImages * 10000 + (hasMusic ? 10000 : 0);
     },
   },
