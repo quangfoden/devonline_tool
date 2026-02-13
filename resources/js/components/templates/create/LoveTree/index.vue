@@ -48,7 +48,7 @@
           <input
             :value="names[0] || ''"
             @input="updateName(0, $event.target.value)"
-            placeholder="VD: Quang"
+            placeholder="VD: Anh"
             class="romantic-input"
             maxlength="20"
           />
@@ -62,7 +62,7 @@
           <input
             :value="names[1] || ''"
             @input="updateName(1, $event.target.value)"
-            placeholder="VD: Linh"
+            placeholder="VD: Em"
             class="romantic-input"
             maxlength="20"
           />
@@ -283,9 +283,9 @@ export default {
   data() {
     return {
       presetMusics: [
-        { name: "Nhạc Tình Yêu 1", url: "/template/LoveTimeline/music/love1.mp3" },
-        { name: "Nhạc Tình Yêu 2", url: "/template/LoveTimeline/music/love2.mp3" },
-        { name: "Nhạc Tình Yêu 3", url: "/template/LoveTimeline/music/love3.mp3" },
+        { name: "Nhạc Tình Yêu 1", url: "/template/LoveTree/music/love1.mp3" },
+        { name: "Nhạc Tình Yêu 2", url: "/template/LoveTree/music/love2.mp3" },
+        { name: "Nhạc Tình Yêu 3", url: "/template/LoveTree/music/love3.mp3" },
       ],
     };
   },

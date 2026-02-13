@@ -255,13 +255,13 @@ function _toPrimitive(t, r) {
     return {
       presetMusics: [{
         name: "Nhạc Tình Yêu 1",
-        url: "/template/LoveTimeline/music/love1.mp3"
+        url: "/template/LoveTree/music/love1.mp3"
       }, {
         name: "Nhạc Tình Yêu 2",
-        url: "/template/LoveTimeline/music/love2.mp3"
+        url: "/template/LoveTree/music/love2.mp3"
       }, {
         name: "Nhạc Tình Yêu 3",
-        url: "/template/LoveTimeline/music/love3.mp3"
+        url: "/template/LoveTree/music/love3.mp3"
       }]
     };
   },
@@ -640,7 +640,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onInput: _cache[1] || (_cache[1] = function ($event) {
       return $options.updateName(0, $event.target.value);
     }),
-    placeholder: "VD: Quang",
+    placeholder: "VD: Anh",
     "class": "romantic-input",
     maxlength: "20"
   }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_8)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [_cache[10] || (_cache[10] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
@@ -652,7 +652,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onInput: _cache[2] || (_cache[2] = function ($event) {
       return $options.updateName(1, $event.target.value);
     }),
-    placeholder: "VD: Linh",
+    placeholder: "VD: Em",
     "class": "romantic-input",
     maxlength: "20"
   }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_10)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Lines Section "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [_cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {

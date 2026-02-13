@@ -2,8 +2,8 @@ window.config = window.config || {};
 
 window.config = {
     names: ["Anh", "Em"],
-    date: "2024-02-14",
-    MUSIC_URL: "/template/LoveTree/music/happy1.mp3", // mặc định
+    date: "2025-10-22",
+    MUSIC_URL: "/template/LoveTree/music/love1.mp3", // mặc định
 
     lines: [
         "Gửi em yêu thương",

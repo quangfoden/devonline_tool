@@ -259,7 +259,7 @@ export default {
     return {
       presetMusics: [
         { name: "Nhạc Valentine 1", url: "/template/AskValentin/music/happy1.mp3" },
-        { name: "Nhạc Valentine 2", url: "/template/AskValentin/music/happy2.mp3" },
+        { name: "Nhạc Valentine 2", url: "/template/AskValentin/music/love1.mp3" },
       ],
     };
   },

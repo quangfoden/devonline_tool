@@ -25,6 +25,7 @@ class TemplateController extends Controller
                     $q->where('is_paid', true);
                 }
             ])
+            ->orderBy('id','DESC')
             ->get();
     }
 
