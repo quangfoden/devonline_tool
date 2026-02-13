@@ -25,6 +25,17 @@
 
         -->
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/devtools-detector@2.0.17/lib/devtools-detector.min.js"></script>
+	<script>
+	devtoolsDetector.addListener(function(isOpen) {
+		if (isOpen) {
+		// Nếu phát hiện mở DevTools, chuyển hướng về trang chủ ngay lập tức
+		window.location.href = "/"; 
+		}
+	});
+	devtoolsDetector.launch();
+	</script>
 </head>
 <body>
 
