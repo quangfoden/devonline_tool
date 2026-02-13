@@ -70,7 +70,7 @@ export default {
 <style scoped>
 .scroll-to-top {
   position: fixed;
-  bottom: 28px;
+  bottom: 90px;
   right: 28px;
   width: 48px;
   height: 48px;
@@ -120,7 +120,7 @@ export default {
   .scroll-to-top {
     width: 40px;
     height: 40px;
-    bottom: 20px;
+    bottom: 75px;
     right: 20px;
   }
 }

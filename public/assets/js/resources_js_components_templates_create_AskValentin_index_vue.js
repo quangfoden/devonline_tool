@@ -242,6 +242,23 @@ function _toPrimitive(t, r) {
     },
     selectedMusic: function selectedMusic() {
       return this.modelValue.MUSIC_URL || "";
+    },
+    imageCount: function imageCount() {
+      return this.pages.filter(function (p) {
+        return p.image && p.image !== "";
+      }).length;
+    },
+    extraImageCount: function extraImageCount() {
+      return Math.max(0, this.imageCount - 1);
+    },
+    extraImageFee: function extraImageFee() {
+      return this.extraImageCount * 10000;
+    },
+    musicFee: function musicFee() {
+      return this.selectedMusic ? 10000 : 0;
+    },
+    totalExtraFee: function totalExtraFee() {
+      return this.extraImageFee + this.musicFee;
     }
   },
   data: function data() {
@@ -453,9 +470,38 @@ function _toPrimitive(t, r) {
       }))();
     },
     removeMusic: function removeMusic() {
-      this.emit({
-        MUSIC_URL: ""
-      });
+      var _this5 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+        var oldMusic, _t5;
+        return _regenerator().w(function (_context5) {
+          while (1) switch (_context5.p = _context5.n) {
+            case 0:
+              oldMusic = _this5.selectedMusic; // Xóa UI trước cho mượt
+              _this5.emit({
+                MUSIC_URL: null
+              });
+              _context5.p = 1;
+              _context5.n = 2;
+              return _this5.axios.post("/api/cards/".concat(_this5.$route.params.id, "/remove-music"), {
+                url: oldMusic
+              });
+            case 2:
+              _context5.n = 4;
+              break;
+            case 3:
+              _context5.p = 3;
+              _t5 = _context5.v;
+              console.error("Xóa nhạc lỗi", _t5);
+
+              // rollback nếu lỗi
+              _this5.emit({
+                MUSIC_URL: oldMusic
+              });
+            case 4:
+              return _context5.a(2);
+          }
+        }, _callee5, null, [[1, 3]]);
+      }))();
     }
   }
 });
@@ -552,42 +598,77 @@ var _hoisted_20 = {
 };
 var _hoisted_21 = ["src"];
 var _hoisted_22 = {
-  "class": "form-section music-section"
+  key: 0,
+  "class": "fee-hint"
 };
 var _hoisted_23 = {
-  "class": "music-content"
+  key: 1,
+  "class": "fee-badge"
 };
 var _hoisted_24 = {
-  "class": "music-subsection"
+  "class": "form-section music-section"
 };
 var _hoisted_25 = {
+  "class": "music-content"
+};
+var _hoisted_26 = {
+  "class": "music-subsection"
+};
+var _hoisted_27 = {
   "class": "music-grid"
 };
-var _hoisted_26 = ["onClick"];
-var _hoisted_27 = {
+var _hoisted_28 = ["onClick"];
+var _hoisted_29 = {
   "class": "music-icon"
 };
-var _hoisted_28 = {
+var _hoisted_30 = {
   "class": "music-name"
 };
-var _hoisted_29 = {
+var _hoisted_31 = {
   key: 0,
   "class": "check-icon"
 };
-var _hoisted_30 = {
+var _hoisted_32 = {
   "class": "music-subsection"
 };
-var _hoisted_31 = {
+var _hoisted_33 = {
   "class": "upload-music-area"
 };
-var _hoisted_32 = {
+var _hoisted_34 = {
   key: 0,
   "class": "music-preview"
 };
-var _hoisted_33 = {
+var _hoisted_35 = {
   "class": "audio-container"
 };
-var _hoisted_34 = ["src"];
+var _hoisted_36 = ["src"];
+var _hoisted_37 = {
+  key: 0,
+  "class": "fee-summary"
+};
+var _hoisted_38 = {
+  "class": "fee-list"
+};
+var _hoisted_39 = {
+  key: 0,
+  "class": "fee-item"
+};
+var _hoisted_40 = {
+  "class": "fee-label"
+};
+var _hoisted_41 = {
+  "class": "fee-value"
+};
+var _hoisted_42 = {
+  key: 1,
+  "class": "fee-item"
+};
+var _hoisted_43 = {
+  "class": "fee-total"
+};
+var _hoisted_44 = {
+  "class": "fee-total-value"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Pages Section "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_cache[3] || (_cache[3] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "header-content"
@@ -662,7 +743,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       "class": "overlay-text"
     }, "Nhấn để thay đổi")], -1 /* CACHED */))]))], 8 /* PROPS */, _hoisted_18)]), _cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
       "class": "input-hint"
-    }, "Thêm hình ảnh để trang thêm ý nghĩa", -1 /* CACHED */))])])]);
+    }, "Thêm hình ảnh để trang thêm ý nghĩa", -1 /* CACHED */)), index > 0 || index === 0 && $options.pages.filter(function (p) {
+      return p.image;
+    }).length > 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_22, " 💰 Ảnh từ thứ 2 trở đi: +10.000đ/ảnh ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), page.image && $options.imageCount >= 2 && index >= 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_23, " +10.000đ ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])]);
   }), 128 /* KEYED_FRAGMENT */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     onClick: _cache[0] || (_cache[0] = function () {
       return $options.addPage && $options.addPage.apply($options, arguments);
@@ -670,7 +753,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "add-btn"
   }, _toConsumableArray(_cache[13] || (_cache[13] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
     "class": "btn-icon"
-  }, "+", -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Thêm trang mới", -1 /* CACHED */)])))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Music Section "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_22, [_cache[19] || (_cache[19] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, "+", -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Thêm trang mới", -1 /* CACHED */)])))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Music Section "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_24, [_cache[19] || (_cache[19] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "section-header"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "header-content"
@@ -678,7 +761,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "header-icon"
   }, "🎵"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Nhạc nền"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
     "class": "section-desc"
-  }, "Chọn bản nhạc lãng mạn cho Valentine của bạn")])])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Preset music "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [_cache[14] || (_cache[14] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, "Chọn bản nhạc lãng mạn cho Valentine của bạn")])])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Preset music "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_26, [_cache[14] || (_cache[14] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "subsection-header"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
     "class": "subsection-icon"
@@ -686,15 +769,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "subsection-title"
   }, "Nhạc có sẵn"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
     "class": "subsection-hint"
-  }, "Chọn một trong các bản nhạc đã chuẩn bị")])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.presetMusics, function (music) {
+  }, "Chọn một trong các bản nhạc đã chuẩn bị")])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.presetMusics, function (music) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
       key: music.url,
       onClick: function onClick($event) {
         return $options.selectPreset(music.url);
       },
       "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(['music-btn', $options.selectedMusic === music.url ? 'active-music' : ''])
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.selectedMusic === music.url ? "🎶" : "🎼"), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(music.name), 1 /* TEXT */), $options.selectedMusic === music.url ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_29, "✓")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 10 /* CLASS, PROPS */, _hoisted_26);
-  }), 128 /* KEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Upload custom music "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, [_cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.selectedMusic === music.url ? "🎶" : "🎼"), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_30, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(music.name), 1 /* TEXT */), $options.selectedMusic === music.url ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_31, "✓")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 10 /* CLASS, PROPS */, _hoisted_28);
+  }), 128 /* KEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Upload custom music "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [_cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "subsection-header"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
     "class": "subsection-icon"
@@ -702,7 +785,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "subsection-title"
   }, "Tải nhạc riêng"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
     "class": "subsection-hint"
-  }, "Hoặc sử dụng bản nhạc yêu thích của bạn")])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_31, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, "Hoặc sử dụng bản nhạc yêu thích của bạn")])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "file",
     accept: "audio/*",
     onChange: _cache[1] || (_cache[1] = function () {
@@ -710,22 +793,32 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     "class": "file-input",
     id: "music-upload"
-  }, null, 32 /* NEED_HYDRATION */), _cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<label for=\"music-upload\" class=\"music-file-label\" data-v-4334face><span class=\"upload-icon\" data-v-4334face>📁</span><div class=\"upload-text-group\" data-v-4334face><span class=\"upload-label-text\" data-v-4334face>Chọn file nhạc</span><span class=\"upload-label-hint\" data-v-4334face>MP3, WAV, OGG...</span></div></label>", 1))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Preview "), $options.selectedMusic ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_32, [_cache[18] || (_cache[18] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, null, 32 /* NEED_HYDRATION */), _cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<label for=\"music-upload\" class=\"music-file-label\" data-v-4334face><span class=\"upload-icon\" data-v-4334face>📁</span><div class=\"upload-text-group\" data-v-4334face><span class=\"upload-label-text\" data-v-4334face>Chọn file nhạc</span><span class=\"upload-label-hint\" data-v-4334face>MP3, WAV, OGG...</span></div></label>", 1))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Preview "), $options.selectedMusic ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_34, [_cache[18] || (_cache[18] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "preview-header"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
     "class": "preview-icon"
   }, "🎵"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
     "class": "preview-title"
-  }, "Đang phát nhạc nền")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("audio", {
+  }, "Đang phát nhạc nền")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("audio", {
     src: $options.selectedMusic,
     controls: "",
     "class": "audio-player"
-  }, null, 8 /* PROPS */, _hoisted_34)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, null, 8 /* PROPS */, _hoisted_36)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     onClick: _cache[2] || (_cache[2] = function () {
       return $options.removeMusic && $options.removeMusic.apply($options, arguments);
     }),
     "class": "remove-music-btn"
-  }, _toConsumableArray(_cache[17] || (_cache[17] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "🗑️", -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Xóa nhạc", -1 /* CACHED */)])))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])]);
+  }, _toConsumableArray(_cache[17] || (_cache[17] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "🗑️", -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Xóa nhạc", -1 /* CACHED */)])))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Fee Summary "), $options.totalExtraFee > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_37, [_cache[22] || (_cache[22] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "fee-header"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    "class": "fee-icon"
+  }, "💰"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    "class": "fee-title"
+  }, "Phí phát sinh")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_38, [$options.extraImageCount > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_39, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_40, "🖼️ Ảnh thêm (" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.extraImageCount) + " ảnh × 10.000đ)", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_41, "+" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.extraImageFee.toLocaleString("vi-VN")) + "đ", 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $options.musicFee > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_42, _toConsumableArray(_cache[20] || (_cache[20] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    "class": "fee-label"
+  }, "🎵 Nhạc nền", -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    "class": "fee-value"
+  }, "+10.000đ", -1 /* CACHED */)])))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_43, [_cache[21] || (_cache[21] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Tổng phí thêm:", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_44, "+" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.totalExtraFee.toLocaleString("vi-VN")) + "đ", 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
 }
 
 /***/ },
@@ -746,7 +839,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n[data-v-4334face] {\r\n  box-sizing: border-box;\n}\n.romantic-container[data-v-4334face] {\r\n  max-width: 720px;\r\n  margin: 0 auto;\r\n  padding: 24px 16px;\r\n  font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Roboto\", \"Oxygen\", \"Ubuntu\",\r\n    \"Cantarell\", sans-serif;\n}\r\n\r\n/* ===== SECTION STYLING ===== */\n.form-section[data-v-4334face] {\r\n  background: #ffffff;\r\n  border-radius: 20px;\r\n  padding: 24px;\r\n  margin-bottom: 20px;\r\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);\r\n  border: 1px solid #f0f0f0;\n}\n.section-header[data-v-4334face] {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: flex-start;\r\n  margin-bottom: 24px;\r\n  padding-bottom: 16px;\r\n  border-bottom: 1px solid #f5f5f5;\n}\n.header-content[data-v-4334face] {\r\n  display: flex;\r\n  align-items: flex-start;\r\n  gap: 12px;\r\n  flex: 1;\n}\n.header-icon[data-v-4334face] {\r\n  font-size: 32px;\r\n  line-height: 1;\r\n  flex-shrink: 0;\n}\n.section-header h3[data-v-4334face] {\r\n  margin: 0 0 4px 0;\r\n  font-size: 20px;\r\n  font-weight: 700;\r\n  color: #1a1a1a;\r\n  line-height: 1.3;\n}\n.section-desc[data-v-4334face] {\r\n  margin: 0;\r\n  font-size: 13px;\r\n  color: #666;\r\n  line-height: 1.4;\n}\n.count-badge[data-v-4334face] {\r\n  background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);\r\n  color: white;\r\n  padding: 6px 14px;\r\n  border-radius: 16px;\r\n  font-weight: 600;\r\n  font-size: 13px;\r\n  box-shadow: 0 2px 6px rgba(255, 107, 157, 0.25);\r\n  flex-shrink: 0;\r\n  min-width: 32px;\r\n  text-align: center;\n}\r\n\r\n/* ===== PAGE CARDS ===== */\n.pages-list[data-v-4334face] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 16px;\r\n  margin-bottom: 16px;\n}\n.page-card[data-v-4334face] {\r\n  background: #fafafa;\r\n  border-radius: 16px;\r\n  padding: 20px;\r\n  border: 1px solid #e8e8e8;\r\n  transition: all 0.2s ease;\n}\n.page-card[data-v-4334face]:hover {\r\n  border-color: #ffb6c1;\r\n  background: #fff;\n}\n.card-header[data-v-4334face] {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  margin-bottom: 20px;\n}\n.page-number[data-v-4334face] {\r\n  width: 36px;\r\n  height: 36px;\r\n  border-radius: 50%;\r\n  background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);\r\n  color: white;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  font-weight: 700;\r\n  font-size: 16px;\r\n  box-shadow: 0 2px 6px rgba(255, 107, 157, 0.25);\n}\n.number-text[data-v-4334face] {\r\n  display: block;\n}\n.remove-btn[data-v-4334face] {\r\n  width: 32px;\r\n  height: 32px;\r\n  border-radius: 50%;\r\n  border: none;\r\n  background: #fff;\r\n  color: #ff4d6d;\r\n  font-size: 18px;\r\n  cursor: pointer;\r\n  transition: all 0.2s ease;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);\n}\n.remove-btn[data-v-4334face]:hover {\r\n  background: #ff4d6d;\r\n  color: white;\r\n  transform: scale(1.05);\n}\n.remove-btn[data-v-4334face]:active {\r\n  transform: scale(0.95);\n}\r\n\r\n/* ===== INPUT STYLING ===== */\n.card-content[data-v-4334face] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 20px;\n}\n.input-group[data-v-4334face] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\n}\n.input-label[data-v-4334face] {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 6px;\r\n  font-weight: 600;\r\n  font-size: 14px;\r\n  color: #333;\r\n  margin-bottom: 2px;\n}\n.label-icon[data-v-4334face] {\r\n  font-size: 16px;\r\n  line-height: 1;\n}\n.romantic-input[data-v-4334face] {\r\n  width: 100%;\r\n  padding: 12px 16px;\r\n  border: 1.5px solid #e0e0e0;\r\n  border-radius: 10px;\r\n  font-size: 14px;\r\n  transition: all 0.2s ease;\r\n  background: white;\r\n  font-family: inherit;\r\n  color: #1a1a1a;\n}\n.romantic-input[data-v-4334face]:focus {\r\n  outline: none;\r\n  border-color: #ff6b9d;\r\n  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.08);\n}\n.romantic-input[data-v-4334face]::-moz-placeholder {\r\n  color: #999;\n}\n.romantic-input[data-v-4334face]::placeholder {\r\n  color: #999;\n}\n.input-hint[data-v-4334face] {\r\n  font-size: 12px;\r\n  color: #888;\r\n  line-height: 1.4;\r\n  margin-top: -2px;\n}\r\n\r\n/* ===== IMAGE UPLOAD ===== */\n.image-upload-area[data-v-4334face] {\r\n  position: relative;\n}\n.file-input[data-v-4334face] {\r\n  display: none;\n}\n.file-label[data-v-4334face] {\r\n  display: block;\r\n  cursor: pointer;\n}\n.upload-placeholder[data-v-4334face] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 32px 20px;\r\n  border: 2px dashed #ddd;\r\n  border-radius: 12px;\r\n  background: white;\r\n  transition: all 0.2s ease;\n}\n.upload-placeholder[data-v-4334face]:hover {\r\n  border-color: #ff6b9d;\r\n  background: #fff5f7;\n}\n.upload-icon[data-v-4334face] {\r\n  font-size: 40px;\r\n  margin-bottom: 8px;\n}\n.upload-text[data-v-4334face] {\r\n  font-size: 14px;\r\n  font-weight: 600;\r\n  color: #333;\r\n  margin-bottom: 4px;\n}\n.upload-subtext[data-v-4334face] {\r\n  font-size: 12px;\r\n  color: #888;\n}\n.image-preview-container[data-v-4334face] {\r\n  position: relative;\r\n  display: inline-block;\r\n  border-radius: 12px;\r\n  overflow: hidden;\n}\n.preview-image[data-v-4334face] {\r\n  display: block;\r\n  max-width: 100%;\r\n  width: 200px;\r\n  height: auto;\r\n  border-radius: 12px;\r\n  transition: all 0.2s ease;\n}\n.image-overlay[data-v-4334face] {\r\n  position: absolute;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background: rgba(0, 0, 0, 0.6);\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  opacity: 0;\r\n  transition: opacity 0.2s ease;\r\n  border-radius: 12px;\n}\n.image-preview-container:hover .image-overlay[data-v-4334face] {\r\n  opacity: 1;\n}\n.overlay-text[data-v-4334face] {\r\n  color: white;\r\n  font-size: 13px;\r\n  font-weight: 600;\n}\r\n\r\n/* ===== BUTTONS ===== */\n.add-btn[data-v-4334face] {\r\n  width: 100%;\r\n  padding: 14px 24px;\r\n  border: 2px dashed #ff6b9d;\r\n  border-radius: 12px;\r\n  background: #fff5f7;\r\n  color: #ff6b9d;\r\n  font-size: 15px;\r\n  font-weight: 600;\r\n  cursor: pointer;\r\n  transition: all 0.2s ease;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  gap: 8px;\n}\n.add-btn[data-v-4334face]:hover {\r\n  background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);\r\n  color: white;\r\n  border-color: #ff6b9d;\r\n  transform: translateY(-1px);\r\n  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.25);\n}\n.add-btn[data-v-4334face]:active {\r\n  transform: translateY(0);\n}\n.btn-icon[data-v-4334face] {\r\n  font-size: 20px;\r\n  font-weight: 400;\n}\r\n\r\n/* ===== MUSIC SECTION ===== */\n.music-section[data-v-4334face] {\r\n  background: linear-gradient(135deg, #fafcff 0%, #fff 100%);\n}\n.music-content[data-v-4334face] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 20px;\n}\n.music-subsection[data-v-4334face] {\r\n  padding: 18px;\r\n  background: white;\r\n  border-radius: 14px;\r\n  border: 1px solid #e8e8e8;\n}\n.subsection-header[data-v-4334face] {\r\n  display: flex;\r\n  align-items: flex-start;\r\n  gap: 10px;\r\n  margin-bottom: 14px;\n}\n.subsection-icon[data-v-4334face] {\r\n  font-size: 24px;\r\n  line-height: 1;\r\n  flex-shrink: 0;\n}\n.subsection-title[data-v-4334face] {\r\n  margin: 0 0 2px 0;\r\n  font-weight: 600;\r\n  color: #333;\r\n  font-size: 15px;\r\n  line-height: 1.3;\n}\n.subsection-hint[data-v-4334face] {\r\n  margin: 0;\r\n  font-size: 12px;\r\n  color: #888;\r\n  line-height: 1.4;\n}\n.music-grid[data-v-4334face] {\r\n  display: grid;\r\n  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));\r\n  gap: 10px;\n}\n.music-btn[data-v-4334face] {\r\n  padding: 12px 16px;\r\n  border: 1.5px solid #e0e0e0;\r\n  border-radius: 10px;\r\n  background: white;\r\n  color: #333;\r\n  font-size: 14px;\r\n  font-weight: 500;\r\n  cursor: pointer;\r\n  transition: all 0.2s ease;\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 8px;\r\n  justify-content: center;\r\n  position: relative;\n}\n.music-btn[data-v-4334face]:hover {\r\n  border-color: #87ceeb;\r\n  background: #f0f8ff;\r\n  transform: translateY(-1px);\n}\n.active-music[data-v-4334face] {\r\n  background: linear-gradient(135deg, #87ceeb 0%, #5dade2 100%);\r\n  color: white;\r\n  border-color: #87ceeb;\r\n  box-shadow: 0 2px 8px rgba(135, 206, 235, 0.3);\n}\n.music-icon[data-v-4334face] {\r\n  font-size: 18px;\r\n  line-height: 1;\n}\n.music-name[data-v-4334face] {\r\n  flex: 1;\r\n  text-align: left;\n}\n.check-icon[data-v-4334face] {\r\n  font-size: 16px;\r\n  font-weight: 700;\n}\n.upload-music-area[data-v-4334face] {\r\n  margin-top: 4px;\n}\n.music-file-label[data-v-4334face] {\r\n  display: inline-flex;\r\n  align-items: center;\r\n  gap: 12px;\r\n  padding: 12px 20px;\r\n  border: 1.5px solid #e0e0e0;\r\n  border-radius: 10px;\r\n  background: white;\r\n  cursor: pointer;\r\n  transition: all 0.2s ease;\n}\n.music-file-label[data-v-4334face]:hover {\r\n  border-color: #87ceeb;\r\n  background: #f0f8ff;\n}\n.upload-text-group[data-v-4334face] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 2px;\n}\n.upload-label-text[data-v-4334face] {\r\n  font-size: 14px;\r\n  font-weight: 600;\r\n  color: #333;\r\n  line-height: 1.2;\n}\n.upload-label-hint[data-v-4334face] {\r\n  font-size: 11px;\r\n  color: #888;\r\n  line-height: 1.2;\n}\n.music-preview[data-v-4334face] {\r\n  padding: 18px;\r\n  background: white;\r\n  border-radius: 14px;\r\n  border: 1px solid #e8e8e8;\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 12px;\n}\n.preview-header[data-v-4334face] {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 8px;\r\n  margin-bottom: 4px;\n}\n.preview-icon[data-v-4334face] {\r\n  font-size: 20px;\n}\n.preview-title[data-v-4334face] {\r\n  font-size: 14px;\r\n  font-weight: 600;\r\n  color: #333;\n}\n.audio-container[data-v-4334face] {\r\n  width: 100%;\n}\n.audio-player[data-v-4334face] {\r\n  width: 100%;\r\n  height: 40px;\r\n  border-radius: 8px;\r\n  outline: none;\n}\n.remove-music-btn[data-v-4334face] {\r\n  padding: 10px 18px;\r\n  border: none;\r\n  border-radius: 8px;\r\n  background: #fff0f0;\r\n  color: #ff4d6d;\r\n  font-weight: 600;\r\n  cursor: pointer;\r\n  transition: all 0.2s ease;\r\n  display: inline-flex;\r\n  align-items: center;\r\n  gap: 6px;\r\n  align-self: flex-start;\r\n  font-size: 13px;\n}\n.remove-music-btn[data-v-4334face]:hover {\r\n  background: #ff4d6d;\r\n  color: white;\n}\n.remove-music-btn[data-v-4334face]:active {\r\n  transform: scale(0.97);\n}\r\n\r\n/* ===== RESPONSIVE DESIGN ===== */\n@media (max-width: 768px) {\n.romantic-container[data-v-4334face] {\r\n    padding: 16px 12px;\n}\n.form-section[data-v-4334face] {\r\n    padding: 20px 16px;\r\n    border-radius: 16px;\r\n    margin-bottom: 16px;\n}\n.section-header[data-v-4334face] {\r\n    flex-direction: column;\r\n    align-items: flex-start;\r\n    gap: 12px;\n}\n.count-badge[data-v-4334face] {\r\n    align-self: flex-start;\n}\n.section-header h3[data-v-4334face] {\r\n    font-size: 18px;\n}\n.section-desc[data-v-4334face] {\r\n    font-size: 12px;\n}\n.header-icon[data-v-4334face] {\r\n    font-size: 28px;\n}\n.page-card[data-v-4334face] {\r\n    padding: 16px;\n}\n.page-number[data-v-4334face] {\r\n    width: 32px;\r\n    height: 32px;\r\n    font-size: 14px;\n}\n.romantic-input[data-v-4334face] {\r\n    font-size: 15px;\r\n    padding: 11px 14px;\n}\n.input-hint[data-v-4334face] {\r\n    font-size: 11px;\n}\n.music-grid[data-v-4334face] {\r\n    grid-template-columns: 1fr;\n}\n.add-btn[data-v-4334face] {\r\n    padding: 13px 20px;\r\n    font-size: 14px;\n}\n.music-subsection[data-v-4334face] {\r\n    padding: 16px;\n}\n.subsection-icon[data-v-4334face] {\r\n    font-size: 22px;\n}\n.subsection-title[data-v-4334face] {\r\n    font-size: 14px;\n}\n.music-btn[data-v-4334face] {\r\n    padding: 11px 14px;\n}\n}\n@media (max-width: 480px) {\n.romantic-container[data-v-4334face] {\r\n    padding: 12px 8px;\n}\n.form-section[data-v-4334face] {\r\n    padding: 16px 12px;\n}\n.section-header h3[data-v-4334face] {\r\n    font-size: 17px;\n}\n.header-icon[data-v-4334face],\r\n  .subsection-icon[data-v-4334face] {\r\n    font-size: 24px;\n}\n.preview-image[data-v-4334face] {\r\n    width: 100%;\r\n    max-width: 100%;\n}\n.upload-placeholder[data-v-4334face] {\r\n    padding: 28px 16px;\n}\n.upload-icon[data-v-4334face] {\r\n    font-size: 36px;\n}\n.card-content[data-v-4334face] {\r\n    gap: 18px;\n}\n.input-group[data-v-4334face] {\r\n    gap: 6px;\n}\n.music-file-label[data-v-4334face] {\r\n    width: 100%;\r\n    justify-content: center;\n}\n}\n@media (max-width: 360px) {\n.romantic-input[data-v-4334face] {\r\n    font-size: 14px;\r\n    padding: 10px 12px;\n}\n.music-btn[data-v-4334face] {\r\n    font-size: 13px;\r\n    padding: 10px 12px;\n}\n.add-btn[data-v-4334face] {\r\n    font-size: 13px;\r\n    padding: 12px 16px;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n[data-v-4334face] {\r\n  box-sizing: border-box;\n}\n.romantic-container[data-v-4334face] {\r\n  max-width: 720px;\r\n  margin: 0 auto;\r\n  padding: 24px 16px;\r\n  font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Roboto\", \"Oxygen\", \"Ubuntu\",\r\n    \"Cantarell\", sans-serif;\n}\r\n\r\n/* ===== SECTION STYLING ===== */\n.form-section[data-v-4334face] {\r\n  background: #ffffff;\r\n  border-radius: 20px;\r\n  padding: 24px;\r\n  margin-bottom: 20px;\r\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);\r\n  border: 1px solid #f0f0f0;\n}\n.section-header[data-v-4334face] {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: flex-start;\r\n  margin-bottom: 24px;\r\n  padding-bottom: 16px;\r\n  border-bottom: 1px solid #f5f5f5;\n}\n.header-content[data-v-4334face] {\r\n  display: flex;\r\n  align-items: flex-start;\r\n  gap: 12px;\r\n  flex: 1;\n}\n.header-icon[data-v-4334face] {\r\n  font-size: 32px;\r\n  line-height: 1;\r\n  flex-shrink: 0;\n}\n.section-header h3[data-v-4334face] {\r\n  margin: 0 0 4px 0;\r\n  font-size: 20px;\r\n  font-weight: 700;\r\n  color: #1a1a1a;\r\n  line-height: 1.3;\n}\n.section-desc[data-v-4334face] {\r\n  margin: 0;\r\n  font-size: 13px;\r\n  color: #666;\r\n  line-height: 1.4;\n}\n.count-badge[data-v-4334face] {\r\n  background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);\r\n  color: white;\r\n  padding: 6px 14px;\r\n  border-radius: 16px;\r\n  font-weight: 600;\r\n  font-size: 13px;\r\n  box-shadow: 0 2px 6px rgba(255, 107, 157, 0.25);\r\n  flex-shrink: 0;\r\n  min-width: 32px;\r\n  text-align: center;\n}\r\n\r\n/* ===== PAGE CARDS ===== */\n.pages-list[data-v-4334face] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 16px;\r\n  margin-bottom: 16px;\n}\n.page-card[data-v-4334face] {\r\n  background: #fafafa;\r\n  border-radius: 16px;\r\n  padding: 20px;\r\n  border: 1px solid #e8e8e8;\r\n  transition: all 0.2s ease;\n}\n.page-card[data-v-4334face]:hover {\r\n  border-color: #ffb6c1;\r\n  background: #fff;\n}\n.card-header[data-v-4334face] {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  margin-bottom: 20px;\n}\n.page-number[data-v-4334face] {\r\n  width: 36px;\r\n  height: 36px;\r\n  border-radius: 50%;\r\n  background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);\r\n  color: white;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  font-weight: 700;\r\n  font-size: 16px;\r\n  box-shadow: 0 2px 6px rgba(255, 107, 157, 0.25);\n}\n.number-text[data-v-4334face] {\r\n  display: block;\n}\n.remove-btn[data-v-4334face] {\r\n  width: 32px;\r\n  height: 32px;\r\n  border-radius: 50%;\r\n  border: none;\r\n  background: #fff;\r\n  color: #ff4d6d;\r\n  font-size: 18px;\r\n  cursor: pointer;\r\n  transition: all 0.2s ease;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);\n}\n.remove-btn[data-v-4334face]:hover {\r\n  background: #ff4d6d;\r\n  color: white;\r\n  transform: scale(1.05);\n}\n.remove-btn[data-v-4334face]:active {\r\n  transform: scale(0.95);\n}\r\n\r\n/* ===== INPUT STYLING ===== */\n.card-content[data-v-4334face] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 20px;\n}\n.input-group[data-v-4334face] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\n}\n.input-label[data-v-4334face] {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 6px;\r\n  font-weight: 600;\r\n  font-size: 14px;\r\n  color: #333;\r\n  margin-bottom: 2px;\n}\n.label-icon[data-v-4334face] {\r\n  font-size: 16px;\r\n  line-height: 1;\n}\n.romantic-input[data-v-4334face] {\r\n  width: 100%;\r\n  padding: 12px 16px;\r\n  border: 1.5px solid #e0e0e0;\r\n  border-radius: 10px;\r\n  font-size: 14px;\r\n  transition: all 0.2s ease;\r\n  background: white;\r\n  font-family: inherit;\r\n  color: #1a1a1a;\n}\n.romantic-input[data-v-4334face]:focus {\r\n  outline: none;\r\n  border-color: #ff6b9d;\r\n  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.08);\n}\n.romantic-input[data-v-4334face]::-moz-placeholder {\r\n  color: #999;\n}\n.romantic-input[data-v-4334face]::placeholder {\r\n  color: #999;\n}\n.input-hint[data-v-4334face] {\r\n  font-size: 12px;\r\n  color: #888;\r\n  line-height: 1.4;\r\n  margin-top: -2px;\n}\r\n\r\n/* ===== IMAGE UPLOAD ===== */\n.image-upload-area[data-v-4334face] {\r\n  position: relative;\n}\n.file-input[data-v-4334face] {\r\n  display: none;\n}\n.file-label[data-v-4334face] {\r\n  display: block;\r\n  cursor: pointer;\n}\n.upload-placeholder[data-v-4334face] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 32px 20px;\r\n  border: 2px dashed #ddd;\r\n  border-radius: 12px;\r\n  background: white;\r\n  transition: all 0.2s ease;\n}\n.upload-placeholder[data-v-4334face]:hover {\r\n  border-color: #ff6b9d;\r\n  background: #fff5f7;\n}\n.upload-icon[data-v-4334face] {\r\n  font-size: 40px;\r\n  margin-bottom: 8px;\n}\n.upload-text[data-v-4334face] {\r\n  font-size: 14px;\r\n  font-weight: 600;\r\n  color: #333;\r\n  margin-bottom: 4px;\n}\n.upload-subtext[data-v-4334face] {\r\n  font-size: 12px;\r\n  color: #888;\n}\n.image-preview-container[data-v-4334face] {\r\n  position: relative;\r\n  display: inline-block;\r\n  border-radius: 12px;\r\n  overflow: hidden;\n}\n.preview-image[data-v-4334face] {\r\n  display: block;\r\n  max-width: 100%;\r\n  width: 200px;\r\n  height: auto;\r\n  border-radius: 12px;\r\n  transition: all 0.2s ease;\n}\n.image-overlay[data-v-4334face] {\r\n  position: absolute;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background: rgba(0, 0, 0, 0.6);\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  opacity: 0;\r\n  transition: opacity 0.2s ease;\r\n  border-radius: 12px;\n}\n.image-preview-container:hover .image-overlay[data-v-4334face] {\r\n  opacity: 1;\n}\n.overlay-text[data-v-4334face] {\r\n  color: white;\r\n  font-size: 13px;\r\n  font-weight: 600;\n}\r\n\r\n/* ===== BUTTONS ===== */\n.add-btn[data-v-4334face] {\r\n  width: 100%;\r\n  padding: 14px 24px;\r\n  border: 2px dashed #ff6b9d;\r\n  border-radius: 12px;\r\n  background: #fff5f7;\r\n  color: #ff6b9d;\r\n  font-size: 15px;\r\n  font-weight: 600;\r\n  cursor: pointer;\r\n  transition: all 0.2s ease;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  gap: 8px;\n}\n.add-btn[data-v-4334face]:hover {\r\n  background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);\r\n  color: white;\r\n  border-color: #ff6b9d;\r\n  transform: translateY(-1px);\r\n  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.25);\n}\n.add-btn[data-v-4334face]:active {\r\n  transform: translateY(0);\n}\n.btn-icon[data-v-4334face] {\r\n  font-size: 20px;\r\n  font-weight: 400;\n}\r\n\r\n/* ===== MUSIC SECTION ===== */\n.music-section[data-v-4334face] {\r\n  background: linear-gradient(135deg, #fafcff 0%, #fff 100%);\n}\n.music-content[data-v-4334face] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 20px;\n}\n.music-subsection[data-v-4334face] {\r\n  padding: 18px;\r\n  background: white;\r\n  border-radius: 14px;\r\n  border: 1px solid #e8e8e8;\n}\n.subsection-header[data-v-4334face] {\r\n  display: flex;\r\n  align-items: flex-start;\r\n  gap: 10px;\r\n  margin-bottom: 14px;\n}\n.subsection-icon[data-v-4334face] {\r\n  font-size: 24px;\r\n  line-height: 1;\r\n  flex-shrink: 0;\n}\n.subsection-title[data-v-4334face] {\r\n  margin: 0 0 2px 0;\r\n  font-weight: 600;\r\n  color: #333;\r\n  font-size: 15px;\r\n  line-height: 1.3;\n}\n.subsection-hint[data-v-4334face] {\r\n  margin: 0;\r\n  font-size: 12px;\r\n  color: #888;\r\n  line-height: 1.4;\n}\n.music-grid[data-v-4334face] {\r\n  display: grid;\r\n  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));\r\n  gap: 10px;\n}\n.music-btn[data-v-4334face] {\r\n  padding: 12px 16px;\r\n  border: 1.5px solid #e0e0e0;\r\n  border-radius: 10px;\r\n  background: white;\r\n  color: #333;\r\n  font-size: 14px;\r\n  font-weight: 500;\r\n  cursor: pointer;\r\n  transition: all 0.2s ease;\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 8px;\r\n  justify-content: center;\r\n  position: relative;\n}\n.music-btn[data-v-4334face]:hover {\r\n  border-color: #87ceeb;\r\n  background: #f0f8ff;\r\n  transform: translateY(-1px);\n}\n.active-music[data-v-4334face] {\r\n  background: linear-gradient(135deg, #87ceeb 0%, #5dade2 100%);\r\n  color: white;\r\n  border-color: #87ceeb;\r\n  box-shadow: 0 2px 8px rgba(135, 206, 235, 0.3);\n}\n.music-icon[data-v-4334face] {\r\n  font-size: 18px;\r\n  line-height: 1;\n}\n.music-name[data-v-4334face] {\r\n  flex: 1;\r\n  text-align: left;\n}\n.check-icon[data-v-4334face] {\r\n  font-size: 16px;\r\n  font-weight: 700;\n}\n.upload-music-area[data-v-4334face] {\r\n  margin-top: 4px;\n}\n.music-file-label[data-v-4334face] {\r\n  display: inline-flex;\r\n  align-items: center;\r\n  gap: 12px;\r\n  padding: 12px 20px;\r\n  border: 1.5px solid #e0e0e0;\r\n  border-radius: 10px;\r\n  background: white;\r\n  cursor: pointer;\r\n  transition: all 0.2s ease;\n}\n.music-file-label[data-v-4334face]:hover {\r\n  border-color: #87ceeb;\r\n  background: #f0f8ff;\n}\n.upload-text-group[data-v-4334face] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 2px;\n}\n.upload-label-text[data-v-4334face] {\r\n  font-size: 14px;\r\n  font-weight: 600;\r\n  color: #333;\r\n  line-height: 1.2;\n}\n.upload-label-hint[data-v-4334face] {\r\n  font-size: 11px;\r\n  color: #888;\r\n  line-height: 1.2;\n}\n.music-preview[data-v-4334face] {\r\n  padding: 18px;\r\n  background: white;\r\n  border-radius: 14px;\r\n  border: 1px solid #e8e8e8;\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 12px;\n}\n.preview-header[data-v-4334face] {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 8px;\r\n  margin-bottom: 4px;\n}\n.preview-icon[data-v-4334face] {\r\n  font-size: 20px;\n}\n.preview-title[data-v-4334face] {\r\n  font-size: 14px;\r\n  font-weight: 600;\r\n  color: #333;\n}\n.audio-container[data-v-4334face] {\r\n  width: 100%;\n}\n.audio-player[data-v-4334face] {\r\n  width: 100%;\r\n  height: 40px;\r\n  border-radius: 8px;\r\n  outline: none;\n}\n.remove-music-btn[data-v-4334face] {\r\n  padding: 10px 18px;\r\n  border: none;\r\n  border-radius: 8px;\r\n  background: #fff0f0;\r\n  color: #ff4d6d;\r\n  font-weight: 600;\r\n  cursor: pointer;\r\n  transition: all 0.2s ease;\r\n  display: inline-flex;\r\n  align-items: center;\r\n  gap: 6px;\r\n  align-self: flex-start;\r\n  font-size: 13px;\n}\n.remove-music-btn[data-v-4334face]:hover {\r\n  background: #ff4d6d;\r\n  color: white;\n}\n.remove-music-btn[data-v-4334face]:active {\r\n  transform: scale(0.97);\n}\r\n\r\n\r\n/* ===== FEE SUMMARY ===== */\n.fee-summary[data-v-4334face] {\r\n  background: linear-gradient(135deg, #fff8e7 0%, #fff3cd 100%);\r\n  border: 1.5px solid #ffc107;\r\n  border-radius: 16px;\r\n  padding: 18px 20px;\r\n  margin-top: 4px;\r\n  animation: fadeIn-4334face 0.3s ease;\n}\n@keyframes fadeIn-4334face {\nfrom { opacity: 0; transform: translateY(-6px);\n}\nto { opacity: 1; transform: translateY(0);\n}\n}\n.fee-header[data-v-4334face] {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 8px;\r\n  margin-bottom: 12px;\n}\n.fee-icon[data-v-4334face] {\r\n  font-size: 20px;\n}\n.fee-title[data-v-4334face] {\r\n  font-size: 15px;\r\n  font-weight: 700;\r\n  color: #8a6200;\n}\n.fee-list[data-v-4334face] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n  margin-bottom: 14px;\n}\n.fee-item[data-v-4334face] {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  font-size: 14px;\r\n  color: #5a4000;\n}\n.fee-value[data-v-4334face] {\r\n  font-weight: 600;\r\n  color: #e67e00;\n}\n.fee-total[data-v-4334face] {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  padding-top: 12px;\r\n  border-top: 1px dashed #ffc107;\r\n  font-size: 15px;\r\n  font-weight: 700;\r\n  color: #6b4c00;\n}\n.fee-total-value[data-v-4334face] {\r\n  font-size: 17px;\r\n  color: #d4500a;\n}\r\n\r\n/* ===== RESPONSIVE DESIGN ===== */\n@media (max-width: 768px) {\n.romantic-container[data-v-4334face] {\r\n    padding: 16px 12px;\n}\n.form-section[data-v-4334face] {\r\n    padding: 20px 16px;\r\n    border-radius: 16px;\r\n    margin-bottom: 16px;\n}\n.section-header[data-v-4334face] {\r\n    flex-direction: column;\r\n    align-items: flex-start;\r\n    gap: 12px;\n}\n.count-badge[data-v-4334face] {\r\n    align-self: flex-start;\n}\n.section-header h3[data-v-4334face] {\r\n    font-size: 18px;\n}\n.section-desc[data-v-4334face] {\r\n    font-size: 12px;\n}\n.header-icon[data-v-4334face] {\r\n    font-size: 28px;\n}\n.page-card[data-v-4334face] {\r\n    padding: 16px;\n}\n.page-number[data-v-4334face] {\r\n    width: 32px;\r\n    height: 32px;\r\n    font-size: 14px;\n}\n.romantic-input[data-v-4334face] {\r\n    font-size: 15px;\r\n    padding: 11px 14px;\n}\n.input-hint[data-v-4334face] {\r\n    font-size: 11px;\n}\n.music-grid[data-v-4334face] {\r\n    grid-template-columns: 1fr;\n}\n.add-btn[data-v-4334face] {\r\n    padding: 13px 20px;\r\n    font-size: 14px;\n}\n.music-subsection[data-v-4334face] {\r\n    padding: 16px;\n}\n.subsection-icon[data-v-4334face] {\r\n    font-size: 22px;\n}\n.subsection-title[data-v-4334face] {\r\n    font-size: 14px;\n}\n.music-btn[data-v-4334face] {\r\n    padding: 11px 14px;\n}\n}\n@media (max-width: 480px) {\n.romantic-container[data-v-4334face] {\r\n    padding: 12px 8px;\n}\n.form-section[data-v-4334face] {\r\n    padding: 16px 12px;\n}\n.section-header h3[data-v-4334face] {\r\n    font-size: 17px;\n}\n.header-icon[data-v-4334face],\r\n  .subsection-icon[data-v-4334face] {\r\n    font-size: 24px;\n}\n.preview-image[data-v-4334face] {\r\n    width: 100%;\r\n    max-width: 100%;\n}\n.upload-placeholder[data-v-4334face] {\r\n    padding: 28px 16px;\n}\n.upload-icon[data-v-4334face] {\r\n    font-size: 36px;\n}\n.card-content[data-v-4334face] {\r\n    gap: 18px;\n}\n.input-group[data-v-4334face] {\r\n    gap: 6px;\n}\n.music-file-label[data-v-4334face] {\r\n    width: 100%;\r\n    justify-content: center;\n}\n}\n@media (max-width: 360px) {\n.romantic-input[data-v-4334face] {\r\n    font-size: 14px;\r\n    padding: 10px 12px;\n}\n.music-btn[data-v-4334face] {\r\n    font-size: 13px;\r\n    padding: 10px 12px;\n}\n.add-btn[data-v-4334face] {\r\n    font-size: 13px;\r\n    padding: 12px 16px;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -795,7 +888,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _index_vue_vue_type_template_id_4334face_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.vue?vue&type=template&id=4334face&scoped=true */ "./resources/js/components/templates/create/AskValentin/index.vue?vue&type=template&id=4334face&scoped=true");
 /* harmony import */ var _index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./index.vue?vue&type=script&lang=js */ "./resources/js/components/templates/create/AskValentin/index.vue?vue&type=script&lang=js");
 /* harmony import */ var _index_vue_vue_type_style_index_0_id_4334face_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index.vue?vue&type=style&index=0&id=4334face&scoped=true&lang=css */ "./resources/js/components/templates/create/AskValentin/index.vue?vue&type=style&index=0&id=4334face&scoped=true&lang=css");
-/* harmony import */ var C_devonline_tool_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var E_Dev_devonline_tool_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -803,7 +896,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,C_devonline_tool_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_index_vue_vue_type_template_id_4334face_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-4334face"],['__file',"resources/js/components/templates/create/AskValentin/index.vue"]])
+const __exports__ = /*#__PURE__*/(0,E_Dev_devonline_tool_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_index_vue_vue_type_template_id_4334face_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-4334face"],['__file',"resources/js/components/templates/create/AskValentin/index.vue"]])
 /* hot reload */
 if (false) // removed by dead control flow
 {}

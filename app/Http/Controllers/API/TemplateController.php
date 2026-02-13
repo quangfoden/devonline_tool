@@ -14,6 +14,7 @@ class TemplateController extends Controller
             'id',
             'name',
             'slug',
+            'price',
             'description',
             'preview_data',
             'preview_url',

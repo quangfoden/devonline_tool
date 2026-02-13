@@ -398,7 +398,7 @@ export default {
   padding: 32px;
   border-radius: 24px;
   box-shadow: 0 12px 48px rgba(139, 47, 60, 0.08);
-  max-width: 800px;
+  max-width: 650px;
   margin: 0 auto;
   border: 1px solid var(--color-border);
 }

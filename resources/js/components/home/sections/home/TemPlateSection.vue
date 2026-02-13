@@ -38,6 +38,17 @@
               <img :src="template.thumbnail" :alt="template.name" loading="lazy" />
             </div>
 
+            <!-- Price badge -->
+            <div class="template-card__price-badge">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+              </svg>
+
+              <span>{{ template.price > 0 ? formatVND(template.price) : "Miễn phí" }}</span>
+            </div>
+
             <div class="template-card__overlay">
               <button class="template-card__preview-btn" @click="preview(template)">
                 <svg
@@ -144,8 +155,15 @@ export default {
       return gradients[Math.floor(Math.random() * gradients.length)];
     },
 
+    formatVND(value) {
+      return new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+        maximumFractionDigits: 0,
+      }).format(value);
+    },
+
     preview(template) {
-      // this.$router.push(`/demo/${template.slug}`)
       if (template.preview_url) {
         window.open(template.preview_url, "_blank");
       }
@@ -155,7 +173,6 @@ export default {
       this.loadingSpam = true;
       try {
         const draftId = await this.$store.dispatch("createCardDraft", templateId);
-
         if (draftId) {
           this.$router.push(`/create/${draftId}`);
         }
@@ -167,7 +184,6 @@ export default {
       }
     },
     showMore() {
-      // tăng thêm 6 mỗi lần, hoặc hiện toàn bộ nếu ít hơn
       this.visibleCount = Math.min(this.templates.length, this.visibleCount + 6);
     },
   },
@@ -175,6 +191,47 @@ export default {
 </script>
 
 <style scoped>
+/* ===== PRICE BADGE ===== */
+.template-card__price-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary, #8b2f3c);
+  letter-spacing: 0.1px;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.2s ease;
+}
+
+.template-card__price-badge svg {
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+/* Khi "Miễn phí" thì màu xanh lá */
+.template-card__price-badge:has(span:empty),
+.template-card__price-badge--free {
+  color: #16a34a;
+}
+
+/* Ẩn nhẹ khi hover (overlay xuất hiện) */
+.template-card__image:hover .template-card__price-badge {
+  opacity: 0;
+}
+
+/* ===== GIỮ NGUYÊN CÁC STYLE CŨ ===== */
 .templates__more {
   display: flex;
   justify-content: center;
@@ -191,9 +248,7 @@ export default {
   font-size: 14px;
   letter-spacing: 0.3px;
   cursor: pointer;
-
   box-shadow: 0 10px 28px rgba(139, 47, 60, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-
   transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
 }
 
@@ -208,7 +263,6 @@ export default {
   box-shadow: 0 8px 18px rgba(139, 47, 60, 0.28), inset 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-/* Disabled */
 .load-more-btn:disabled {
   background: var(--gradient-accent);
   color: var(--color-text-light);

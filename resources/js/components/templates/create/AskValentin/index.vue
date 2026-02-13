@@ -85,6 +85,17 @@
                 </label>
               </div>
               <span class="input-hint">Thêm hình ảnh để trang thêm ý nghĩa</span>
+              <span
+                v-if="
+                  index > 0 || (index === 0 && pages.filter((p) => p.image).length > 1)
+                "
+                class="fee-hint"
+              >
+                💰 Ảnh từ thứ 2 trở đi: +10.000đ/ảnh
+              </span>
+              <span v-if="page.image && imageCount >= 2 && index >= 1" class="fee-badge">
+                +10.000đ
+              </span>
             </div>
           </div>
         </div>
@@ -177,6 +188,27 @@
         </div>
       </div>
     </section>
+    <!-- Fee Summary -->
+    <div v-if="totalExtraFee > 0" class="fee-summary">
+      <div class="fee-header">
+        <span class="fee-icon">💰</span>
+        <span class="fee-title">Phí phát sinh</span>
+      </div>
+      <div class="fee-list">
+        <div v-if="extraImageCount > 0" class="fee-item">
+          <span class="fee-label">🖼️ Ảnh thêm ({{ extraImageCount }} ảnh × 10.000đ)</span>
+          <span class="fee-value">+{{ extraImageFee.toLocaleString("vi-VN") }}đ</span>
+        </div>
+        <div v-if="musicFee > 0" class="fee-item">
+          <span class="fee-label">🎵 Nhạc nền</span>
+          <span class="fee-value">+10.000đ</span>
+        </div>
+      </div>
+      <div class="fee-total">
+        <span>Tổng phí thêm:</span>
+        <span class="fee-total-value">+{{ totalExtraFee.toLocaleString("vi-VN") }}đ</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -201,6 +233,25 @@ export default {
 
     selectedMusic() {
       return this.modelValue.MUSIC_URL || "";
+    },
+    imageCount() {
+      return this.pages.filter((p) => p.image && p.image !== "").length;
+    },
+
+    extraImageCount() {
+      return Math.max(0, this.imageCount - 1);
+    },
+
+    extraImageFee() {
+      return this.extraImageCount * 10000;
+    },
+
+    musicFee() {
+      return this.selectedMusic ? 10000 : 0;
+    },
+
+    totalExtraFee() {
+      return this.extraImageFee + this.musicFee;
     },
   },
 
@@ -339,8 +390,26 @@ export default {
       e.target.value = "";
     },
 
-    removeMusic() {
-      this.emit({ MUSIC_URL: "" });
+    async removeMusic() {
+      const oldMusic = this.selectedMusic;
+
+      // Xóa UI trước cho mượt
+      this.emit({
+        MUSIC_URL: null,
+      });
+
+      try {
+        await this.axios.post(`/api/cards/${this.$route.params.id}/remove-music`, {
+          url: oldMusic,
+        });
+      } catch (e) {
+        console.error("Xóa nhạc lỗi", e);
+
+        // rollback nếu lỗi
+        this.emit({
+          MUSIC_URL: oldMusic,
+        });
+      }
     },
   },
 };
@@ -870,6 +939,75 @@ export default {
 
 .remove-music-btn:active {
   transform: scale(0.97);
+}
+
+
+/* ===== FEE SUMMARY ===== */
+.fee-summary {
+  background: linear-gradient(135deg, #fff8e7 0%, #fff3cd 100%);
+  border: 1.5px solid #ffc107;
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin-top: 4px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fee-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.fee-icon {
+  font-size: 20px;
+}
+
+.fee-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #8a6200;
+}
+
+.fee-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.fee-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #5a4000;
+}
+
+.fee-value {
+  font-weight: 600;
+  color: #e67e00;
+}
+
+.fee-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px dashed #ffc107;
+  font-size: 15px;
+  font-weight: 700;
+  color: #6b4c00;
+}
+
+.fee-total-value {
+  font-size: 17px;
+  color: #d4500a;
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
