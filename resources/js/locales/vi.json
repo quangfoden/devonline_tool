@@ -1,10 +1,13 @@
 {
     "top_bar": {
         "menu_text": {
-            "home": "TRANG CHỦ",
-            "about": "VỀ NAM ANH",
-            "products": "SẢN PHẨM NAM ANH",
-            "news": "TIN TỨC NAM ANH"
+            "home": "Trang chủ",
+            "about": "Cách hoạt động",
+            "templates": "Tất cả mẫu",
+            "reviews": "Đánh giá"
+        },
+        "cta": {
+            "start_now": "Bắt đầu ngay"
         }
     },
     "placeholder": {
@@ -32,5 +35,13 @@
     },
     "alert": {
         "data_not_found": "Không có kết quả."
+    },
+    "hero_sec": {
+        "title_line_1": "Tạo Thiệp Chúc Mừng",
+        "title_line_2": "Đậm Chất Riêng Của Bạn",
+        "description": "Chọn mẫu có sẵn, tùy chỉnh lời chúc – hình ảnh – nhạc nền và chia sẻ thiệp qua link hoặc mã QR chỉ trong vài phút.",
+        "btn_primary": "Tạo Thiệp Ngay",
+        "btn_secondary": "Khám Phá Mẫu Đẹp",
+        "scroll_text": "Cuộn xuống để khám phá"
     }
 }

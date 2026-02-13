@@ -1121,7 +1121,7 @@ h4.card-title .lang_selector {
 }
 .home-content #langSwitch {
   position: relative;
-  right: 50px;
+  right: 20px;
   text-transform: uppercase;
 }
 .home-content #langSwitch img {
@@ -1132,7 +1132,7 @@ h4.card-title .lang_selector {
   border-radius: 50%;
 }
 .home-content #langSwitch .value {
-  color: #fff;
+  color: #8b2f3c;
   width: 100px;
   float: right;
   cursor: pointer;
@@ -1186,6 +1186,7 @@ h4.card-title .lang_selector {
 }
 .home-content #langSwitch .options .item span {
   position: relative;
+  color: #8b2f3c;
   left: 15px;
   top: 2px;
 }

@@ -1022,7 +1022,13 @@
 
 
 @media screen and (max-width:550px) {
+.home-content #langSwitch .value span{
+    display: none;
+}
 
+.home-content #langSwitch .value i{
+    display: none;
+}
     //home-page
     .home-content {
         #slideSection {

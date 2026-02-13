@@ -1,10 +1,13 @@
 {
     "top_bar": {
         "menu_text": {
-            "home": "HOME",
-            "about": "ABOUT NAM ANH",
-            "products": "ALL PRODUCTS",
-            "news": "NAM ANH NEWS"
+            "home": "Home",
+            "about": "How It Works",
+            "templates": "All Templates",
+            "reviews": "Reviews"
+        },
+        "cta": {
+            "start_now": "Get Started"
         }
     },
     "placeholder": {
@@ -32,5 +35,17 @@
     },
     "alert": {
         "data_not_found": "Data not found."
-    }
+    },
+
+
+
+    "hero_sec": {
+    "title_line_1": "Create Beautiful Greeting Cards",
+    "title_line_2": "With Your Personal Touch",
+    "description":
+      "Choose a template, customize your message – images – background music, and share your card via link or QR code in minutes.",
+    "btn_primary": "Create Your Card",
+    "btn_secondary": "Explore Templates",
+    "scroll_text": "Scroll down to explore"
+  }
 }

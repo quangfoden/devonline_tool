@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="5lWlOU-WFeMjBAW2XEwXovpygOd6XJdH_zQpmsSYMkE" />
-    <title>{{ $title ?? 'Tạo thiệp online miễn phí | DevOnline Shop' }}</title>
+    <title>{{ $title ?? 'DevOnline Shop' }}</title>
     <meta name="description" content="{{ $description ?? 'Tạo thiệp chúc mừng online miễn phí. Cá nhân hoá nội dung, gửi link, mã qr nhanh chóng.' }}">
     <meta name="keywords" content="{{ $keywords ?? 'thiệp online, tạo thiệp, thiệp chúc mừng, QR code, gửi thiệp' }}">
     <meta name="author" content="{{ $author ?? config('app.name', 'DevOnline Shop') }}">
@@ -26,6 +26,9 @@
     <meta name="twitter:description" content="{{ $twitter_description ?? ($description ?? 'Tạo thiệp chúc mừng online miễn phí, nhanh và đẹp.') }}">
     <meta name="twitter:image" content="{{ $twitter_image ?? asset('images/og-image.png') }}">
     <meta name="theme-color" content="{{ $theme_color ?? '#ff758c' }}">
+    <link rel="alternate" hreflang="vi" href="{{ url('/vi') }}">
+    <link rel="alternate" hreflang="en" href="{{ url('/en') }}">
+    <link rel="alternate" hreflang="x-default" href="{{ url('/') }}">
 
     {{-- Structured Data: WebSite + Organization for better SERP understanding --}}
     <script type="application/ld+json">

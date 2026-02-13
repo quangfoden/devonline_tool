@@ -30,25 +30,30 @@ export const routes = [
         component: HomeParent,
         children: [
             {
-                path: '',
-                name: 'Home Page',
-                component: HomePage
-            },
-            {
-                path: '/demo/:slug',
-                name: 'Template Demo',
-                component: TemplateDemo
-            },
-            {
-                path: '/create/:id',
-                name: 'Create Template',
-                component: CreateCard
-            },
-            {
-                path: '/payment/success',
-                name: 'payment-page',
-                component: PaymentSuccess,
-            },
+                path: ':lang',
+                children: [
+                    {
+                        path: '',
+                        name: 'Home Page',
+                        component: HomePage
+                    },
+                    {
+                        path: '/demo/:slug',
+                        name: 'Template Demo',
+                        component: TemplateDemo
+                    },
+                    {
+                        path: '/create/:id',
+                        name: 'Create Template',
+                        component: CreateCard
+                    },
+                    {
+                        path: '/payment/success',
+                        name: 'payment-page',
+                        component: PaymentSuccess,
+                    },
+                ]
+            }
         ]
     },
 
@@ -557,32 +562,32 @@ router.beforeEach((to, from, next) => {
     initLoading();
     let isAdminArea = document.URL.includes('/admin');
 
-    // // check lang in path
-    // if (!isAdminArea) {
-    //     const lang = i18n.global.locale;
-    //     if (typeof to.name === 'undefined') {
-    //         next(`/${lang}`);
-    //         return;
-    //     }
-    //     if (typeof to.params.lang === 'undefined') {
-    //         next(`/${lang}${to.path}`);
-    //         return;
-    //     }
-    //     if (!config.languages.includes(to.params.lang)) {
-    //         let nextTo = '';
-    //         if (config.sub_pages.includes(to.params.lang)) {
-    //             nextTo = '/' + lang + to.path;
-    //         } else {
-    //             nextTo = `/${lang}/`;
-    //         }
-    //         i18n.global.locale = to.params.lang;
-    //         next(nextTo);
-    //         return;
-    //     } else {
-    //         localStorage.setItem('lang', to.params.lang);
-    //         i18n.global.locale = to.params.lang;
-    //     }
-    // }
+    // check lang in path
+    if (!isAdminArea) {
+        const lang = i18n.global.locale;
+        if (typeof to.name === 'undefined') {
+            next(`/${lang}`);
+            return;
+        }
+        if (typeof to.params.lang === 'undefined') {
+            next(`/${lang}${to.path}`);
+            return;
+        }
+        if (!config.languages.includes(to.params.lang)) {
+            let nextTo = '';
+            if (config.sub_pages.includes(to.params.lang)) {
+                nextTo = '/' + lang + to.path;
+            } else {
+                nextTo = `/${lang}/`;
+            }
+            i18n.global.locale = to.params.lang;
+            next(nextTo);
+            return;
+        } else {
+            localStorage.setItem('lang', to.params.lang);
+            i18n.global.locale = to.params.lang;
+        }
+    }
 
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
     const isAuthenticated = store.getters.getLoginResponse.authenticated || JSON.parse(localStorage.getItem('loginResponse'))?.authenticated
